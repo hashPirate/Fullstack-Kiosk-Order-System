@@ -2,14 +2,14 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import KioskView from "./kiosk/KioskView.jsx";
-import KioskHome from "./kiosk/KioskHome.jsx";
-import CashierView from "./cashier/CashierView.jsx";
-import CashierHome from "./cashier/CashierHome.jsx";
-import KitchenView from "./kitchen/KitchenView.jsx";
-import KitchenHome from "./kitchen/KitchenHome.jsx";
-import ManagerView from "./manager/ManagerView.jsx";
-import ManagerHome from "./manager/ManagerHome.jsx";
+import KioskView from "./views/kiosk/KioskView.jsx";
+import KioskHome from "./views/kiosk/KioskHome.jsx";
+import CashierView from "./views/cashier/CashierView.jsx";
+import CashierHome from "./views/cashier/CashierHome.jsx";
+import KitchenView from "./views/kitchen/KitchenView.jsx";
+import KitchenHome from "./views/kitchen/KitchenHome.jsx";
+import ManagerView from "./views/manager/ManagerView.jsx";
+import ManagerHome from "./views/manager/ManagerHome.jsx";
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
