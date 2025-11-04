@@ -6,10 +6,15 @@ function App() {
 
   return (
     <>
-      <p>
-        This is the home page.
-      </p>
-      <NavLink to="other">Link to Other</NavLink>
+      <h2>Welcome to Exsellence!</h2>
+      <p>Please choose a link to visit:</p>
+      <ul>
+        <li><NavLink to="/kiosk">Kiosk View</NavLink></li>
+        <li><NavLink to="/cashier">Cashier View</NavLink></li>
+        <li><NavLink to="/kitchen">Kitchen View</NavLink></li>
+        <li><NavLink to="/manager">Manager View</NavLink></li>
+      </ul>
+      
     </>
   )
 }
