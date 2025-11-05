@@ -1,0 +1,21 @@
+
+body, html {
+    margin: 0;
+    padding: 0
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* Make sure this has the same specificity as .CollapsibleDetails.CollapsibleActive or higher! */
+/* Otherwise cascades will fail. */
+.menuPartCollapsible {
+    overflow: hidden;
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    flex-wrap: wrap;
+}
+

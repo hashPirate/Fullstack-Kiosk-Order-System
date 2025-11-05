@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0
+}
+
+* {
+    box-sizing: border-box;
+}
+
+nav * {
+    color: white;
+}
+
+#kioskTitle {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    font-family: 'Playwrite US Trad';
+    font-size: 24pt;
+}
+
+#weather {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 16pt;
+    font-family: Futura, Arial, sans-serif;
+}
+
+.kioskIcon {
+    font-size: 2.5em;
+}
+
+
+nav {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    background-color: crimson;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 20px 5px 20px;
+    align-items: center;
+}
+
+#navLeft {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+#navRight {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+
