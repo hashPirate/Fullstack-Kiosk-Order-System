@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import Collapsible from './Collapsible.jsx';
+import Collapsible from '../../utilities/Collapsible.jsx';
 import KioskMenuPart from './KioskMenuPart.jsx';
 import clsx from 'clsx';
 

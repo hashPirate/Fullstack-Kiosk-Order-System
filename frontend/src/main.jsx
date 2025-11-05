@@ -8,6 +8,7 @@ import BuildBowl from "./views/kiosk/BuildBowl.jsx";
 import BuildPlate from "./views/kiosk/BuildPlate.jsx";
 import BuildBigPlate from "./views/kiosk/BuildBigPlate.jsx";
 import BuildDrink from "./views/kiosk/BuildDrink.jsx";
+import SetLanguage from "./views/kiosk/SetLanguage.jsx";
 import CashierView from "./views/cashier/CashierView.jsx";
 import CashierHome from "./views/cashier/CashierHome.jsx";
 import KitchenView from "./views/kitchen/KitchenView.jsx";
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="build_plate" element={<BuildPlate />}></Route>
           <Route path="build_big_plate" element={<BuildBigPlate />}></Route>
           <Route path="build_drink" element={<BuildDrink />}></Route>
+          <Route path="language" element={<SetLanguage />}></Route>
         </Route>
         <Route path="/cashier" element={<CashierView />}>
           <Route index element={<CashierHome />}></Route>
