@@ -1,5 +1,5 @@
 
-import { NavLink, Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
 import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
 import { CiGlobe } from "react-icons/ci";

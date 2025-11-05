@@ -8,6 +8,17 @@ body, html {
     box-sizing: border-box;
 }
 
+#orderDetailsPage {
+    padding: 0px 20px 40px 20px;
+}
+
+#buildHeading {
+    font-family: Futura, Arial, sans-serif;
+    color: black;
+    font-size: 16pt;
+    font-weight: normal;
+    text-align: center;
+}
 
 /* Make sure this has the same specificity as .CollapsibleDetails.CollapsibleActive or higher! */
 /* Otherwise cascades will fail. */
@@ -22,6 +33,7 @@ body, html {
 #completeOrderButton {
     background-color: crimson;
     font-family: Futura, Arial, sans-serif;
+    font-size: 14pt;
     color: white;
     border-radius: 5px;
     padding: 10px;
@@ -44,6 +56,7 @@ body, html {
 #cancelOrderButton {
     background-color: rgb(229, 224, 224);
     font-family: Futura, Arial, sans-serif;
+    font-size: 14pt;
     color: black;
     border-radius: 5px;
     padding: 10px;
@@ -61,8 +74,6 @@ body, html {
 #cancelOrderButton:hover {
     cursor: pointer;
 }
-
-
 
 #orderButtons {
     display: flex;
