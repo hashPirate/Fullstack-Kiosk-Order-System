@@ -21,6 +21,7 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.21.2",
+    "express-session": "^1.18.2",
     "pg": "^8.8.0"
   },
   "devDependencies": {

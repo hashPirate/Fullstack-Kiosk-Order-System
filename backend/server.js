@@ -7,15 +7,20 @@ const path = require('path')
 const app = express();
 const port = 3000;
 
-// Create pool
-const pool = new Pool({
-    user: process.env.PSQL_USER,
-    host: process.env.PSQL_HOST,
-    database: process.env.PSQL_DATABASE,
-    password: process.env.PSQL_PASSWORD,
-    port: process.env.PSQL_PORT,
-    ssl: {rejectUnauthorized: false}
-});
+// Controllers
+const ingredientsController = require('./controllers/ingredients');
+const menuController = require('./controllers/menu');
+const ordersController = require('./controllers/orders');
+const sessionController = require('./controllers/session');
+const reportsController = require('./controllers/reports');
+const usersController = require('./controllers/users');
+
+app.use("/ingredients", ingredientsController);
+app.use("/menu", menuController);
+app.use("/orders", ordersController);
+app.use("/session", sessionController.router);
+app.use("/reports", reportsController);
+app.use("/users", usersController);
 
 // Add process hook to shutdown pool
 process.on('SIGINT', function() {
@@ -26,27 +31,9 @@ process.on('SIGINT', function() {
 
 app.set("view engine", "ejs");
 
-app.get('/', (req, res) => {
-    const data = {name: 'Mario'};
-    res.render('index', data);
-});
-
-app.get('/user', (req, res) => {
-    teammembers = []
-    pool
-        .query('SELECT * FROM teammembers;')
-        .then(query_res => {
-            for (let i = 0; i < query_res.rowCount; i++){
-                teammembers.push(query_res.rows[i]);
-            }
-            const data = {teammembers: teammembers};
-            console.log(teammembers);
-            res.render('user', data);        
-        });
-});
-
-
 app.listen(port, () => {
+
+
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
