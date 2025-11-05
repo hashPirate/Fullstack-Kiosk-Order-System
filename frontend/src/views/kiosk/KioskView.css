@@ -19,10 +19,11 @@ nav * {
 }
 
 #langDisplay {
-    font-size: 32pt;
+    font-size: 28pt;
     background-color: white;
-    min-width: 42pt;
+    min-width: 38pt;
     text-align: center;
+    vertical-align: center;
     border-radius: 10px;
 }
 
