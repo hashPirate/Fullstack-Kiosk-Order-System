@@ -5,6 +5,7 @@ import KioskMenuPart from './KioskMenuPart.jsx';
 
 import './OrderDetails.css';
 
+// NOTE: BuildBowl, BuildPlate, BuildBigPlate, and BuildDrink could be wrapped up into one thing, but idk if that would really be helpful.
 export default function BuildBowl() {
     // For now, part 1 stores the name of the selected part. We can probably do better in the future.
     const [part1, setPart1] = useState('');
@@ -12,37 +13,35 @@ export default function BuildBowl() {
     const navigate = useNavigate();
 
     const sel1Parts = [
-        {img: "/menu_part_images/beijing-beef.jpg", name: "Beijing Beef", price: "$0.00", callback: setPart1},
-        {img: "/menu_part_images/beijing-beef.jpg", name: "Broccoli Beef", price: "$0.00", callback: setPart1},
-        {img: "/menu_part_images/beijing-beef.jpg", name: "Teriyaki Chicken", price: "$0.00", callback: setPart1}
+        {img: "/menu_part_images/rice.jpg", name: "Rice", price: "$0.00"},
+        {img: "/menu_part_images/chow-mein.jpg", name: "Chow Mein", price: "$1.00"},
     ]
 
     const sel2Parts = [
-        {img: "/menu_part_images/egg-roll.jpg", name: "Egg Roll", price: "$1.00", callback: setPart2},
-        {img: "/menu_part_images/cream-cheese-rangoon.jpg", name: "Rangoon", price: "$1.00", callback: setPart2}
+        {img: "/menu_part_images/beijing-beef.jpg", name: "Beijing Beef", price: "$1.00"},
+        {img: "/menu_part_images/grilled-teriyaki-chicken.jpg", name: "Teriyaki Chicken", price: "$1.00"},
+        {img: "/menu_part_images/mushroom-chicken.jpg", name: "Mushroom Chicken", price: "$1.00"},
     ]
+
+    // Render a list of MenuParts, where each MenuPart is a JS object with img, name, price, callabck properties.
+    function renderMenuParts(menuPartsObj, selectionState, selectionSetter) {
+        return menuPartsObj.map((mpart, i) => {
+            if (mpart.name == selectionState) {
+                return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={selectionSetter} selected={true}/>
+            } else {
+                return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={selectionSetter} />
+            }
+        });
+    }
 
     return (
         <div id="kioskBuildBowl">
-            <Collapsible detailsClasses="menuPartCollapsible" summary="Select Part 1">
-                {   sel1Parts.map((mpart, i) => {
-                        if (mpart.name == part1) {
-                            return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={mpart.callback} selected={true}/>
-                        } else {
-                            return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={mpart.callback} />
-                        }
-                    })
-                }
+            <h3 id="buildHeading">Build your bowl.</h3>
+            <Collapsible detailsClasses="menuPartCollapsible" summary="Choose a Base">
+                {renderMenuParts(sel1Parts, part1, setPart1)}
             </Collapsible>
-            <Collapsible detailsClasses="menuPartCollapsible" summary="Select Part 2">
-                {   sel2Parts.map((mpart, i) => {
-                        if (mpart.name == part2) {
-                            return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={mpart.callback} selected={true}/>
-                        } else {
-                            return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={mpart.callback} />
-                        }
-                    })
-                }
+            <Collapsible detailsClasses="menuPartCollapsible" summary="Select First Side">
+                {renderMenuParts(sel2Parts, part2, setPart2)}
             </Collapsible>
 
             {/* DEBUG ONLY, delete this <p> later! */}
