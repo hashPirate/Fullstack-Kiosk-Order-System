@@ -19,3 +19,54 @@ body, html {
     flex-wrap: wrap;
 }
 
+#completeOrderButton {
+    background-color: crimson;
+    font-family: Futura, Arial, sans-serif;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    border-width: 0;
+    border-style: none;
+}
+
+#completeOrderButton:active {
+    background-color: rgb(184, 23, 55);
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#completeOrderButton:hover {
+    cursor: pointer;
+}
+
+
+#cancelOrderButton {
+    background-color: rgb(229, 224, 224);
+    font-family: Futura, Arial, sans-serif;
+    color: black;
+    border-radius: 5px;
+    padding: 10px;
+    border-width: 0;
+    border-style: none;
+}
+
+#cancelOrderButton:active {
+    background-color: rgb(203, 200, 200);
+    color: black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#cancelOrderButton:hover {
+    cursor: pointer;
+}
+
+
+
+#orderButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+

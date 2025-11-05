@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import Collapsible from './Collapsible.jsx';
 import KioskMenuPart from './KioskMenuPart.jsx';
 
@@ -8,6 +9,7 @@ export default function BuildBowl() {
     // For now, part 1 stores the name of the selected part. We can probably do better in the future.
     const [part1, setPart1] = useState('');
     const [part2, setPart2] = useState('');
+    const navigate = useNavigate();
 
     const sel1Parts = [
         {img: "/menu_part_images/beijing-beef.jpg", name: "Beijing Beef", price: "$0.00", callback: setPart1},
@@ -42,6 +44,15 @@ export default function BuildBowl() {
                     })
                 }
             </Collapsible>
+
+            {/* DEBUG ONLY, delete this <p> later! */}
+            <p>[DEBUG]: selected parts: {[part1, part2].filter(item => item !== "").join(", ")}</p>
+
+            <div id="orderButtons">
+                {/* For now, both buttons just take you back to the kiosk. */}
+                <button id="completeOrderButton" onClick={() => navigate("/kiosk")}>Complete Order</button>
+                <button id="cancelOrderButton" onClick={() => navigate("/kiosk")}>Cancel</button>
+            </div>
         </div>
     );
 }

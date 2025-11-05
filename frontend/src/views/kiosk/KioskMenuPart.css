@@ -9,7 +9,7 @@ body, html {
 }
 
 .kioskMenuPart.partSelected {
-    background-color: red;
+    background-color: crimson;
 }
 
 .kioskMenuPart {
