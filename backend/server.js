@@ -5,7 +5,7 @@ const path = require('path')
 
 // Create express app
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Create pool
 const pool = new Pool({
@@ -46,7 +46,7 @@ app.get('/user', (req, res) => {
 });
 
 
-app.listen(port, () => {
+app.listen(443, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
