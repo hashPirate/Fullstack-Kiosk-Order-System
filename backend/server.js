@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 // Create express app
 const app = express();
@@ -18,6 +19,14 @@ app.use("/orders", ordersController);
 app.use("/session", sessionController.router);
 app.use("/reports", reportsController);
 app.use("/users", usersController);
+
+// Serve React app
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Handle any other routes by serving the React app's index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+});
 
 // Add process hook to shutdown pool
 process.on('SIGINT', function() {
