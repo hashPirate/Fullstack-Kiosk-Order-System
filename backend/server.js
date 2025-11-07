@@ -13,12 +13,12 @@ const sessionController = require('./controllers/session');
 const reportsController = require('./controllers/reports');
 const usersController = require('./controllers/users');
 
-app.use("/ingredients", ingredientsController);
-app.use("/menu", menuController);
-app.use("/orders", ordersController);
-app.use("/session", sessionController.router);
-app.use("/reports", reportsController);
-app.use("/users", usersController);
+app.use("/api/ingredients", ingredientsController);
+app.use("/api/menu", menuController);
+app.use("/api/orders", ordersController);
+app.use("/api/session", sessionController.router);
+app.use("/api/reports", reportsController);
+app.use("/api/users", usersController);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
