@@ -1,11 +1,8 @@
 const express = require('express');
-const { Pool } = require('pg');
-const dotenv = require('dotenv').config();
-const path = require('path')
 
 // Create express app
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Controllers
 const ingredientsController = require('./controllers/ingredients');
@@ -32,8 +29,6 @@ process.on('SIGINT', function() {
 app.set("view engine", "ejs");
 
 app.listen(port, () => {
-
-
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
