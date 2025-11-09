@@ -103,6 +103,10 @@ class OrderManager extends DbModelManager {
         await this.db.query('UPDATE ingredients SET current_quantity = ingredients.current_quantity - (ingredients_to_menu_parts.quantity_cost * order_items.quantity) FROM menu_parts_to_order_items INNER JOIN order_items ON menu_parts_to_order_items.order_item_id = order_items.order_item_id INNER JOIN ingredients_to_menu_parts ON menu_parts_to_order_items.menu_part_id = ingredients_to_menu_parts.menu_part_id WHERE ingredients.ingredient_id = ingredients_to_menu_parts.ingredient_id AND order_items.order_id = $1', [order.getOrderID()]);
     }
 
+    async setIsCooked(order, is_cooked) {
+        await this.db.query('UPDATE orders SET is_cooked = $1 WHERE order_id = $2', [is_cooked, order.getOrderID()]);
+    }
+
     async getSalesByItem(startTime, endTime) {
         const query = `
             SELECT

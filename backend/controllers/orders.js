@@ -41,6 +41,17 @@ router.get('/uncooked', async (req, res) => {
     }
 });
 
+router.put('/:id/set-cooked', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { is_cooked } = req.body;
+        db.orderManager.setIsCooked(await db.orderManager.getOrderById(id), is_cooked);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.get('/past', async (req, res) => {
     try {
         const { limit, offset } = req.query;
