@@ -9,6 +9,7 @@ class Order extends DatabaseEntry {
         this.order_id = result.order_id;
         this.created_at = result.created_at;
         this.is_final = result.is_final;
+        this.is_cooked = result.is_cooked;
     }
 
     getPrimaryKeyValue() {
@@ -27,12 +28,16 @@ class Order extends DatabaseEntry {
         return this.is_final;
     }
 
+    getIsCooked() {
+        return this.is_cooked;
+    }
+
     async getOrderItems() {
         return this.db.orderManager.getOrderItems(this);
     }
 
     toString() {
-        return `Order ID: ${this.order_id}, Created At: ${this.created_at}, Is Final: ${this.is_final}`;
+        return `Order ID: ${this.order_id}, Created At: ${this.created_at}, Is Final: ${this.is_final}, Is Cooked: ${this.is_cooked}`;
     }
 
     toJSON() {
@@ -40,6 +45,7 @@ class Order extends DatabaseEntry {
             order_id: this.order_id,
             created_at: this.created_at,
             is_final: this.is_final,
+            is_cooked: this.is_cooked,
         };
     }
 }

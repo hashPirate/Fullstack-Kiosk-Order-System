@@ -32,6 +32,15 @@ router.get('/active', async (req, res) => {
     }
 });
 
+router.get('/uncooked', async (req, res) => {
+    try {
+        const orders = await db.orderManager.getUncookedOrders();
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.get('/past', async (req, res) => {
     try {
         const { limit, offset } = req.query;

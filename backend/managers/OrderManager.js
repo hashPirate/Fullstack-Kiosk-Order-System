@@ -30,6 +30,12 @@ class OrderManager extends DbModelManager {
         return result.rows.map(row => new Order(this.db, row));
     }
 
+    // [Donnell]: get all the orders that haven't been cooked yet.
+    async getUncookedOrders() {
+        const result = await this.db.query('SELECT * FROM orders WHERE is_cooked = FALSE ORDER BY created_at');
+        return result.rows.map(row => new Order(this.db, row));
+    }
+
     async getLatestOrdersAfterDateAndFinal(limit, date) {
         const result = await this.db.query('SELECT * FROM orders WHERE created_at::date >= $1 AND is_final = true ORDER BY created_at DESC LIMIT $2', [date, limit]);
         return result.rows.map(row => new Order(this.db, row));
