@@ -1,0 +1,77 @@
+/* NOTE: this CSS file is shared by PendingOrder and PendingOrderItem. */
+
+body, html {
+    margin: 0;
+    padding: 0
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h3 {
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-family: Futura, Arial, sans-serif;
+    font-weight: normal;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-family: Futura, Arial, sans-serif;
+    font-weight: normal;
+}
+
+.menuPart {
+    padding: 10px;
+    margin: 0 0 10px 20px;
+    background-color: azure;
+    border-radius: 10px;
+    font-size: 16pt;
+}
+
+.pendingOrderItem {
+    padding: 10px;
+    margin: 0 20px 10px 20px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+}
+
+.orderHeading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.orderIcon {
+    font-size: 28pt;
+}
+
+.orderIcon:hover {
+    cursor: pointer;
+    color: white;
+}
+
+.orderTitle {
+    font-size: 21pt;
+}
+
+.itemName {
+    padding: 5px;
+    font-size: 18pt;
+}
+
+.pendingOrder {
+    padding: 10px;
+    margin: 0 0 20px 0;
+    display: block;
+    padding: 0 0 10px 0;
+    background-color: lightblue;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
