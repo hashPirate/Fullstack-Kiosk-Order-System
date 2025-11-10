@@ -1,0 +1,47 @@
+
+body, html {
+    margin: 0;
+    padding: 0
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: rgb(56, 223, 235);
+}
+
+#kitchenNavTitle {
+    font-family: Futura, Arial, sans-serif;
+    font-size: 20pt;
+    font-weight: normal;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+
+#navLeft {
+
+}
+
+#navRight {
+
+}
+
+.navSpacer {
+    margin-right: 32pt;
+    margin-top: 32pt;
+}
+
+.navIcon, .navIcon * {
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-size: 32pt;
+}
