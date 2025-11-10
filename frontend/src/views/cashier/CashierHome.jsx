@@ -1,11 +1,14 @@
 
-import { NavLink, Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
+import ProgressBar from "./ProgressBar";
 
 export default function CashierHome() {
     return (
         <>
-            <p>This is the Cashier Home.</p>
-            <NavLink to="/">Back to Main Page</NavLink>
+            <div>
+                                       
+
+            </div> 
         </>
     );
 };

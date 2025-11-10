@@ -1,0 +1,13 @@
+#OrderView {
+    display: inline;
+}
+
+#orderTitle {
+    text-align: center;
+    background-color: white;
+}
+
+#totalAmount {
+    display: flex;
+}
+
