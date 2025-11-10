@@ -4,9 +4,9 @@ require('dotenv').config()     // [Donnell]: I wrote this because dotenv wasn't 
 
 // Create express app
 const app = express();
-const port = process.env.PORT || 3000;     // [Donnell]: there is a variable in the .env named DB_PORT. Was PORT a typo?
+const port = process.env.PORT || 3000;
 
-app.use(express.json());     // [Donnell]: I also had to add this for it to work. Idk why.
+// .use(express.json());     // [Donnell]: I also had to add this for it to work. Idk why.
 
 // Controllers
 const ingredientsController = require('./controllers/ingredients');
