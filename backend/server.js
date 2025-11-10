@@ -1,9 +1,12 @@
 const express = require('express');
 const path = require('path');
+require('dotenv').config()     // [Donnell]: I wrote this because dotenv wasn't loading for me. Feel free to refactor.
 
 // Create express app
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(express.json());     // [Donnell]: I also had to add this for it to work. Idk why.
 
 // Controllers
 const ingredientsController = require('./controllers/ingredients');
