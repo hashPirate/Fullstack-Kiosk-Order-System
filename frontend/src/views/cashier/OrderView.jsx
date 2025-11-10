@@ -14,7 +14,7 @@ export default function OrderView() {
 
                 <div id="totalAmount">
                     <p>Total: $</p>
-                    <p> moth sucks dick for this much: 0</p>
+                    <p> 10.99</p>
                 </div>
             </div>
 
