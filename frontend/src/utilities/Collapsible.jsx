@@ -1,4 +1,4 @@
-import './Collapsible.css';
+import styles from './Collapsible.module.css';
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
 import { useState } from 'react';
 import clsx from 'clsx';
@@ -10,11 +10,11 @@ export default function Collapsible(props) {
     const [collapsed, setCollapsed] = useState(true);
     return (
         <div className="CollapsibleComponent">
-            <div className={clsx("CollapsibleHeader", !collapsed && "UncollapsedHeader")} onClick={() => setCollapsed(!collapsed)}>
-                <span className="CollapsibleSummary">{props.summary}</span>
-                <IoArrowForwardCircleOutline className={clsx(!collapsed && "rotate90", "CollapsibleMarker")}/>
+            <div className={clsx(styles.CollapsibleHeader, !collapsed && styles.UncollapsedHeader)} onClick={() => setCollapsed(!collapsed)}>
+                <span className={styles.CollapsibleSummary}>{props.summary}</span>
+                <IoArrowForwardCircleOutline className={clsx(!collapsed && styles.rotate90, styles.CollapsibleMarker)}/>
             </div>
-            <div className={clsx("CollapsibleDetails", !collapsed && "UncollapsedDetails", !collapsed && props.detailsClasses)}>
+            <div className={clsx(styles.CollapsibleDetails, !collapsed && styles.UncollapsedDetails, !collapsed && props.detailsClasses)}>
                 {props.children}
             </div>
         </div>

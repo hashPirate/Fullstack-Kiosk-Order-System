@@ -1,23 +1,6 @@
 /* NOTE: this CSS file is shared by PendingOrder and PendingOrderItem. */
 
-body, html {
-    margin: 0;
-    padding: 0
-}
-
-* {
-    box-sizing: border-box;
-}
-
-h3 {
-    margin: 0;
-    padding: 0;
-    color: black;
-    font-family: Futura, Arial, sans-serif;
-    font-weight: normal;
-}
-
-p {
+.itemName {
     margin: 0;
     padding: 0;
     color: black;
@@ -26,6 +9,11 @@ p {
 }
 
 .menuPart {
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-family: Futura, Arial, sans-serif;
+    font-weight: normal;
     padding: 10px;
     margin: 0 0 10px 20px;
     background-color: azure;

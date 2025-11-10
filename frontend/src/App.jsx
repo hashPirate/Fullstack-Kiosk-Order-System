@@ -1,6 +1,6 @@
 // import { useState } from 'react'
 import { NavLink } from 'react-router-dom';
-import './App.css';
+import "./__global_styles__.css";
 
 function App() {
 

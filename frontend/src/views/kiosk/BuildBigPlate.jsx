@@ -1,4 +1,4 @@
-import OrderDetails from './EnterItemDetails.jsx';
+import OrderDetails from './OrderDetails.jsx';
 
 export default function BuildBigPlate() {
     const sidePrompts = [

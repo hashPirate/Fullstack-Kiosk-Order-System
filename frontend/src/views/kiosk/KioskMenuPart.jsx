@@ -1,6 +1,6 @@
 
 import { Link } from "react-router";
-import './KioskMenuPart.css';
+import styles from './KioskMenuPart.module.css';
 import clsx from 'clsx';
 
 // Props:
@@ -9,10 +9,10 @@ import clsx from 'clsx';
     // price -- string
 export default function KioskMenuItem(props) {
     return (
-        <div className={clsx("kioskMenuPart", props.selected && "partSelected")} onClick={() => props.selectionCallback(props.name)}>
-            <img className="kioskMenuPartImage" src={props.img} alt={props.name} />
-            <span className="menuPartName">{props.name}</span>
-            <span className="menuPartPrice">{props.price}</span>
+        <div className={clsx(styles.kioskMenuPart, props.selected && styles.partSelected)} onClick={() => props.selectionCallback(props.name)}>
+            <img className={styles.kioskMenuPartImage} src={props.img} alt={props.name} />
+            <span className={styles.menuPartName}>{props.name}</span>
+            <span className={styles.menuPartPrice}>{props.price}</span>
         </div>
     );
 }

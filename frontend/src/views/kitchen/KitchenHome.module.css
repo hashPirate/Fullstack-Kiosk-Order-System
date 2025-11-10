@@ -1,18 +1,9 @@
 
-body, html {
-    margin: 0;
-    padding: 0;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-#kitchenHome {
+.kitchenHome {
     padding: 2.5rem;
 }
 
-#placeholderTitle, #placeholderBody {
+.placeholderTitle, .placeholderBody {
     padding: 0;
     margin: 0;
     font-family: Futura, Arial, sans-serif;
@@ -20,11 +11,11 @@ body, html {
     text-align: center;
 }
 
-#placeholderTitle {
+.placeholderTitle {
     font-size: 20pt;
 }
 
-#placeholderBody {
+.placeholderBody {
     margin: 10pt 0 10pt 0;
     font-size: 12pt;
 }
