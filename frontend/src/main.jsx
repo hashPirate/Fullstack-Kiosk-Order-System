@@ -14,7 +14,12 @@ import CashierHome from "./views/cashier/CashierHome.jsx";
 import KitchenView from "./views/kitchen/KitchenView.jsx";
 import KitchenHome from "./views/kitchen/KitchenHome.jsx";
 import ManagerView from "./views/manager/ManagerView.jsx";
-import ManagerHome from "./views/manager/ManagerHome.jsx";
+import ManageServers from "./views/manager/views/ManageServers.jsx";
+import Inventory from "./views/manager/views/Inventory.jsx";
+import Reports from "./views/manager/views/Reports.jsx";
+import ManageMenuParts from "./views/manager/views/ManageMenuParts.jsx";
+import ManageMenuItems from "./views/manager/views/ManageMenuItems.jsx";
+import SalesReport from "./views/manager/views/SalesReport.jsx";
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
@@ -37,7 +42,13 @@ createRoot(document.getElementById('root')).render(
           <Route index element={<KitchenHome />}></Route>
         </Route>
         <Route path="/manager" element={<ManagerView />}>
-          <Route index element={<ManagerHome />}></Route>
+          <Route index element={<ManageServers />}></Route>
+          <Route path="servers" element={<ManageServers />}></Route>
+          <Route path="inventory" element={<Inventory />}></Route>
+          <Route path="reports" element={<Reports />}></Route>
+          <Route path="menu-parts" element={<ManageMenuParts />}></Route>
+          <Route path="menu-items" element={<ManageMenuItems />}></Route>
+          <Route path="sales-report" element={<SalesReport />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>
