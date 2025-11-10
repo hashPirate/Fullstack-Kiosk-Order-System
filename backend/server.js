@@ -1,20 +1,31 @@
 const express = require('express');
-const { Pool } = require('pg');
-const dotenv = require('dotenv').config();
-const path = require('path')
+const path = require('path');
 
 // Create express app
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Create pool
-const pool = new Pool({
-    user: process.env.PSQL_USER,
-    host: process.env.PSQL_HOST,
-    database: process.env.PSQL_DATABASE,
-    password: process.env.PSQL_PASSWORD,
-    port: process.env.PSQL_PORT,
-    ssl: {rejectUnauthorized: false}
+// Controllers
+const ingredientsController = require('./controllers/ingredients');
+const menuController = require('./controllers/menu');
+const ordersController = require('./controllers/orders');
+const sessionController = require('./controllers/session');
+const reportsController = require('./controllers/reports');
+const usersController = require('./controllers/users');
+
+app.use("/api/ingredients", ingredientsController);
+app.use("/api/menu", menuController);
+app.use("/api/orders", ordersController);
+app.use("/api/session", sessionController.router);
+app.use("/api/reports", reportsController);
+app.use("/api/users", usersController);
+
+// Serve React app
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Handle any other routes by serving the React app's index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
 // Add process hook to shutdown pool
@@ -26,27 +37,7 @@ process.on('SIGINT', function() {
 
 app.set("view engine", "ejs");
 
-app.get('/', (req, res) => {
-    const data = {name: 'Mario'};
-    res.render('index', data);
-});
-
-app.get('/user', (req, res) => {
-    teammembers = []
-    pool
-        .query('SELECT * FROM teammembers;')
-        .then(query_res => {
-            for (let i = 0; i < query_res.rowCount; i++){
-                teammembers.push(query_res.rows[i]);
-            }
-            const data = {teammembers: teammembers};
-            console.log(teammembers);
-            res.render('user', data);        
-        });
-});
-
-
-app.listen(443, () => {
+app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
 

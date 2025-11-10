@@ -16,12 +16,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon backend/server.js",
+    "heroku-prebuild": "npm install && cd frontend && npm install && npm run build"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.21.2",
+    "express-session": "^1.18.2",
     "pg": "^8.8.0"
   },
   "devDependencies": {
