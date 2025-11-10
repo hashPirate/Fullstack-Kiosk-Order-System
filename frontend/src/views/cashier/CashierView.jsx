@@ -12,6 +12,9 @@ export default function CashierView() {
     const [lang, setLang] = useState("English");
     const [progress, setProgress] = useState(0);
 
+
+
+
     return (
         <>
             <div id="CashierView">
@@ -27,8 +30,8 @@ export default function CashierView() {
                     <OrderView/>
 
                     <div id = "diffViews">
-                        <ProgressBar/>
-                        <Outlet context={{lang, setLang, progress}}/>
+                        <ProgressBar context={{progress}}/>
+                        <Outlet context={{lang, setLang, setProgress}}/>
                     </div>
 
                 </div>

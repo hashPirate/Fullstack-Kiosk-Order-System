@@ -1,12 +1,17 @@
 import { NavLink, Outlet } from "react-router";
+import { VscChromeClose } from "react-icons/vsc";
+
 import "./OrderPart.css";
 
-export default function OrderPart() {
+export default function OrderPart({partName, partPrice}) {
     return (
         <>
             <div id="part">
-                <p id="partName">Part 1 Name</p>
-                <p id="partPrice">$0.50</p>
+                <div>
+                    <VscChromeClose />
+                    <p id="partName">{partName}</p>
+                </div>
+                <p id="partPrice">${partPrice}</p>
             </div>
         </>
     );

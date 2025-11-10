@@ -6,9 +6,12 @@
     border-radius: 30px;
 
     margin: 10px 70px;
-
+    outline: 5px;
+    outline-color: black;
+    
 }
 
 #ProgressBar * {
     margin: 10px 10px;
+    white-space: nowrap;
 }

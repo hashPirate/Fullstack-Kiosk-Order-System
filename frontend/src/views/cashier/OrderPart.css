@@ -3,8 +3,22 @@
     margin: 0;
     padding: 0;
     gap: 20px;
-    justify-content: space-between;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-
-
+    height: auto;
+    width: 80%;
+    align-items: center;
+    justify-content: space-between;
 }
+#part * {
+    margin: 0;
+    padding: 0;
+}
+
+#part div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+}
+

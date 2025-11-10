@@ -2,17 +2,30 @@ import { NavLink, Outlet } from "react-router";
 import OrderPart from "./OrderPart";
 import "./Order.css";
 
-export default function Order() {
+
+
+export default function Order({itemName, itemPrice, orderParts}) {
+
+    // function partsList(parts) {
+    //     const items = parts.map((orderParts, i) =>
+    //         <OrderPart partName={}
+    //     );
+    // }
+
     return (
         <>  
             <div id="order">
                 <div id="header">
-                    <h1>Menu Item Name</h1>
-                    <h1>$10.99</h1>
+                    <h1>{itemName}</h1>
+                    <h1>$ {itemPrice} </h1>
                 </div>
 
                 <div id="partList">
-                    <OrderPart/>
+                    {
+                        orderParts.map((orderParts, i) => 
+                            <OrderPart partName= {orderParts.name} partPrice={orderParts.price}/>
+                        )
+                    }
                 </div>
             </div>
 

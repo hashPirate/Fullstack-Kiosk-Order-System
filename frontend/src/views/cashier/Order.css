@@ -1,4 +1,6 @@
-#order { 
+#order {
+    
+    /* display: inline-block;  */
     background-color: #E6E6E6;
     border-radius: 20px;
 }
@@ -15,4 +17,6 @@
 #partList {
     display: flex;
     margin: 0 0 0 5%;
+    display: inline-block;
+    width: 100%;
 }
