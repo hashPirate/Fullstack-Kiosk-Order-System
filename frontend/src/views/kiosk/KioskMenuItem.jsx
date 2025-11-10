@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import styles from "./KioskHome.module.css";
 
 // Props:
     // img -- string
@@ -7,10 +8,10 @@ import { Link } from "react-router";
 export default function KioskMenuItem(props) {
     return (
         <Link to={props.linkto}>
-            <div className="kioskMenuItem">
-                <img className="kioskMenuItemImage" src={props.img} alt={props.name} />
-                <span className="menuItemName">{props.name}</span>
-                <span className="menuItemPrice">{props.price}</span>
+            <div className={styles.kioskMenuItem}>
+                <img className={styles.kioskMenuItemImage} src={props.img} alt={props.name} />
+                <span className={styles.menuItemName}>{props.name}</span>
+                <span className={styles.menuItemPrice}>{props.price}</span>
             </div>
         </Link>
     );

@@ -7,7 +7,7 @@
     text-align: center;
 }
 
-#langButtonsDiv {
+.langButtonsDiv {
     display: flex;
     flex-direction: column;
     justify-content: center;

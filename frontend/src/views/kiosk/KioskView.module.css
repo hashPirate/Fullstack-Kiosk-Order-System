@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap');
 
-body, html {
-    margin: 0;
-    padding: 0
-}
-
-* {
-    box-sizing: border-box;
-}
-
-nav * {
+.kioskNav * {
     color: white;
+}
+
+.kioskNav {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    background-color: crimson;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 20px 5px 20px;
+    align-items: center;
 }
 
 .headerLink, .headerLink * {
@@ -18,7 +18,7 @@ nav * {
 
 }
 
-#langDisplay {
+.langDisplay {
     font-size: 28pt;
     background-color: white;
     min-width: 38pt;
@@ -27,7 +27,7 @@ nav * {
     border-radius: 10px;
 }
 
-#kioskTitle {
+.kioskTitle {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
     font-family: 'Playwrite US Trad';
@@ -35,7 +35,7 @@ nav * {
     text-decoration: none;
 }
 
-#weather {
+.weather {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -48,24 +48,15 @@ nav * {
 }
 
 
-nav {
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
-    background-color: crimson;
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 20px 5px 20px;
-    align-items: center;
-}
 
-#navLeft {
+.navLeft {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
 
-#navRight {
+.navRight {
     display: flex;
     justify-content: space-between;
     align-items: center;

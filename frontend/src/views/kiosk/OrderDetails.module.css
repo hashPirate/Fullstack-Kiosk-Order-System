@@ -1,18 +1,9 @@
 
-body, html {
-    margin: 0;
-    padding: 0
-}
-
-* {
-    box-sizing: border-box;
-}
-
-#orderDetailsPage {
+.orderDetailsPage {
     padding: 0px 20px 40px 20px;
 }
 
-#buildHeading {
+.buildHeading {
     font-family: Futura, Arial, sans-serif;
     color: black;
     font-size: 16pt;
@@ -30,7 +21,7 @@ body, html {
     flex-wrap: wrap;
 }
 
-#completeOrderButton {
+.completeOrderButton {
     background-color: crimson;
     font-family: Futura, Arial, sans-serif;
     font-size: 14pt;
@@ -41,19 +32,19 @@ body, html {
     border-style: none;
 }
 
-#completeOrderButton:active {
+.completeOrderButton:active {
     background-color: rgb(184, 23, 55);
     color: white;
     border-radius: 5px;
     padding: 10px;
 }
 
-#completeOrderButton:hover {
+.completeOrderButton:hover {
     cursor: pointer;
 }
 
 
-#cancelOrderButton {
+.cancelOrderButton {
     background-color: rgb(229, 224, 224);
     font-family: Futura, Arial, sans-serif;
     font-size: 14pt;
@@ -64,18 +55,18 @@ body, html {
     border-style: none;
 }
 
-#cancelOrderButton:active {
+.cancelOrderButton:active {
     background-color: rgb(203, 200, 200);
     color: black;
     border-radius: 5px;
     padding: 10px;
 }
 
-#cancelOrderButton:hover {
+.cancelOrderButton:hover {
     cursor: pointer;
 }
 
-#orderButtons {
+.orderButtons {
     display: flex;
     justify-content: center;
     gap: 20px;

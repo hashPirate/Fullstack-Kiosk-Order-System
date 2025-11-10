@@ -1,15 +1,5 @@
 
-body, html {
-    margin: 0;
-    padding: 0
-}
-
-* {
-    box-sizing: border-box;
-}
-
-
-nav {
+.kitchenNav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -17,7 +7,7 @@ nav {
     background-color: rgb(56, 223, 235);
 }
 
-#kitchenNavTitle {
+.kitchenNavTitle {
     font-family: Futura, Arial, sans-serif;
     font-size: 20pt;
     font-weight: normal;
@@ -26,11 +16,11 @@ nav {
     margin: 0;
 }
 
-#navLeft {
+.navLeft {
 
 }
 
-#navRight {
+.navRight {
 
 }
 

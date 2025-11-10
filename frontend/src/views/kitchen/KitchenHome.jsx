@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router";
 import LoremIpsum from '../../utilities/LoremIpsum.jsx';
 import { useState } from 'react';
 
-import "./KitchenHome.css";
+import styles from "./KitchenHome.module.css";
 import PendingOrder from "./PendingOrder.jsx";
 
 const exampleOrdersTemplate = [
@@ -77,15 +77,15 @@ export default function KitchenHome() {
             // Otherwise, render this
             return (
                 <>
-                    <h3 id="placeholderTitle">You're all caught up!</h3>
-                    <p id="placeholderBody">Check back soon...</p>
+                    <h3 className={styles.placeholderTitle}>You're all caught up!</h3>
+                    <p className={styles.placeholderBody}>Check back soon...</p>
                 </>
             );
         }
    } 
 
     return (
-        <div id="kitchenHome">
+        <div className={styles.kitchenHome}>
             { renderOrders() }
         </div>
     );

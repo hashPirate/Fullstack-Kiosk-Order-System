@@ -4,11 +4,11 @@ import Collapsible from '../../utilities/Collapsible.jsx';
 import KioskMenuPart from './KioskMenuPart.jsx';
 import clsx from 'clsx';
 
-import './EnterItemDetails.css';
+import styles from './OrderDetails.module.css';
 
 // sidePrompts: JS object of prompts and possible side choices
 // setSelections: callback for OrderDetails to set the selections
-export default function OrderDetails({sidePrompts, setSelectionsCallback, itemName}) {
+export default function OrderDetails({sidePrompts, itemName}) {
     const [selections, setSelections] = useState(new Array(sidePrompts.length).fill(""))
     const navigate = useNavigate();
 
@@ -33,24 +33,24 @@ export default function OrderDetails({sidePrompts, setSelectionsCallback, itemNa
 
     function renderCollapsibles() {
         return sidePrompts.map((sp, spNum) =>
-            <Collapsible key={spNum} detailsClasses="menuPartCollapsible" summary={sp.prompt}>
+            <Collapsible key={spNum} detailsClasses={styles.menuPartCollapsible} summary={sp.prompt}>
                 {renderMenuParts(sp.menuParts, spNum)}
             </Collapsible>
         );
     }
 
     return (
-        <div id="orderDetailsPage" className={itemName}>
-            <h3 id="buildHeading">Build your {itemName}.</h3>
+        <div className={clsx(styles.orderDetailsPage, styles.itemName)}>
+            <h3 className={styles.buildHeading}>Build your {itemName}.</h3>
             { renderCollapsibles() }
 
             {/* DEBUG ONLY, delete this <p> later! */}
             <p>[DEBUG]: selected parts: {selections.filter(item => item !== "").join(", ")}</p>
 
-            <div id="orderButtons">
+            <div className={styles.orderButtons}>
                 {/* For now, both buttons just take you back to the kiosk. */}
-                <button id="completeOrderButton" onClick={() => navigate("/kiosk")}>Order Item</button>
-                <button id="cancelOrderButton" onClick={() => navigate("/kiosk")}>Cancel</button>
+                <button className={styles.completeOrderButton} onClick={() => navigate("/kiosk")}>Order Item</button>
+                <button className={styles.cancelOrderButton} onClick={() => navigate("/kiosk")}>Cancel</button>
             </div>
         </div>
     );

@@ -7,7 +7,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
 
-import "./KioskView.css";
+import styles from "./KioskView.module.css";
 
 const langIcons = {
     "English": "🇬🇧",
@@ -53,15 +53,15 @@ export default function KioskView() {
 
     return (
         <>
-            <nav>
-                <div id="navLeft">
-                    <Link to="language" className="headerLink"><CiGlobe className="kioskIcon"/></Link>
-                    <span id="langDisplay">{langIcons[lang]}</span>
+            <nav className={styles.kioskNav}>
+                <div className={styles.navLeft}>
+                    <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon}/></Link>
+                    <span className={styles.langDisplay}>{langIcons[lang]}</span>
                 </div>
-                <Link to="/kiosk" className="headerLink"><h1 id="kioskTitle">Ex-sell-ence</h1></Link>
-                <div id="navRight">
-                    <div id="weather"><TiWeatherCloudy className="kioskIcon"/> <span id="weatherText">{temp}</span></div>
-                    <LuShoppingCart className="kioskIcon"/>
+                <Link to="/kiosk" className={styles.headerLink}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
+                <div className={styles.navRight}>
+                    <div className={styles.weather}><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
+                    <LuShoppingCart className={styles.kioskIcon}/>
                 </div>
             </nav>
             <Outlet context={{lang, setLang}} />
