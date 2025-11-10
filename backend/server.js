@@ -6,7 +6,7 @@ require('dotenv').config()     // [Donnell]: I wrote this because dotenv wasn't 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// .use(express.json());     // [Donnell]: I also had to add this for it to work. Idk why.
+app.use(express.json());     // [Donnell]: I also had to add this for it to work. Idk why.
 
 // Controllers
 const ingredientsController = require('./controllers/ingredients');
