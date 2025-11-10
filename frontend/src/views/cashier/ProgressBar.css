@@ -1,0 +1,17 @@
+#ProgressBar {
+    display: flex;
+    justify-content: space-between;
+    gap: 300px;
+    background-color: #E6E6E6;
+    border-radius: 30px;
+
+    margin: 10px 70px;
+    outline: 5px;
+    outline-color: black;
+    
+}
+
+#ProgressBar * {
+    margin: 10px 10px;
+    white-space: nowrap;
+}

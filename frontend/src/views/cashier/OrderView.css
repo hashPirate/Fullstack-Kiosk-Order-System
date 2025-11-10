@@ -1,0 +1,20 @@
+#OrderView {
+    margin-top: 2px;
+    margin-left: 2px;
+    display: inline;
+    width: 100%;
+    height: calc(95vh - 7px);
+    outline: 2px;
+    outline-color: black;
+    outline-style: solid;
+}
+
+#orderTitle {
+    text-align: center;
+    background-color: white;
+}
+
+#totalAmount {
+    display: flex;
+}
+
