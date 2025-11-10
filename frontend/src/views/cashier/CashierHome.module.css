@@ -1,0 +1,11 @@
+#wideDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 85%;
+    margin: 5%;
+}
+
+#wideDiv div {
+    display: block;
+}

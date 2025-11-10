@@ -19,11 +19,11 @@ export default function OrderView() {
     return (
         <>
             <div id={styles.OrderView}>
-                <h1 id={styles.orderTitle}>Order</h1>
+                <div>
+                    <h1 id={styles.orderTitle}>Order</h1>
 
-                <Order itemName = "Kung Pao Chicken" itemPrice= "5.99" orderParts={example}/>
-
-                {/* <Order itemName = "Chinese Fried Chicken" itemPrice = "6.99"/> */}
+                    <Order itemName = "Kung Pao Chicken" itemPrice= "5.99" orderParts={example}/>
+                </div>
 
                 <div id={styles.totalAmount}>
                     <p>Total: $</p>
