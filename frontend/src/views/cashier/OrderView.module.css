@@ -1,4 +1,4 @@
-#OrderView {
+.OrderView {
     margin-top: 2px;
     margin-left: 2px;
     display: inline;
@@ -9,12 +9,11 @@
     outline-style: solid;
 }
 
-#orderTitle {
+.orderTitle {
     text-align: center;
     background-color: white;
 }
 
-#totalAmount {
+.totalAmount {
     display: flex;
 }
-

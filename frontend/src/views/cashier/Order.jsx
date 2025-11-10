@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router";
 import OrderPart from "./OrderPart";
-import "./Order.css";
+import styles from "./Order.module.css";
 
 
 
@@ -14,13 +14,13 @@ export default function Order({itemName, itemPrice, orderParts}) {
 
     return (
         <>  
-            <div id="order">
-                <div id="header">
+            <div className={styles.order}>
+                <div className={styles.header}>
                     <h1>{itemName}</h1>
                     <h1>$ {itemPrice} </h1>
                 </div>
 
-                <div id="partList">
+                <div className={styles.partList}>
                     {
                         orderParts.map((orderParts, i) => 
                             <OrderPart partName= {orderParts.name} partPrice={orderParts.price}/>

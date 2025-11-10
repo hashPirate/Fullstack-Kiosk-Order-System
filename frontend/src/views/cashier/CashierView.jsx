@@ -1,9 +1,9 @@
 import { Link, Outlet } from "react-router";
 import { useEffect, useState } from "react";
-import { SlArrowLeft } from "react-icons/sl";
-import { SlGlobe } from "react-icons/sl";
+import { IoArrowBack } from "react-icons/io5";
+import { CiGlobe } from "react-icons/ci";
 
-import "./CashierView.css"
+import styles from "./CashierView.module.css"
 import OrderView from "./OrderView";
 import ProgressBar from "./ProgressBar";
 
@@ -17,19 +17,19 @@ export default function CashierView() {
 
     return (
         <>
-            <div id="CashierView">
-                <nav>
-                    <Link to="/"><h1><SlArrowLeft /></h1></Link>               
-                    <Link to="/cashier"><h1 id= "cashierTitle"> New Order </h1></Link>       
-                    <Link to="/"><h1> <SlGlobe /> </h1></Link>
+            <div className={styles.CashierView}>
+                <nav className={styles.nav}>
+                    <Link to="/"><IoArrowBack className={styles.navIcon}/></Link>               
+                    <h1 className= {styles.cashierTitle}> New Order </h1>       
+                    <Link to="language"><CiGlobe className={styles.navIcon}/></Link>
                     
                 </nav>
                 
 
-                <div id="mainDiv">                
+                <div className={styles.mainDiv}>                
                     <OrderView/>
 
-                    <div id = "diffViews">
+                    <div className = {styles.diffViews}>
                         <ProgressBar context={{progress}}/>
                         <Outlet context={{lang, setLang, setProgress}}/>
                     </div>
