@@ -1,0 +1,41 @@
+
+.CashierView nav * {
+    color: white;
+    margin: 0;
+    padding: 2px 0;
+    height: auto;
+}
+
+.navIcon, .navIcon * {
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-size: 32pt;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background-color: rgb(60, 199, 209);
+}
+
+.cashierTitle {
+    font-family: Futura, Arial, sans-serif;
+    font-size: 20pt;
+    font-weight: normal;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+
+.mainDiv {
+  display: flex;
+}
+
+.diffViews {
+  flex-grow: 1;
+  flex-basis: 100%;
+
+}

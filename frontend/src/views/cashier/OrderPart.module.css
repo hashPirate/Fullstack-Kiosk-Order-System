@@ -1,4 +1,4 @@
-#part {
+.part {
     display: flex;
     margin: 0;
     padding: 0;
@@ -9,12 +9,12 @@
     align-items: center;
     justify-content: space-between;
 }
-#part * {
+.part * {
     margin: 0;
     padding: 0;
 }
 
-#part div {
+.part div {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -22,3 +22,10 @@
     padding: 0;
 }
 
+.partName {
+    /* Add any specific styles for partName here */
+}
+
+.partPrice {
+    /* Add any specific styles for partPrice here */
+}

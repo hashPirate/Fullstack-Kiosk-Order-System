@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router";
 import Order from "./Order";
-import "./OrderView.css";
+import styles from "./OrderView.module.css";
 
 export default function OrderView() {
 
@@ -18,14 +18,14 @@ export default function OrderView() {
 
     return (
         <>
-            <div id="OrderView">
-                <h1 id="orderTitle">Order</h1>
+            <div className={styles.OrderView}>
+                <h1 className={styles.orderTitle}>Order</h1>
 
                 <Order itemName = "Kung Pao Chicken" itemPrice= "5.99" orderParts={example}/>
 
                 {/* <Order itemName = "Chinese Fried Chicken" itemPrice = "6.99"/> */}
 
-                <div id="totalAmount">
+                <div className={styles.totalAmount}>
                     <p>Total: $</p>
                     <p> 10.99</p>
                 </div>
