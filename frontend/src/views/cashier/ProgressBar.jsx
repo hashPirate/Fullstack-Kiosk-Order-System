@@ -1,13 +1,13 @@
 import { Link, Outlet } from "react-router";
 import { useEffect, useState } from "react";
 
-import "./ProgressBar.css";
+import styles from "./ProgressBar.module.css";
 
 export default function ProgressBar() {
 
     return (
         <>
-            <div id="ProgressBar">
+            <div id={styles.ProgressBar}>
                 <p>Menu Item</p>
                 <p>Menu Parts</p>
                 <p>Drinks</p>
