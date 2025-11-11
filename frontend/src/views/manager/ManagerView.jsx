@@ -5,8 +5,10 @@ import { LuShoppingCart } from "react-icons/lu";
 import { CiGlobe } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
+import clsx from 'clsx';
+import { IoMdArrowBack } from "react-icons/io";
 
-import "./ManagerView.css";
+import styles from "./ManagerView.module.css";
 
 const langIcons = {
     "English": "🇬🇧",
@@ -51,34 +53,34 @@ export default function ManagerView() {
 
     return (
         <>
-            <nav>
-                <div id="navLeft">
-                    <CiGlobe className="managerIcon"/>
-                    <span id="langDisplay">{langIcons[lang]}</span>
+            <nav className={styles.managerNav}>
+                <div className={styles.navLeft}>
+                    {/* No need for language switching on Manager View... for now. */}
+                    <Link to="/"><IoMdArrowBack className={styles.managerIcon}/></Link>
                 </div>
-                <Link to="/manager" className="headerLink"><h1 id="managerTitle">Ex-sell-ence</h1></Link>
-                <div id="navRight">
-                    <div id="weather"><TiWeatherCloudy className="managerIcon"/> <span id="weatherText">{temp}</span></div>
-                    <LuShoppingCart className="managerIcon"/>
+                <Link to="/manager" className={styles.headerLink}><h1 className={styles.managerTitle}>Ex-sell-ence Manager</h1></Link>
+                <div className={styles.navRight}>
+                    <div className={styles.weather}><TiWeatherCloudy className={styles.managerIcon}/> <span className={styles.weatherText}>{temp}</span></div>
+                    {/* No need for cart on Manager View either. */}
                 </div>
             </nav>
-            <div id="managerTabs">
-                <NavLink to="/manager/servers" className={({isActive}) => `managerTab ${isActive || location.pathname === '/manager' ? 'active' : ''}`}>
+            <div className={styles.managerTabs}>
+                <NavLink to="/manager/servers" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     servers
                 </NavLink>
-                <NavLink to="/manager/inventory" className={({isActive}) => `managerTab ${isActive ? 'active' : ''}`}>
+                <NavLink to="/manager/inventory" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     inventory
                 </NavLink>
-                <NavLink to="/manager/reports" className={({isActive}) => `managerTab ${isActive ? 'active' : ''}`}>
+                <NavLink to="/manager/reports" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     reports
                 </NavLink>
-                <NavLink to="/manager/menu-parts" className={({isActive}) => `managerTab ${isActive ? 'active' : ''}`}>
+                <NavLink to="/manager/menu-parts" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     menu-parts
                 </NavLink>
-                <NavLink to="/manager/menu-items" className={({isActive}) => `managerTab ${isActive ? 'active' : ''}`}>
+                <NavLink to="/manager/menu-items" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     menu-items
                 </NavLink>
-                <NavLink to="/manager/sales-report" className={({isActive}) => `managerTab ${isActive ? 'active' : ''}`}>
+                <NavLink to="/manager/sales-report" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     sales-report
                 </NavLink>
             </div>

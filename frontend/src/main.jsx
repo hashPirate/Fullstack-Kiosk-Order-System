@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import KioskView from "./views/kiosk/KioskView.jsx";
 import KioskHome from "./views/kiosk/KioskHome.jsx";
@@ -42,7 +42,7 @@ createRoot(document.getElementById('root')).render(
           <Route index element={<KitchenHome />}></Route>
         </Route>
         <Route path="/manager" element={<ManagerView />}>
-          <Route index element={<ManageServers />}></Route>
+          <Route index element={<Navigate to="/manager/servers" replace />}></Route>
           <Route path="servers" element={<ManageServers />}></Route>
           <Route path="inventory" element={<Inventory />}></Route>
           <Route path="reports" element={<Reports />}></Route>

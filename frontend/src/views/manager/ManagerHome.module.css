@@ -1,18 +1,11 @@
-body, html {
-    margin: 0;
-    padding: 0
-}
-
-* {
-    box-sizing: border-box;
-}
-#managerTabs {
+.managerTabs {
     display: flex;
     gap: 1.25rem;
     padding: 1.25rem;
     flex-wrap: wrap;
 }
-#managerTabs * {
+
+.managerTabs * {
     color: black;
     text-decoration: none;
 }

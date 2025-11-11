@@ -1,19 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap');
-body, html {
-    margin: 0;
-    padding: 0
-}
-
-* {
-    box-sizing: border-box;
-}
-nav * {
+.managerNav * {
     color: white;
 }
+
 .headerLink, .headerLink * {
     text-decoration: none;
 }
-#langDisplay {
+
+.langDisplay {
     font-size: 28pt;
     background-color: white;
     min-width: 38pt;
@@ -21,55 +14,64 @@ nav * {
     vertical-align: center;
     border-radius: 10px;
 }
-#managerTitle {
+
+.managerTitle {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
     font-family: 'Playwrite US Trad';
     font-size: 24pt;
     text-decoration: none;
 }
-#weather {
+
+.weather {
     display: flex;
     align-items: center;
     gap: 5px;
     font-size: 16pt;
     font-family: Futura, Arial, sans-serif;
 }
+
 .managerIcon {
     font-size: 2.5em;
 }
+
 nav {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
-    background-color: #d93025;
+    background-color: crimson;
     display: flex;
     justify-content: space-between;
     padding: 5px 20px 5px 20px;
     align-items: center;
 }
-#navLeft {
+
+.navLeft {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
-#navRight {
+
+.navRight {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
-#managerTabs {
+
+.managerTabs {
     display: flex;
     gap: 1.25rem;
     padding: 1.25rem;
     flex-wrap: wrap;
     background-color: #f5f5f5;
 }
-#managerTabs * {
+
+.managerTabs * {
     color: black;
     text-decoration: none;
 }
+
 .managerTab {
     padding: 1rem 2rem;
     background-color: whitesmoke;
@@ -81,10 +83,12 @@ nav {
     cursor: pointer;
     transition: box-shadow 0.2s ease-out 0s;
 }
+
 .managerTab:hover {
     box-shadow: none;
     transition: box-shadow 0.2s ease-out 0s;
 }
+
 .managerTab.active {
     background-color: crimson;
     color: white;
