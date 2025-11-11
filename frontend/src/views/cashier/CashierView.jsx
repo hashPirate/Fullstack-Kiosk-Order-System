@@ -1,9 +1,7 @@
 import { Link, Outlet } from "react-router";
 import { useEffect, useState } from "react";
-import { IoArrowBack } from "react-icons/io5";
 import { SlArrowLeft } from "react-icons/sl";
-import {SlGlobe } from "react-icons/sl";
-import { CiGlobe } from "react-icons/ci";
+import { SlGlobe } from "react-icons/sl";
 
 import styles from "./CashierView.module.css"
 import OrderView from "./OrderView";

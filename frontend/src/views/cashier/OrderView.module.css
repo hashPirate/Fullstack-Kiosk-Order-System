@@ -1,4 +1,4 @@
-.OrderView {
+#OrderView {
     margin-top: 2px;
     margin-left: 2px;
     width: 100%;
@@ -13,11 +13,12 @@
     flex-direction: column;   
 }
 
-.orderTitle {
+#orderTitle {
     text-align: center;
     background-color: white;
 }
 
-.totalAmount {
+#totalAmount {
     display: flex;
 }
+
