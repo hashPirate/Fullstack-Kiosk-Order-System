@@ -5,10 +5,14 @@ html {
     background-color: white;
 }
 
+#CashierView {
+  height: 100vh;
+}
+
 #CashierView nav * {
     color: white;
     margin: 0;
-    padding: 2px 0;
+    padding: 0;
     height: auto;
 }
 
@@ -26,7 +30,7 @@ html {
 #CashierView nav {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
-    background-color: lightsteelblue;
+    background-color: #0EC3DF;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -43,6 +47,7 @@ html {
 
 #mainDiv {
   display: flex;
+  height: 95%;
 }
 
 #diffViews {
