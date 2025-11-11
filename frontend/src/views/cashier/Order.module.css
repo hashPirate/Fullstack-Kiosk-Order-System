@@ -1,9 +1,11 @@
 
 #order {
     
-    /* display: inline-block;  */
     background-color: #E6E6E6;
     border-radius: 20px;
+
+    margin: 5%;
+   
 }
 
 #header {

@@ -12,26 +12,37 @@ export default function CashierView() {
     const [lang, setLang] = useState("English");
     const [progress, setProgress] = useState(0);
 
+    // const [orders, setOrders] = useState([{
+    //     menuName: "Plate",
+    //     menuPrice: 9.00,
+    //     menuParts: [{name: "Chicken", price: 10.99}, {name: "Beef", price: 10.99}],
+    // }])    
+    
+    const [orders, setOrders] = useState([])
 
+    const [newOrder, setNewOrder] = useState({})
+
+    const [total, setTotal] = useState(0);
 
 
     return (
         <>
-            <div className={styles.CashierView}>
-                <nav className={styles.nav}>
-                    <Link to="/"><IoArrowBack className={styles.navIcon}/></Link>               
-                    <h1 className= {styles.cashierTitle}> New Order </h1>       
-                    <Link to="language"><CiGlobe className={styles.navIcon}/></Link>
+            <div id={styles.CashierView}>
+                <nav>
+                    <Link to="/"><h1><SlArrowLeft /></h1></Link>               
+                    <Link to="/cashier"><h1 id= {styles.cashierTitle}> New Order </h1></Link>       
+                    <Link to="/"><h1> <SlGlobe /> </h1></Link>
                     
                 </nav>
                 
 
-                <div className={styles.mainDiv}>                
-                    <OrderView/>
+                <div id={styles.mainDiv}>                
+                    <OrderView total={total} setTotal={setTotal} orders={orders} setOrders={setOrders} newOrder = {newOrder} setNewOrder={setNewOrder}/>
 
-                    <div className = {styles.diffViews}>
+
+                    <div id = {styles.diffViews}>
                         <ProgressBar context={{progress}}/>
-                        <Outlet context={{lang, setLang, setProgress}}/>
+                        <Outlet context={[total, setTotal, lang, progress, setProgress, orders, setOrders, newOrder, setNewOrder]}/>
                     </div>
 
                 </div>

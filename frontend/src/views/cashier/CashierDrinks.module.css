@@ -1,0 +1,56 @@
+#wideDiv {
+    display: flex;
+    width: 100%;
+}
+
+#ingredients {
+    display: flexbox;
+    margin-top: 5%;
+    justify-content: space-around;
+    gap: 200px 20px;
+    width: 100%;
+
+}
+
+#exitArrow {
+
+    background-color: #CC6677;
+    border-radius: 30%;
+    margin: 2vw;
+    padding-top: 10px;
+
+    width: 6vw;
+    height: 6vw;
+}
+
+#exitArrow * * {
+    width: 5vw;
+    height: 5vw;
+
+    text-decoration: none;
+
+    color: white;
+
+}
+
+#container {
+    position: relative;
+}
+
+
+#next {
+    background-color: #AA4499;
+    /* border-radius: 20%; */
+    display: flex;
+    color: white;
+
+    position: absolute;
+
+    top: 90%;
+    left: 80%;
+
+    width: 20%;
+    height: 10%;
+    justify-content: center;
+    align-items: center;
+}

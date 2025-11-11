@@ -1,12 +1,16 @@
 .OrderView {
     margin-top: 2px;
     margin-left: 2px;
-    display: inline;
     width: 100%;
-    height: calc(95vh - 7px);
+    min-height: 100%;
+    height: fit-content;
     outline: 2px;
     outline-color: black;
     outline-style: solid;
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;   
 }
 
 .orderTitle {

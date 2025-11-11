@@ -3,15 +3,21 @@ import { VscChromeClose } from "react-icons/vsc";
 
 import styles from "./OrderPart.module.css";
 
-export default function OrderPart({partName, partPrice}) {
+export default function OrderPart({partName, partPrice, newOrder, setNewOrder, onClick, xVisable}) {
+
+
+
     return (
         <>
-            <div className={styles.part}>
-                <div>
-                    <VscChromeClose />
-                    <p className={styles.partName}>{partName}</p>
+            <div id={styles.part}>
+                <div>   
+                    {
+                        xVisable &&
+                        <VscChromeClose onClick={onClick}/>
+                    }
+                    <p id={styles.partName}>{partName}</p>
                 </div>
-                <p className={styles.partPrice}>${partPrice}</p>
+                <p id={styles.partPrice}>${partPrice}</p>
             </div>
         </>
     );

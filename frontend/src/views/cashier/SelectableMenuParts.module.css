@@ -1,0 +1,16 @@
+.container {
+    display: inline-block;
+    text-align: center;
+    border-radius: 10%;
+    width: 20vw;
+    height: fit-content;
+    text-decoration: none;
+}
+
+.container * {
+    margin: 5%;
+    max-width: 80%;
+    border-radius: 5%;
+    text-decoration: none;
+    color: black;
+}

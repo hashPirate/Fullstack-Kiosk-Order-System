@@ -1,7 +1,7 @@
 .ProgressBar {
     display: flex;
     justify-content: space-between;
-    gap: 300px;
+    gap: 30vw;
     background-color: #E6E6E6;
     border-radius: 30px;
 

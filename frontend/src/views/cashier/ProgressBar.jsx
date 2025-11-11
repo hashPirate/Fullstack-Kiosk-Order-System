@@ -7,7 +7,7 @@ export default function ProgressBar() {
 
     return (
         <>
-            <div className={styles.ProgressBar}>
+            <div id={styles.ProgressBar}>
                 <p>Menu Item</p>
                 <p>Menu Parts</p>
                 <p>Drinks</p>

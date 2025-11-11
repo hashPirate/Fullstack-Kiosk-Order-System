@@ -1,40 +1,56 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
 
-.CashierView nav * {
+#CashierView {
+  height: 100vh;
+}
+
+#CashierView nav * {
     color: white;
     margin: 0;
-    padding: 2px 0;
+    padding: 0;
     height: auto;
 }
 
-.navIcon, .navIcon * {
-    padding: 0;
-    margin: 0;
-    color: white;
-    font-size: 32pt;
-}
-
-.nav {
+#CashierView nav a {
+    text-decoration: none;
     display: flex;
     align-items: center;
+}
+
+#CashierView nav h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+#CashierView nav {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    background-color: #0EC3DF;
+    display: flex;
     justify-content: space-between;
-    padding: 12px;
-    background-color: rgb(60, 199, 209);
+    align-items: center;
 }
 
-.cashierTitle {
-    font-family: Futura, Arial, sans-serif;
-    font-size: 20pt;
-    font-weight: normal;
-    color: white;
-    padding: 0;
-    margin: 0;
+#cashierTitle {
+  line-height: 1;
 }
 
-.mainDiv {
+#CashierView nav svg {
+  vertical-align: middle;
+  font-size: 2rem;
+}
+
+#mainDiv {
   display: flex;
+  height: 95%;
 }
 
-.diffViews {
+#diffViews {
   flex-grow: 1;
   flex-basis: 100%;
 
