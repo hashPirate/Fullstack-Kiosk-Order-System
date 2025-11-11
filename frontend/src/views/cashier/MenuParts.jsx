@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useOutletContext } from "react-router";
 import styles from "./MenuParts.module.css";
 import { SlArrowLeft } from "react-icons/sl";
 import SelectableMenuParts from "./SelectableMenuParts";
@@ -9,40 +9,53 @@ export default function MenuParts() {
         {
             color: "#332288", 
             img: "/menu_part_images/beijing-beef.jpg",
-            name: "Menu Item", 
-            price: 0.00
+            name: "Rice Item", 
+            price: 1.00
         },
         {
             color: "#117733", 
             img: "/menu_part_images/beijing-beef.jpg",
-            name: "Menu Item", 
-            price: 0.00
+            name: "Chicken Item", 
+            price: 2.00
         }, 
 
         {    color: "#44AA99", 
             img: "/menu_part_images/beijing-beef.jpg",
-            name: "Menu Item", 
-            price: 0.00
+            name: "Beef Item", 
+            price: 3.00
         }, 
 
         {    color: "#88CCEE", 
             img: "/menu_part_images/beijing-beef.jpg",
-            name: "Menu Item", 
-            price: 0.00
+            name: "Other Item", 
+            price: 4.00
         }, 
 
         {    color: "#DDCC77", 
             img: "/menu_part_images/beijing-beef.jpg",
             name: "Menu Item", 
-            price: 0.00
+            price: 5.00
         }
     ]
+
+    const [total, setTotal, lang, progress, setProgress, orders, setOrders, newOrder, setNewOrder] = useOutletContext(); 
+
 
     return (
         <>
             <div id={styles.wideDiv}>
                 <div id={styles.exitArrow}>
-                    <Link to={"/cashier"}>
+                    <Link to={"/cashier"} onClick={
+                        () => {
+
+                            let menuPartsTotal = 0;
+                            for (i in newOrder.menuParts) {
+                                menuPartsTotal += i.price;
+                            }
+                            setTotal(prevTotal => (prevTotal - newOrder.menuPrice - menuPartsTotal));
+                            setNewOrder({});
+                        }
+                    }>
                         <SlArrowLeft />
                     </Link>
 
@@ -53,7 +66,22 @@ export default function MenuParts() {
                     <div id={styles.ingredients}>
                         {
                             ingredientList.map((ingre, i) =>
-                                <SelectableMenuParts order={ingre}/>
+                                <SelectableMenuParts order={ingre} onClick={
+                                    () => {
+
+                                        setTotal(prevTotal => (prevTotal + ingre.price));
+                                        
+                                        setNewOrder(previousState => 
+                                        ({
+                                            ...previousState,
+                                            menuParts: [
+                                                ...(previousState?.menuParts ?? []),
+                                                {name: ingre.name, price: ingre.price}
+
+                                            ]
+                                        }));
+                                    }
+                                } setNewOrder={setNewOrder} />
                             )
                         }
                     </div>

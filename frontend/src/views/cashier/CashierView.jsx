@@ -12,7 +12,17 @@ export default function CashierView() {
     const [lang, setLang] = useState("English");
     const [progress, setProgress] = useState(0);
 
+    // const [orders, setOrders] = useState([{
+    //     menuName: "Plate",
+    //     menuPrice: 9.00,
+    //     menuParts: [{name: "Chicken", price: 10.99}, {name: "Beef", price: 10.99}],
+    // }])    
+    
+    const [orders, setOrders] = useState([])
 
+    const [newOrder, setNewOrder] = useState({})
+
+    const [total, setTotal] = useState(0);
 
 
     return (
@@ -27,11 +37,12 @@ export default function CashierView() {
                 
 
                 <div id={styles.mainDiv}>                
-                    <OrderView/>
+                    <OrderView total={total} setTotal={setTotal} orders={orders} setOrders={setOrders} newOrder = {newOrder} setNewOrder={setNewOrder}/>
+
 
                     <div id = {styles.diffViews}>
                         <ProgressBar context={{progress}}/>
-                        <Outlet context={{lang, setLang, setProgress}}/>
+                        <Outlet context={[total, setTotal, lang, progress, setProgress, orders, setOrders, newOrder, setNewOrder]}/>
                     </div>
 
                 </div>

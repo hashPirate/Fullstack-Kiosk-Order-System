@@ -1,9 +1,9 @@
 
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useOutletContext } from "react-router";
 import SelectableMenuParts from "./SelectableMenuParts";
 import styles from "./CashierHome.module.css";
 
-export default function CashierHome() {
+export default function CashierHome({}) {
 
     const biggerPlate = {
         color: "#44AA99",
@@ -28,13 +28,37 @@ export default function CashierHome() {
         linkto: "cashier_menu_parts"
     }
 
+    const [total, setTotal, lang, progress, setProgress, orders, setOrders, newOrder, setNewOrder] = useOutletContext(); 
+
     return (
         <>
             <div id={styles.wideDiv}>
-                <SelectableMenuParts order={bowl} />
+                <SelectableMenuParts order={bowl} onClick={
+                    () => 
+                        {
+                            
+                            setNewOrder({menuName: "Bowl", menuPrice: 10.99, menuParts: []})
+                            setTotal(prevTotal => (prevTotal + 10.99))
+                        }
+                    } 
+                setNewOrder={setNewOrder} />
                 <div>
-                    <SelectableMenuParts order={biggerPlate}/>
-                    <SelectableMenuParts order={plate}/>
+                    <SelectableMenuParts order={biggerPlate} onClick={
+                    () => 
+                        {
+                            
+                            setNewOrder({menuName: "Bigger Plate", menuPrice: 10.99, menuParts: []})
+                            setTotal(prevTotal => (prevTotal + 10.99))
+                        }
+                }setNewOrder={setNewOrder}/>
+                    <SelectableMenuParts order={plate} onClick={
+                    () => 
+                        {
+                            
+                            setNewOrder({menuName: "Plate", menuPrice: 10.99, menuParts: []})
+                            setTotal(prevTotal => (prevTotal + 10.99))
+                        }
+                }setNewOrder={setNewOrder}/>
                 </div>
             </div> 
         </>

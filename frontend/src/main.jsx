@@ -11,6 +11,8 @@ import BuildDrink from "./views/kiosk/BuildDrink.jsx";
 import SetLanguage from "./views/kiosk/SetLanguage.jsx";
 import CashierView from "./views/cashier/CashierView.jsx";
 import CashierHome from "./views/cashier/CashierHome.jsx";
+import CashierMenuParts from "./views/cashier/MenuParts.jsx";
+import CashierDrinks from "./views/cashier/CashierDrinks.jsx";
 import KitchenView from "./views/kitchen/KitchenView.jsx";
 import KitchenHome from "./views/kitchen/KitchenHome.jsx";
 import ManagerView from "./views/manager/ManagerView.jsx";
@@ -32,6 +34,8 @@ createRoot(document.getElementById('root')).render(
         </Route>
         <Route path="/cashier" element={<CashierView />}>
           <Route index element={<CashierHome />}></Route>
+          <Route path="cashier_menu_parts" element={<CashierMenuParts />}></Route>
+          <Route path="cashier_drinks" element={<CashierDrinks />}></Route>
         </Route>
         <Route path="/kitchen" element={<KitchenView />}>
           <Route index element={<KitchenHome />}></Route>
