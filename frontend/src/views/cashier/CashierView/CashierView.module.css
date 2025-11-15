@@ -1,0 +1,93 @@
+:root {
+    /* Can anyone think of a better way to do header-content height splitting...? */
+    --cashier-header-height: 4rem;
+    --cashier-view-height: calc(100vh - var(--cashier-header-height));
+    --cashier-header-color: color-mix(in srgb, aqua 80%, brown 20%);
+    --cashier-header-icon-size: 2rem;
+}
+
+.header {
+    padding: 20px;
+    display: flex;
+    height: var(--cashier-header-height);
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--cashier-header-color);
+    border-bottom: 2px solid black;
+}
+
+.headerLink, .headerLink:visited, .headerLink:active {
+    color: white;
+    text-decoration: none;
+}
+
+.title {
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24pt;
+    color: white;
+}
+
+.headerIcon {
+    font-size: var(--cashier-header-icon-size);
+    color: white
+}
+
+.headerSpacer {
+    width: var(--cashier-header-icon-size);
+    height: var(--cashier-header-icon-size);
+}
+
+.splitView {
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    height: var(--cashier-view-height);
+    width: 100vw;
+}
+
+.orderPane {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background-color: white;
+    border-right: 2px solid black;
+    padding: 0.75rem;    /* NOTE: I may want to move this logic to OrderView.module.css */
+}
+
+.menuPane {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background-color: white;
+    padding: 0.75rem;    /* NOTE: I may want to move this logic to the outlet components. */
+}
+
+.progressBarArea {
+    height: 2rem;
+    margin: 15px;
+    padding: 30px 0 30px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progressBar {
+    height: 2rem;
+    padding: 30px;
+    background-color: var(--cashier-header-color);
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    align-items: center;
+    border-radius: 40px;
+}
+
+.progressBarStage {
+    padding: 5px 20px;
+    margin: 0;
+    background-color: aliceblue;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18pt;
+    border-radius: 20px;
+}

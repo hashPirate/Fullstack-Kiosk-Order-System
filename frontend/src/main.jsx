@@ -9,12 +9,14 @@ import BuildPlate from "./views/kiosk/BuildPlate.jsx";
 import BuildBigPlate from "./views/kiosk/BuildBigPlate.jsx";
 import BuildDrink from "./views/kiosk/BuildDrink.jsx";
 import SetLanguage from "./views/kiosk/SetLanguage.jsx";
-import CashierView from "./views/cashier/CashierView.jsx";
-import CashierHome from "./views/cashier/CashierHome.jsx";
-import CashierMenuParts from "./views/cashier/MenuParts.jsx";
-import CashierDrinks from "./views/cashier/CashierDrinks.jsx";
+
+import CashierView from "./views/cashier/CashierView/CashierView.jsx";
+import CashierMenuItems from "./views/cashier/CashierMenuItems.jsx";
+import CashierMenuParts from "./views/cashier/CashierMenuParts.jsx";
+
 import KitchenView from "./views/kitchen/KitchenView.jsx";
 import KitchenHome from "./views/kitchen/KitchenHome.jsx";
+
 import ManagerView from "./views/manager/ManagerView.jsx";
 import ManageServers from "./views/manager/views/ManageServers.jsx";
 import Inventory from "./views/manager/views/Inventory.jsx";
@@ -22,6 +24,7 @@ import Reports from "./views/manager/views/Reports.jsx";
 import ManageMenuParts from "./views/manager/views/ManageMenuParts.jsx";
 import ManageMenuItems from "./views/manager/views/ManageMenuItems.jsx";
 import SalesReport from "./views/manager/views/SalesReport.jsx";
+
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
@@ -38,15 +41,15 @@ createRoot(document.getElementById('root')).render(
           <Route path="language" element={<SetLanguage />}></Route>
         </Route>
         <Route path="/cashier" element={<CashierView />}>
-          <Route index element={<CashierHome />}></Route>
-          <Route path="cashier_menu_parts" element={<CashierMenuParts />}></Route>
-          <Route path="cashier_drinks" element={<CashierDrinks />}></Route>
+          <Route index element={<Navigate to="menu_items" replace />} />
+          <Route path="menu_items" element={<CashierMenuItems />} />
+          <Route path="menu_parts" element={<CashierMenuParts />} />
         </Route>
         <Route path="/kitchen" element={<KitchenView />}>
           <Route index element={<KitchenHome />}></Route>
         </Route>
         <Route path="/manager" element={<ManagerView />}>
-          <Route index element={<Navigate to="/manager/servers" replace />}></Route>
+          <Route index element={<Navigate to="/manager/servers" replace />} />
           <Route path="servers" element={<ManageServers />}></Route>
           <Route path="inventory" element={<Inventory />}></Route>
           <Route path="reports" element={<Reports />}></Route>

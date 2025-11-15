@@ -1,0 +1,27 @@
+
+
+.orderHeader {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2.5rem;
+    color: black;
+}
+
+.orderMenuItems {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.itemHeader {
+    display: flex;
+}
+
+.itemTitle {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14pt;
+
+}
+
