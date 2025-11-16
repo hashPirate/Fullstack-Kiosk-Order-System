@@ -1,0 +1,20 @@
+
+.menuItemsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
+    grid-auto-rows: minmax(20vh, 1fr);
+    grid-gap: 20px;
+}
+
+.menuItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px;
+}
+

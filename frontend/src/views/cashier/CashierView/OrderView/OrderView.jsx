@@ -9,8 +9,10 @@ export default function OrderView() {
         <div className={styles.orderView}>
             <h2 className={styles.orderHeader}>Order</h2>
             <div className={styles.orderMenuItems}>
-                <OrderMenuItem>
-                    <OrderMenuPart/>
+                <OrderMenuItem name="Menu Item" price="99.99">
+                    <OrderMenuPart name="Menu Part" price="8.88"/>
+                    <OrderMenuPart name="Menu Part" price="8.88"/>
+                    <OrderMenuPart name="Menu Part" price="8.88"/>
                 </OrderMenuItem>
             </div>
             <OrderSummary/>
