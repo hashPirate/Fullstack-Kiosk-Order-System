@@ -116,8 +116,26 @@
     font-size: 16pt;
 }
 
+.confirmOrderButton.confirmDisabled {
+    border-color: gray;
+    color: gray;
+}
+
 .confirmOrderButton {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16pt;
+    background-color: white;
+    border: 2px solid black;
+    padding: 10px 0;
+    border-radius: 30px;
+}
+
+.confirmOrderButton:hover {
+    cursor: pointer;
+    background-color: rgb(245, 245, 245);
+}
+
+.confirmOrderButton:active {
+    border-color: gray;
 }
 

@@ -18,7 +18,9 @@ export default function OrderProgression() {
                 <h3 className={clsx(styles.progressBarStage, (outletPath === "menu_items") && styles.progressBarActive)}>Menu Items</h3>
                 <h3 className={clsx(styles.progressBarStage, (outletPath === "menu_parts") && styles.progressBarActive)}>Menu Parts</h3>
             </div>
-            <button className={clsx(styles.doneButton, (outletPath === "menu_parts") && styles.buttonActive)} onClick={onDoneClick}>Done ✓</button>
+            <button className={clsx(styles.doneButton, (outletPath === "menu_parts") && styles.buttonActive)}
+                disabled={outletPath !== "menu_parts"} 
+                onClick={onDoneClick}>Done ✓</button>
         </div>
     );
 }

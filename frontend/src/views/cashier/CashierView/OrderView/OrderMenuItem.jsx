@@ -12,8 +12,11 @@ export default function OrderMenuItem({name, price, itemIndex, children}) {
     const outletPath = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
 
     function onXClick() {
+        // Calculating order length in this round-about way since state updates are not always immediately accessible!
+        let orderLength = orderState.orderContent.length;
         orderState.removeMenuItem(itemIndex);
-        if (orderState.length === 0 && outletPath === "menu_parts") {
+        orderLength -= 1;
+        if (orderLength === 0) {
             navigate("/cashier/menu_items");
         }
     }
