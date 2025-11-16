@@ -14,6 +14,22 @@ class UserManager extends DbModelManager {
         return new User(this.db, result.rows[0]);
     }
 
+    async getUserById(userId) {
+        const result = await this.db.query('SELECT * FROM users WHERE user_id = $1', [userId]);
+        if (result.rows.length === 0) {
+            return null;
+        }
+        return new User(this.db, result.rows[0]);
+    }
+
+    async getUserByGaiaId(gaiaId) {
+        const result = await this.db.query('SELECT * FROM users WHERE gaia_id = $1', [gaiaId]);
+        if (result.rows.length === 0) {
+            return null;
+        }
+        return new User(this.db, result.rows[0]);
+    }
+
     async getAllUsers() {
         const result = await this.db.query('SELECT * FROM users ORDER BY user_id');
         return result.rows.map(row => new User(this.db, row));
@@ -21,11 +37,21 @@ class UserManager extends DbModelManager {
 
     async createUser(username, password) {
         const passwordHash = User.hashPassword(password);
-        // By default, new users get 'cashier' scope.
-        const result = await this.db.query('INSERT INTO users (username, password_hash, scopes) VALUES ($1, $2, $3) RETURNING *', [username.toLowerCase(), passwordHash, ['cashier']]);
+        
+        const result = await this.db.query('INSERT INTO users (username, password_hash, scopes) VALUES ($1, $2, $3) RETURNING *', [username.toLowerCase(), passwordHash, []]);
         if (result.rows.length === 0) {
             return null;
         }
+        return new User(this.db, result.rows[0]);
+    }
+
+    async findOrCreateFromGoogleProfile(profile) {
+        const existingUser = await this.getUserByGaiaId(profile.id);
+        if (existingUser) {
+            return existingUser;
+        }
+
+        const result = await this.db.query('INSERT INTO users (username, scopes, on_staff, gaia_id) VALUES ($1, $2, $3, $4) RETURNING *', [profile.displayName, ['cashier'], true, profile.id]);
         return new User(this.db, result.rows[0]);
     }
 
