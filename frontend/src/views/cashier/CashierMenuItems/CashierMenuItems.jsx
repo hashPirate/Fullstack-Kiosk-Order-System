@@ -1,4 +1,4 @@
-import styles from "./CashierMenuItems.module.css";
+import gridStyles from "../MenuGridStyles.module.css";
 import MenuItem from "./MenuItem.jsx";
 
 const pastelColors = [
@@ -11,12 +11,18 @@ const pastelColors = [
     "#F88379",
     "#C8A2C8",
     "#AFEEEE",
+
+    "#FFDAB9",
+    "#FFFACD",
+    "#F88379",
 ];
 
 export default function CashierMenuItems() {
     return (
-        <div className={styles.menuItemsContainer}>
+        <>
+        <div className={gridStyles.menuGridContainer}>
             {pastelColors.map((c, i) => <MenuItem key={i} style={{backgroundColor: c}} />)}
         </div>
+        </>
     );
 }

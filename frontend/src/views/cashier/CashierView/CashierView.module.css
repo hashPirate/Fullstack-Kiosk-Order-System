@@ -58,9 +58,8 @@
 .menuPane {
     /* overflow-x: hidden;
     overflow-y: scroll; */
-    overflow: hidden;
+    /* overflow: hidden; */
     background-color: white;
-    padding: 0.75rem;    /* NOTE: I may want to move this logic to the outlet components. */
 }
 
 .progressBarArea {
