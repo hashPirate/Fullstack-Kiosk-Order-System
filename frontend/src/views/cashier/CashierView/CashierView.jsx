@@ -5,7 +5,8 @@ import clsx from 'clsx';
 import OrderView from './OrderView/OrderView.jsx';
 import styles from "./CashierView.module.css";
 import CashierHeader from './CashierHeader.jsx';
-import ProgressBar from './ProgressBar.jsx';
+import ProgressBar from './OrderProgression.jsx';
+import OrderProgression from './OrderProgression.jsx';
 
 export default function CashierView() {
     return (
@@ -17,7 +18,7 @@ export default function CashierView() {
             </div>
             <div className={styles.menuPane}>
                 {/* Outlet the selection screens here. */}
-                <ProgressBar />
+                <OrderProgression />
                 <Outlet />
             </div>
         </div>

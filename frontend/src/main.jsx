@@ -12,7 +12,7 @@ import SetLanguage from "./views/kiosk/SetLanguage.jsx";
 
 import CashierView from "./views/cashier/CashierView/CashierView.jsx";
 import CashierMenuItems from "./views/cashier/CashierMenuItems/CashierMenuItems.jsx";
-import CashierMenuParts from "./views/cashier/CashierMenuParts.jsx";
+import CashierMenuParts from "./views/cashier/CashierMenuParts/CashierMenuParts.jsx";
 
 import KitchenView from "./views/kitchen/KitchenView.jsx";
 import KitchenHome from "./views/kitchen/KitchenHome.jsx";
