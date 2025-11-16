@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import gridStyles from '../MenuGridStyles.module.css'; 
 import styles from './CashierMenuParts.module.css';
 
-export default function MenuPart({style}) {
+export default function MenuPart({style, name, id}) {
     const navigate = useNavigate();
 
     function onPartClick() {
@@ -13,7 +13,7 @@ export default function MenuPart({style}) {
 
     return (
         <div className={clsx(gridStyles.gridItem, styles.menuPart)} style={style} onClick={onPartClick}>
-            Menu Part Name Here
+            {name}
         </div>
     );
 }

@@ -7,10 +7,66 @@ import styles from "./CashierView.module.css";
 import CashierHeader from './CashierHeader.jsx';
 import ProgressBar from './OrderProgression.jsx';
 import OrderProgression from './OrderProgression.jsx';
+import OrderContext from '../OrderContext.jsx';
+import { useState } from 'react';
 
 export default function CashierView() {
+    // Order content is a list of menu item objects
+    // Menu item object will look as follows:
+        // {
+        //     itemId: 5,     // The ID from the database
+        //     itemName: "Example Item",
+        //     price: 9.99,
+        //     parts: [
+        //         ...
+        //     ]
+        // }
+    // orderContent[i].parts will be of the following form:
+        // {
+        //     partId: 5,      // The ID from the database
+        //     partName: "Example Menu Part",
+        //     price: 9.99
+        // }
+    const [orderContent, setOrderContent] = useState([]);
+    
+    function addMenuItem(menuItem) {
+        setOrderContent([...orderContent, menuItem]);
+    }
+
+    function removeMenuItem(removeItemIndex) {
+        setOrderContent(orderContent.slice(0, removeItemIndex).concat(orderContent.slice(removeItemIndex + 1, orderContent.length)));
+    }
+
+    function addMenuPart(itemIndex, menuPart) {
+        let newOrderContent = orderContent;
+        newOrderContent[itemIndex].parts = [...newOrderContent[itemIndex].parts, menuPart];
+        setOrderContent(newOrderContent);
+    }
+
+    function removeMenuPart(itemIndex, removePartIndex) {
+        const newOrderContent = orderContent.map((item, i) => {
+            if (i === itemIndex) {
+                return {
+                    ...item,
+                    parts: item.parts.slice(0, removePartIndex).concat(item.parts.slice(removePartIndex + 1))
+                };
+            }
+            return item;
+        });
+        setOrderContent(newOrderContent);
+    }
+
+    const orderContextVal = {
+        orderContent,
+        setOrderContent,
+        addMenuItem,
+        removeMenuItem,
+        addMenuPart,
+        removeMenuPart,
+    };
+
     return (
-    <>
+    <OrderContext.Provider value={orderContextVal}>
         <CashierHeader />
         <div className={styles.splitView}>
             <div className={styles.orderPane}>
@@ -22,7 +78,7 @@ export default function CashierView() {
                 <Outlet />
             </div>
         </div>
-    </>
+    </OrderContext.Provider>
     );
 }
 
