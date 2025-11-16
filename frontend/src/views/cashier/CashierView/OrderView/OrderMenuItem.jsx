@@ -1,0 +1,34 @@
+import { GoXCircle } from "react-icons/go";
+import { useContext } from "react";
+import { useLocation, useNavigate } from "react-router";
+
+import styles from "./OrderView.module.css";
+import OrderContext from "../../OrderContext";
+
+export default function OrderMenuItem({name, price, itemIndex, children}) {
+    const orderState = useContext(OrderContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const outletPath = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+
+    function onXClick() {
+        // Calculating order length in this round-about way since state updates are not always immediately accessible!
+        let orderLength = orderState.orderContent.length;
+        orderState.removeMenuItem(itemIndex);
+        orderLength -= 1;
+        if (orderLength === 0) {
+            navigate("/cashier/menu_items");
+        }
+    }
+
+    return (
+    <div className={styles.orderMenuItem}>
+        <div className={styles.itemHeader}>
+            <GoXCircle className={styles.itemXButton} onClick={onXClick}/>
+            <h4 className={styles.itemTitle}>{name}</h4>
+            <span className={styles.itemPrice}>{price}</span>
+        </div>
+        {children}
+    </div>
+    );
+}

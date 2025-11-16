@@ -17,6 +17,7 @@
   "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
+    "build-front": "vite build ./frontend",
     "heroku-prebuild": "npm install && cd frontend && npm install && npm run build"
   },
   "dependencies": {
@@ -24,7 +25,8 @@
     "ejs": "^3.1.8",
     "express": "^4.21.2",
     "express-session": "^1.18.2",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "react-spinners": "^0.17.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",

@@ -1,0 +1,141 @@
+.orderView {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 4rem 4fr 1fr;
+}
+
+.orderHeader {
+    overflow: hidden;
+    padding-top: 0.5rem;
+    margin: 0;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2.5rem;
+    color: black;
+    border-bottom: 2px solid black;
+}
+
+.orderMenuItems {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.orderMenuItem {
+    background-color: rgb(216, 225, 232);
+    padding: 0.75rem;
+    border-radius: 10px;
+}
+
+.itemHeader {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.itemTitle {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18pt;
+}
+.itemPrice {
+    margin-left: auto;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18pt;
+}
+.itemXButton {
+    font-size: 21pt;
+    margin-right: 9pt;
+}
+.itemXButton:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.orderMenuPart {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: rgb(154, 183, 208);
+    padding: 10px 15px;
+    margin: 0 0 10px 20px;
+    border-radius: 10px;
+}
+
+.partTitle {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14pt;
+}
+.partPrice {
+    margin-left: auto;     /* NOTE: margin-<direction>: auto is DANGEROUS. Use it sparingly... */
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14pt;
+}
+.partXButton {
+    font-size: 18pt;
+    margin-right: 9pt;    /* Push the other stuff to the right a bit. */
+}
+.partXButton:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.orderSummary {
+    padding: 0.75rem;
+    border-top: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+.orderTotal {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* background-color: beige; */
+}
+.totalHeader {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16pt;
+}
+.totalPrice {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16pt;
+}
+
+.confirmOrderButton.confirmDisabled {
+    border-color: gray;
+    color: gray;
+}
+
+.confirmOrderButton {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16pt;
+    background-color: white;
+    border: 2px solid black;
+    padding: 10px 0;
+    border-radius: 30px;
+}
+
+.confirmOrderButton:hover {
+    cursor: pointer;
+    background-color: rgb(245, 245, 245);
+}
+
+.confirmOrderButton:active {
+    border-color: gray;
+}
+
