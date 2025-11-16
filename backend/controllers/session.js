@@ -12,7 +12,7 @@ const sessionMiddleware = session({
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const user = await db.posUserManager.getUser(username);
+    const user = await db.userManager.getUser(username);
     if (user && user.passwordMatches(password)) {
         req.session.user = user;
         res.json({ success: true, user });
