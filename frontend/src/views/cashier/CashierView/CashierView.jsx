@@ -16,7 +16,7 @@ export default function CashierView() {
         // {
         //     itemId: 5,     // The ID from the database
         //     itemName: "Example Item",
-        //     price: 9.99,
+        //     itemPrice: 9.99,
         //     parts: [
         //         ...
         //     ]
@@ -25,21 +25,28 @@ export default function CashierView() {
         // {
         //     partId: 5,      // The ID from the database
         //     partName: "Example Menu Part",
-        //     price: 9.99
+        //     partPrice: 9.99
         // }
     const [orderContent, setOrderContent] = useState([]);
     
-    function addMenuItem(menuItem) {
-        setOrderContent([...orderContent, menuItem]);
+    function addMenuItem(menuItemId, menuItemName, menuItemPrice) {
+        setOrderContent([ ...orderContent, {itemId: menuItemId, itemName: menuItemName, itemPrice: menuItemPrice, parts: []} ]);
     }
 
     function removeMenuItem(removeItemIndex) {
         setOrderContent(orderContent.slice(0, removeItemIndex).concat(orderContent.slice(removeItemIndex + 1, orderContent.length)));
     }
 
-    function addMenuPart(itemIndex, menuPart) {
-        let newOrderContent = orderContent;
-        newOrderContent[itemIndex].parts = [...newOrderContent[itemIndex].parts, menuPart];
+    function addMenuPart(itemIndex, menuPartId, menuPartName, menuPartPrice) {
+        const newOrderContent = orderContent.map((item, i) => {
+            if (i === itemIndex) {
+                return {
+                    ...item,
+                    parts: [...item.parts, {partId: menuPartId, partName: menuPartName, partPrice: menuPartPrice}]
+                };
+            }
+            return item;
+        })
         setOrderContent(newOrderContent);
     }
 

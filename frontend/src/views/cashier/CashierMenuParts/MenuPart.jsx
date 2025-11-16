@@ -1,14 +1,20 @@
-import {useNavigate} from 'react-router-dom';
+// import {useNavigate} from 'react-router-dom';
 import clsx from 'clsx';
+import { useContext } from 'react';
 
 import gridStyles from '../MenuGridStyles.module.css'; 
 import styles from './CashierMenuParts.module.css';
+import OrderContext from '../OrderContext';
 
-export default function MenuPart({style, name, id}) {
-    const navigate = useNavigate();
+export default function MenuPart({style, id, name, price}) {
+    const orderState = useContext(OrderContext);
 
     function onPartClick() {
-        navigate("/cashier/menu_items");
+        if (orderState.length === 0) {
+            console.log("ERROR: cannot add menu parts when there are no menu items!");
+            return;
+        }
+        orderState.addMenuPart(orderState.orderContent.length - 1, id, name, price);
     }
 
     return (

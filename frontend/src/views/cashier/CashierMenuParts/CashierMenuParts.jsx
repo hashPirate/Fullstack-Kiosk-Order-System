@@ -26,7 +26,7 @@ export default function CashierMenuParts() {
     function renderParts() {
         if (partsLoaded) {
             // Render list of items with looping pastel colors
-            return parts.map((prt, i) => <MenuPart key={i} style={{backgroundColor: pastelColors[i % pastelColors.length]}} name={prt.part_name} id={prt.menu_part_id} />);
+            return parts.map((prt, i) => <MenuPart key={i} style={{backgroundColor: pastelColors[i % pastelColors.length]}} id={prt.menu_part_id} name={prt.part_name} price={prt.price} />);
         } else {
             return <HashLoader color={"#1FD5D4"}/>;
         }
