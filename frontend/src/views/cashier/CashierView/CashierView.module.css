@@ -48,16 +48,17 @@
 }
 
 .orderPane {
-    overflow-x: hidden;
-    overflow-y: scroll;
+    /* overflow-x: hidden;
+    overflow-y: scroll; */
+    overflow: hidden;
     background-color: white;
     border-right: 2px solid black;
-    padding: 0.75rem;    /* NOTE: I may want to move this logic to OrderView.module.css */
 }
 
 .menuPane {
-    overflow-x: hidden;
-    overflow-y: scroll;
+    /* overflow-x: hidden;
+    overflow-y: scroll; */
+    overflow: hidden;
     background-color: white;
     padding: 0.75rem;    /* NOTE: I may want to move this logic to the outlet components. */
 }
@@ -83,11 +84,16 @@
 }
 
 .progressBarStage {
-    padding: 5px 20px;
     margin: 0;
-    background-color: aliceblue;
-    color: black;
+    padding: 5px 20px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 18pt;
     border-radius: 20px;
+    color: white;
+}
+
+.progressBarStage.progressBarActive {
+    background-color: rgb(226, 255, 255);
+    color: black;
+    border: 3px solid black;
 }
