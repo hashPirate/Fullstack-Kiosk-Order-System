@@ -51,7 +51,7 @@ class UserManager extends DbModelManager {
             return existingUser;
         }
 
-        const result = await this.db.query('INSERT INTO users (username, scopes, on_staff, gaia_id) VALUES ($1, $2, $3, $4) RETURNING *', [profile.displayName, ['cashier'], true, profile.id]);
+        const result = await this.db.query('INSERT INTO users (username, scopes, on_staff, gaia_id) VALUES ($1, $2, $3, $4) RETURNING *', [profile.displayName, [], true, profile.id]);
         return new User(this.db, result.rows[0]);
     }
 
@@ -66,6 +66,14 @@ class UserManager extends DbModelManager {
 
     async setUsername(user, username) {
         await this.db.query('UPDATE users SET username = $1 WHERE user_id = $2', [username.toLowerCase(), user.getUserId()]);
+    }
+
+    async setCashier(user, isCashier) {
+        if (isCashier) {
+            await this.db.query("UPDATE users SET scopes = array_append(scopes, 'cashier') WHERE user_id = $1 AND NOT ('cashier' = ANY(scopes))", [user.getUserId()]);
+        } else {
+            await this.db.query("UPDATE users SET scopes = array_remove(scopes, 'cashier') WHERE user_id = $1", [user.getUserId()]);
+        }
     }
 
     async setManager(user, isManager) {

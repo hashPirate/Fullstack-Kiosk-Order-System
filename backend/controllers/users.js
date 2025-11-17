@@ -66,6 +66,18 @@ router.put('/:username/username', async (req, res) => {
     }
 });
 
+router.put('/:username/cashier', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const { isCashier } = req.body;
+        const user = await db.userManager.getUser(username);
+        await db.userManager.setCashier(user, isCashier);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.put('/:username/manager', async (req, res) => {
     try {
         const { username } = req.params;
