@@ -41,6 +41,11 @@ class OrderManager extends DbModelManager {
         return result.rows.map(row => new Order(this.db, row));
     }
 
+    async getOrdersForUserId(userId, limit, offset) {
+        const result = await this.db.query('SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3', [userId, limit, offset]);
+        return result.rows.map(row => new Order(this.db, row));
+    }
+
     async getOrderItems(order) {
         const result = await this.db.query('SELECT * FROM order_items WHERE order_id = $1 ORDER BY created_at', [order.getOrderID()]);
         return result.rows.map(row => new OrderItem(this.db, row));

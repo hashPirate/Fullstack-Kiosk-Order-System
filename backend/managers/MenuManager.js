@@ -63,6 +63,15 @@ class MenuManager extends DbModelManager {
         return result.rows.map(row => new MenuPart(this.db, row));
     }
 
+    async getMenuPartsForMenuItem(menuItem) {
+        const result = await this.db.query(
+            `SELECT mp.* FROM menu_parts mp 
+             JOIN menu_parts_to_menu_items mptmi ON mp.menu_part_id = mptmi.menu_part_id 
+             WHERE mptmi.menu_item_id = $1 ORDER BY mp.menu_part_id`,
+            [menuItem.getMenuItemId()]);
+        return result.rows.map(row => new MenuPart(this.db, row));
+    }
+
     async getIngredientsFromMenuPart(menuPart) {
         const result = await this.db.query('SELECT *, itmp.quantity_cost FROM ingredients AS i JOIN ingredients_to_menu_parts AS itmp ON i.ingredient_id = itmp.ingredient_id WHERE itmp.menu_part_id = $1', [menuPart.getMenuPartId()]);
         return result.rows.map(row => new MenuPartIngredient(this.db, row));

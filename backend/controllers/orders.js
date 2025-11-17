@@ -62,6 +62,20 @@ router.get('/past', async (req, res) => {
     }
 });
 
+router.get('/my-orders', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+    
+    try {
+        const { limit, offset } = req.query;
+        const orders = await db.orderManager.getOrdersForUserId(req.user.getUserId(), limit, offset);
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.post('/', async (req, res) => {
     try {
         const order = await db.orderManager.createOrder();
