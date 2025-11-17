@@ -30,13 +30,13 @@ export default function OrderSummary() {
         
         try {
             // Create empty order
-            const orderResp = await axios.post('http://localhost:3000/api/orders/', {});
+            const orderResp = await axios.post('/api/orders/', {});
             const orderId = orderResp.data.order_id;
             console.log("Successfully created order.");
             
             // Add items to order sequentially
             for (const item of orderState.orderContent) {
-                const itemResp = await axios.post(`http://localhost:3000/api/orders/${orderId}/items`, {
+                const itemResp = await axios.post(`/api/orders/${orderId}/items`, {
                     menu_item_id: item.itemId, 
                     quantity: 1
                 });
@@ -45,14 +45,20 @@ export default function OrderSummary() {
                 
                 // Add parts to orderItem
                 for (const part of item.parts) {
-                    await axios.post(`http://localhost:3000/api/orders/items/${orderItemId}/parts`, { 
+                    await axios.post(`/api/orders/items/${orderItemId}/parts`, {
                         menu_part_id: part.partId 
                     });
                     console.log("Successfully added menu part to order item.");
                 }
             }
             
+            const finalizeOrder = await axios.put(`/api/orders/${orderId}/finalize`, {});
+            if (finalizeOrder.data.success !== true) {
+                throw new Error("ERROR: order finalization failed!");
+            }
+
             console.log("Order confirmed successfully!");
+            orderState.setOrderContent([]);    // Clear the order.
         } catch (error) {
             console.log("ERROR during order confirmation:", error);
         } finally {
