@@ -1,10 +1,3 @@
-# Columns:
-#  user_id       | integer           |           | not null | nextval('pos_users_user_id_seq'::regclass)
-#  username      | character varying |           |          |
-#  has_password  | boolean           |           |          |
-#  password_hash | character varying |           |          |
-#  is_manager    | boolean           |           |          |
-
 from dotenv import load_dotenv
 import os
 import psycopg
@@ -17,15 +10,24 @@ db_password = os.getenv("DB_PASSWORD")
 connection = psycopg.connect(f"dbname=group_6_db user=group_6 password={db_password} host=csce-315-db.engr.tamu.edu port=5432")
 cursor = connection.cursor()
 
-# Add the users
-cursor.execute("INSERT INTO pos_users(username, password_hash, is_manager, on_staff) VALUES ('Shawna', '', TRUE, FALSE);")
-cursor.execute("INSERT INTO pos_users(username, password_hash, is_manager, on_staff) VALUES ('Liberato', '', TRUE, FALSE);")
-cursor.execute("INSERT INTO pos_users(username, password_hash, is_manager, on_staff) VALUES ('Jerry', '', FALSE, FALSE);")
-cursor.execute("INSERT INTO pos_users(username, password_hash, is_manager, on_staff) VALUES ('Matthew', '', FALSE, FALSE);")
-cursor.execute("INSERT INTO pos_users(username, password_hash, is_manager, on_staff) VALUES ('Quandale', '', FALSE, FALSE);")
+# Define the users to be added
+users_to_insert = [
+    # username, password_hash, scopes, on_staff
+    ('Shawna', '', ['cashier', 'manager'], False),
+    ('Liberato', '', ['cashier', 'manager'], False),
+    ('Jerry', '', ['cashier'], False),
+    ('Matthew', '', ['cashier'], False),
+    ('Quandale', '', ['cashier'], False)
+]
+
+print("Inserting users into the 'users' table...")
+with cursor.copy("COPY users (username, password_hash, scopes, on_staff) FROM STDIN") as copy:
+    for record in users_to_insert:
+        copy.write_row(record)
+print(f"{len(users_to_insert)} users inserted.")
 
 # Check status
-cursor.execute("SELECT * FROM pos_users;")
+cursor.execute("SELECT user_id, username, scopes, on_staff FROM users;")
 print(cursor.fetchall())
 
 # Need this to save changes!

@@ -1,9 +1,10 @@
-CREATE TABLE "pos_users" (
+CREATE TABLE "users" (
     user_id SERIAL PRIMARY KEY,
-    username VARCHAR,
-    password_hash VARCHAR NOT NULL,
-    is_manager BOOLEAN,
-    on_staff BOOLEAN
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255),
+    scopes TEXT[] NOT NULL DEFAULT '{}',
+    on_staff BOOLEAN NOT NULL DEFAULT FALSE,
+    gaia_id VARCHAR(255) UNIQUE
 );
 
 CREATE TABLE "menu_items" (
@@ -31,7 +32,8 @@ CREATE TABLE "ingredients" (
 CREATE TABLE "orders" (
     order_id SERIAL PRIMARY KEY,
     created_at TIMESTAMP NOT NULL,
-    is_final BOOLEAN
+    is_final BOOLEAN,
+    is_cooked BOOLEAN
 );
 
 CREATE TABLE "ingredients_to_menu_parts" (

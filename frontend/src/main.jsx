@@ -10,6 +10,9 @@ import BuildBigPlate from "./views/kiosk/BuildBigPlate.jsx";
 import BuildDrink from "./views/kiosk/BuildDrink.jsx";
 import SetLanguage from "./views/kiosk/SetLanguage.jsx";
 
+import LoginView from './views/login/LoginView.jsx';
+import LogoutView from './views/login/LogoutView.jsx';
+
 import CashierView from "./views/cashier/CashierView/CashierView.jsx";
 import CashierMenuItems from "./views/cashier/CashierMenuItems/CashierMenuItems.jsx";
 import CashierMenuParts from "./views/cashier/CashierMenuParts/CashierMenuParts.jsx";
@@ -32,6 +35,8 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route index element={<App />} />
+        <Route path="/login" element={<LoginView />} />
+        <Route path="/logout" element={<LogoutView />} />
         <Route path="/kiosk" element={<KioskView />}>
           <Route index element={<KioskHome />}></Route>
           <Route path="build_bowl" element={<BuildBowl />}></Route>

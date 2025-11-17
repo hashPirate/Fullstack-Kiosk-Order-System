@@ -1,5 +1,8 @@
 const { Pool } = require('pg');
 
+// Load in process env vars from dotenv
+require('dotenv').config();
+
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -14,16 +17,17 @@ const db = {
   query: (text, params) => pool.query(text, params),
   runUpdate: (text, params) => pool.query(text, params),
   identityMap,
+  pool,
 };
 
 // Managers
 const OrderManager = require('./managers/OrderManager');
-const POSUserManager = require('./managers/POSUserManager');
+const UserManager = require('./managers/UserManager');
 const MenuManager = require('./managers/MenuManager');
 const IngredientManager = require('./managers/IngredientManager');
 
 db.orderManager = new OrderManager(db);
-db.posUserManager = new POSUserManager(db);
+db.userManager = new UserManager(db);
 db.menuManager = new MenuManager(db);
 db.ingredientManager = new IngredientManager(db);
 
