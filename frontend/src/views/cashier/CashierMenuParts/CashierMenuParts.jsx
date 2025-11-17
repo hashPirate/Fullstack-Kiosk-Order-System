@@ -15,7 +15,7 @@ export default function CashierMenuParts() {
     useEffect(() => {
         const menuItemID = new URLSearchParams(window.location.search).get("menuItemID");
         
-        axios.get("http://localhost:3000/api/menu/items/" + menuItemID + "/parts")
+        axios.get("/api/menu/items/" + menuItemID + "/parts")
         .then(response => {
             console.log(response.data);
             setParts(response.data);
