@@ -11,11 +11,36 @@ router.get('/items', async (req, res) => {
     }
 });
 
+router.get('/full-menu', async (req, res) => {
+    try {
+        const menuItems = await db.menuManager.getAllMenuItems();
+        const items = [];
+        for (const menuItem of menuItems) {
+            const parts = await db.menuManager.getMenuPartsForMenuItem(menuItem);
+            items.push({ ...menuItem.toJSON(), applicable_parts: parts.map(p => p.toJSON()) });
+        }
+        res.json(items);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.get('/items/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const item = await db.menuManager.getMenuItemById(id);
         res.json(item);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/items/:id/parts', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const menuItem = await db.menuManager.getMenuItemById(id);
+        const parts = await db.menuManager.getMenuPartsForMenuItem(menuItem);
+        res.json(parts);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

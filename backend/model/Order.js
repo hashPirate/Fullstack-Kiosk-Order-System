@@ -8,6 +8,7 @@ class Order extends DatabaseEntry {
     updateFromResultSet(result) {
         this.order_id = result.order_id;
         this.created_at = result.created_at;
+        this.user_id = result.user_id;
         this.is_final = result.is_final;
         this.is_cooked = result.is_cooked;
     }
@@ -24,6 +25,10 @@ class Order extends DatabaseEntry {
         return this.created_at;
     }
 
+    getUserID() {
+        return this.user_id;
+    }
+
     getIsFinal() {
         return this.is_final;
     }
@@ -37,7 +42,7 @@ class Order extends DatabaseEntry {
     }
 
     toString() {
-        return `Order ID: ${this.order_id}, Created At: ${this.created_at}, Is Final: ${this.is_final}, Is Cooked: ${this.is_cooked}`;
+        return `Order ID: ${this.order_id}, Created At: ${this.created_at}, User ID: ${this.user_id}, Is Final: ${this.is_final}, Is Cooked: ${this.is_cooked}`;
     }
 
     toJSON() {

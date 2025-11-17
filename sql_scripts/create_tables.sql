@@ -32,6 +32,7 @@ CREATE TABLE "ingredients" (
 CREATE TABLE "orders" (
     order_id SERIAL PRIMARY KEY,
     created_at TIMESTAMP NOT NULL,
+    user_id INTEGER REFERENCES "users" (user_id),
     is_final BOOLEAN,
     is_cooked BOOLEAN
 );
@@ -55,5 +56,11 @@ CREATE TABLE "order_items" (
 CREATE TABLE "menu_parts_to_order_items" (
     menu_parts_to_order_items_id SERIAL PRIMARY KEY,
     order_item_id INTEGER REFERENCES "order_items" (order_item_id),
+    menu_part_id INTEGER REFERENCES "menu_parts" (menu_part_id)
+);
+
+CREATE TABLE "menu_parts_to_menu_items" (
+    menu_parts_to_menu_items_id SERIAL PRIMARY KEY,
+    menu_item_id INTEGER REFERENCES "menu_items" (menu_item_id),
     menu_part_id INTEGER REFERENCES "menu_parts" (menu_part_id)
 );
