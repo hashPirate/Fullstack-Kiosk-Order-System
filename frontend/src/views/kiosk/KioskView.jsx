@@ -1,5 +1,5 @@
 
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useLocation } from "react-router";
 import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
 import { CiGlobe } from "react-icons/ci";
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
 
 import styles from "./KioskView.module.css";
+import CartContext from "./CartContext.js";
 
 const langIcons = {
     "English": "🇬🇧",
@@ -16,7 +17,28 @@ const langIcons = {
 
 export default function KioskView() {
     const [temp, setTemp] = useState("...");
-    const [lang, setLang] = useState("English");
+    const location = useLocation();
+    const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
+
+    // Defining the cart context stuff here so that everything in the app can use it.
+    const [cartContent, setCartContent] = useState([]);
+    // itemId: int
+    // menuPartIds: Array(int)
+    function addCompletedItem(itemId, menuPartIds) {
+        const newCartContent = [...cartContent, {
+            itemId: itemId,
+            parts: menuPartIds
+        }];
+    }
+    function removeCompletedItem(itemIndex) {
+        const newCartContent = cartContent.filter((cc,i) => i !== itemIndex);
+        setCartContent(newCartContent);
+    }
+    const cartContextValue = {
+        cartContent,
+        addCompletedItem,
+        removeCompletedItem,
+    };
 
     // Fetch weather as soon as this component loads.
     useEffect(() => {
@@ -52,19 +74,22 @@ export default function KioskView() {
     }, []);
 
     return (
-        <>
+        <CartContext.Provider value={cartContextValue}>
             <nav className={styles.kioskNav}>
                 <div className={styles.navLeft}>
+                    {/* This conditional rendering just makes sure that there is a back button on the language / cart page. */}
+                    { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink}><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
                     <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon}/></Link>
-                    <span className={styles.langDisplay}>{langIcons[lang]}</span>
+                    {/* navSpacers just exist to balance things out and make sure the title is centered. */}
+                    { (outletLocation === "language" || outletLocation === "cart") ? <></> : <div className={styles.navSpacer}></div> }
                 </div>
                 <Link to="/kiosk" className={styles.headerLink}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
                 <div className={styles.navRight}>
                     <div className={styles.weather}><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
-                    <LuShoppingCart className={styles.kioskIcon}/>
+                    <Link to="cart" className={styles.headerLink}><LuShoppingCart className={styles.kioskIcon}/></Link>
                 </div>
             </nav>
-            <Outlet context={{lang, setLang}} />
-        </>
+            <Outlet />
+        </CartContext.Provider>
     );
 };

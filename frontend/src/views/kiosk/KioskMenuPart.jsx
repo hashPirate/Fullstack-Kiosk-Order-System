@@ -7,12 +7,12 @@ import clsx from 'clsx';
     // img -- string
     // name -- string
     // price -- string
-export default function KioskMenuItem(props) {
+export default function KioskMenuItem({selectionCallback, selected, img, name, price, partId, onClick}) {
     return (
-        <div className={clsx(styles.kioskMenuPart, props.selected && styles.partSelected)} onClick={() => props.selectionCallback(props.name)}>
-            <img className={styles.kioskMenuPartImage} src={props.img} alt={props.name} />
-            <span className={styles.menuPartName}>{props.name}</span>
-            <span className={styles.menuPartPrice}>{props.price}</span>
+        <div className={clsx(styles.kioskMenuPart, selected && styles.partSelected)} onClick={onClick}>
+            <img className={styles.kioskMenuPartImage} src={img} alt={name} />
+            <span className={styles.menuPartName}>{name}</span>
+            <span className={styles.menuPartPrice}>{price}</span>
         </div>
     );
 }

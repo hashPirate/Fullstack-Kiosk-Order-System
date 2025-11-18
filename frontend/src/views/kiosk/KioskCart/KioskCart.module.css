@@ -1,0 +1,80 @@
+.kioskCart {
+    padding: 1.5rem;
+}
+
+.cartItems {
+    max-width: 10in;
+    margin: 0 auto;    /* Warning: dangerous! Can affect other styles. */
+}
+
+.cartTitle {
+    font-family: "Futura", Arial, sans-serif;
+    font-size: 24pt;
+    font-weight: normal;
+    text-align: center;
+}
+
+.cartMenuItem {
+    background-color: rgb(216, 225, 232);
+    padding: 0.75rem;
+    border-radius: 10px;
+}
+
+.itemHeader {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.itemTitle {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18pt;
+}
+.itemPrice {
+    margin-left: auto;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18pt;
+}
+.itemXButton {
+    font-size: 21pt;
+    margin-right: 9pt;
+}
+.itemXButton:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.cartMenuPart {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: rgb(154, 183, 208);
+    padding: 10px 15px;
+    margin: 0 0 10px 20px;
+    border-radius: 10px;
+}
+
+.partTitle {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14pt;
+}
+.partPrice {
+    margin-left: auto;     /* NOTE: margin-<direction>: auto is DANGEROUS. Use it sparingly... */
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14pt;
+}
+.partXButton {
+    font-size: 18pt;
+    margin-right: 9pt;    /* Push the other stuff to the right a bit. */
+}
+.partXButton:hover {
+    color: white;
+    cursor: pointer;
+}

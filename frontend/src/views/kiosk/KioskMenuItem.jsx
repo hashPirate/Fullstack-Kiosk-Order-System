@@ -5,13 +5,13 @@ import styles from "./KioskHome.module.css";
     // img -- string
     // name -- string
     // price -- string
-export default function KioskMenuItem(props) {
+export default function KioskMenuItem({img, name, price, itemId, partCount}) {
     return (
-        <Link to={props.linkto}>
+        <Link to={`build_item?itemId=${itemId}&partCount=${partCount}`}>
             <div className={styles.kioskMenuItem}>
-                <img className={styles.kioskMenuItemImage} src={props.img} alt={props.name} />
-                <span className={styles.menuItemName}>{props.name}</span>
-                <span className={styles.menuItemPrice}>{props.price}</span>
+                <img className={styles.kioskMenuItemImage} src={img} alt={name} />
+                <span className={styles.menuItemName}>{name}</span>
+                <span className={styles.menuItemPrice}>{price}</span>
             </div>
         </Link>
     );

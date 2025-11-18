@@ -4,10 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import KioskView from "./views/kiosk/KioskView.jsx";
 import KioskHome from "./views/kiosk/KioskHome.jsx";
-import BuildBowl from "./views/kiosk/BuildBowl.jsx";
-import BuildPlate from "./views/kiosk/BuildPlate.jsx";
-import BuildBigPlate from "./views/kiosk/BuildBigPlate.jsx";
-import BuildDrink from "./views/kiosk/BuildDrink.jsx";
+import KioskCart from './views/kiosk/KioskCart/KioskCart.jsx';
+import BuildItem from "./views/kiosk/BuildItem.jsx";
 import SetLanguage from "./views/kiosk/SetLanguage.jsx";
 
 import LoginView from './views/login/LoginView.jsx';
@@ -39,11 +37,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="/logout" element={<LogoutView />} />
         <Route path="/kiosk" element={<KioskView />}>
           <Route index element={<KioskHome />}></Route>
-          <Route path="build_bowl" element={<BuildBowl />}></Route>
-          <Route path="build_plate" element={<BuildPlate />}></Route>
-          <Route path="build_big_plate" element={<BuildBigPlate />}></Route>
-          <Route path="build_drink" element={<BuildDrink />}></Route>
+          <Route path="build_item" element={<BuildItem />}></Route>
           <Route path="language" element={<SetLanguage />}></Route>
+          <Route path="cart" element={<KioskCart />}></Route>
         </Route>
         <Route path="/cashier" element={<CashierView />}>
           <Route index element={<Navigate to="menu_items" replace />} />
