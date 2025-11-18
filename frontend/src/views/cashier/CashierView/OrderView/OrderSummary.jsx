@@ -27,6 +27,11 @@ export default function OrderSummary() {
     // TODO: add flag for errors and use it to retry the confirmation if errors occurred.
     async function confirmOrder() {
         setConfirmDisabled(true);
+        if (orderState.orderContent.length === 0) {
+            console.log("Cannot make order without at least one item!");
+            setConfirmDisabled(false);
+            return;
+        }
         
         try {
             // Create empty order

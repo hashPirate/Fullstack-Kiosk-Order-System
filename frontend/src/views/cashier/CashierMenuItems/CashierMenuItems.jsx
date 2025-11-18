@@ -13,7 +13,7 @@ export default function CashierMenuItems() {
     const [itemsLoaded, setItemsLoaded] = useState(false);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/menu/items")
+        axios.get("/api/menu/items")
         .then(response => {
             setItems(response.data);
             setItemsLoaded(true);
