@@ -6,7 +6,6 @@ const { pool } = require('./database');
 // Create express app
 const app = express();
 const port = process.env.PORT || 3000;
-app.use(express.json());
 
 // Controllers
 const ingredientsController = require('./controllers/ingredients');
@@ -15,8 +14,15 @@ const ordersController = require('./controllers/orders');
 const session = require('./controllers/session');
 const reportsController = require('./controllers/reports');
 const usersController = require('./controllers/users');
+const imagesController = require('./controllers/images');
 
 // Middleware
+app.use(express.json());
+app.use(express.raw({ 
+    limit: '50mb',
+    type: ['image/jpeg', 'image/png']
+}));
+
 app.use(session.sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -27,6 +33,7 @@ app.use("/api/orders", ordersController);
 app.use("/api/session", session.router);
 app.use("/api/reports", reportsController);
 app.use("/api/users", usersController);
+app.use("/api/images", imagesController);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
