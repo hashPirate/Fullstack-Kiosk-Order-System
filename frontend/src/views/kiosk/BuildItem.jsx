@@ -21,11 +21,11 @@ export default function BuildItem() {
 
                 // Get the parts data in the right format
                 loadedMenuParts = loadedMenuParts.data.filter(mp => mp.for_sale);    // Filter out menu parts that are not for_sale 
-                loadedMenuParts = loadedMenuParts.map( mp => ({...mp, img: "/menu_part_images/rice.jpg"}) );
+                loadedMenuParts = loadedMenuParts.map( mp => ({...mp, img: "/api/images/" + mp.image_name}) );
                 for (let i = 0; i < partCount; i++) {
                     newSidePrompts.push({
                         prompt: `Choose Side ${i+1}`,
-                        menuParts: loadedMenuParts.map( mp => ({...mp, img: "/menu_part_images/rice.jpg"}) )
+                        menuParts: loadedMenuParts.map( mp => ({...mp, img: "/api/images/" + mp.image_name}) )
                     });
                 }
 

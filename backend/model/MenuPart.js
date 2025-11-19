@@ -8,6 +8,7 @@ class MenuPart extends DatabaseEntry {
     updateFromResultSet(result) {
         this.menu_part_id = result.menu_part_id;
         this.part_name = result.part_name;
+        this.image_name = result.image_name;
         this.price = result.price;
         this.for_sale = result.for_sale;
     }
@@ -18,6 +19,10 @@ class MenuPart extends DatabaseEntry {
 
     getMenuPartId() {
         return this.menu_part_id;
+    }
+
+    getImageName() {
+        return this.image_name;
     }
 
     getPartName() {
@@ -33,13 +38,14 @@ class MenuPart extends DatabaseEntry {
     }
 
     toString() {
-        return `Menu Part ID: ${this.menu_part_id}, Part Name: ${this.part_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}`;
+        return `Menu Part ID: ${this.menu_part_id}, Part Name: ${this.part_name}, Image Name: ${this.image_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}`;
     }
 
     toJSON() {
         return {
             menu_part_id: this.menu_part_id,
             part_name: this.part_name,
+            image_name: this.image_name,
             price: this.price,
             for_sale: this.for_sale,
         };
