@@ -39,6 +39,7 @@ export default function KioskHome() {
 
     return (
         <>
+            <h2 className={styles.selectionPrompt}>Please select a menu item.</h2>
             <div className={styles.kioskMenuItemsContainer}>
                 {/* Remember: files in `public` are served as though they are in the project root. */}
                 {renderKioskItems()}

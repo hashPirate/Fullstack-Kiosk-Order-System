@@ -174,7 +174,7 @@ export default function KioskCart() {
                 <div className={styles.completeOrderContainer}>
                 { (cartState.cartContent.length === 0) ? <></> : <button className={clsx(styles.completeOrderButton, completeDisabled && styles.buttonDisabled)}
                                                                     disabled={completeDisabled}
-                                                                    onClick={confirmOrder}>Complete Order</button>}
+                                                                    onClick={confirmOrder}>{ completeDisabled ? "Processing..." : "Complete Order" }</button>}
                 </div>
             </div>
         );

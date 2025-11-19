@@ -42,7 +42,7 @@ export default function OrderDetails({sidePrompts, itemId, itemName}) {
     // Render the collapsibles
     function renderCollapsibles() {
         return sidePrompts.map((sp, sidePromptIndex) =>
-            <Collapsible key={sidePromptIndex} detailsClasses={styles.menuPartCollapsible} summary={sp.prompt}>
+            <Collapsible key={sidePromptIndex} summaryClasses={styles.menuPartCollapsibleSummary} detailsClasses={styles.menuPartCollapsibleDetails} summary={sp.prompt}>
                 {renderMenuParts(sp.menuParts, sidePromptIndex)}
             </Collapsible>
         );
@@ -59,7 +59,7 @@ export default function OrderDetails({sidePrompts, itemId, itemName}) {
             { renderCollapsibles() }
 
             {/* DEBUG ONLY, delete this <p> later! */}
-            <p>[DEBUG]: selected parts: {selectedPartIds.filter(item => item !== undefined).join(", ")}</p>
+            {/* <p>[DEBUG]: selected parts: {selectedPartIds.filter(item => item !== undefined).join(", ")}</p> */}
 
             <div className={styles.orderButtons}>
                 {/* Only let the user order if all menu parts have been selected. */}
