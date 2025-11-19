@@ -7,9 +7,10 @@ CREATE TABLE "users" (
     gaia_id VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE "menu_parts" (
-    menu_part_id SERIAL PRIMARY KEY,
-    part_name VARCHAR,
+CREATE TABLE "menu_items" (
+    menu_item_id SERIAL PRIMARY KEY,
+    item_name VARCHAR,
+    image_name VARCHAR(255),
     price REAL,
     part_count INTEGER DEFAULT 0,
     for_sale BOOLEAN
@@ -18,6 +19,7 @@ CREATE TABLE "menu_parts" (
 CREATE TABLE "menu_parts" (
     menu_part_id SERIAL PRIMARY KEY,
     part_name VARCHAR,
+    image_name VARCHAR(255),
     price REAL,
     for_sale BOOLEAN
 );
@@ -64,4 +66,9 @@ CREATE TABLE "menu_parts_to_menu_items" (
     menu_parts_to_menu_items_id SERIAL PRIMARY KEY,
     menu_item_id INTEGER REFERENCES "menu_items" (menu_item_id),
     menu_part_id INTEGER REFERENCES "menu_parts" (menu_part_id)
+);
+
+CREATE TABLE "images" (
+    image_name VARCHAR(255) PRIMARY KEY,
+    image_data BYTEA
 );
