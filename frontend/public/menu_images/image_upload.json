@@ -1,10 +1,10 @@
 {
-    "Bowl": "/menu_images/bowl.jpg",
     "Plate": "/menu_images/plate.jpg",
+    "unused menu item": "/menu_images/unused-menu-item.jpg",
+    "Bowl": "/menu_images/bowl.jpg",
+    "Drinks": "/menu_images/drinks.jpg",
     "Big Plate": "/menu_images/big-plate.jpg",
     "Appetizer": "/menu_images/appetizer.jpg",
-    "Drinks": "/menu_images/drinks.jpg",
-    "unused menu item": "/menu_images/unused-menu-item.jpg",
     "New Part Name": "/menu_images/new-part-name.jpg",
     "Coconut Chicken": "/menu_images/coconut-chicken.jpg",
     "Kung Pao Chicken": "/menu_images/kung-pao-chicken.jpg",

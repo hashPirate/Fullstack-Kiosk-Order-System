@@ -40,11 +40,12 @@ for menu_item in menu_items:
     filename = convertToKebabCase(menu_item) + IMAGE_JPG_EXTENSION
     image_upload[menu_item] = f"/menu_images/{filename}"
     
-    # Set image name in database
+    # Set image name in database only if it doesn't have one yet
     cursor.execute(
-        "UPDATE menu_items SET image_name = %s WHERE item_name = %s;",
+        "UPDATE menu_items SET image_name = %s WHERE item_name = %s AND image_name IS NULL;",
         (filename, menu_item),
     )
+    
 
 cursor.execute("SELECT part_name FROM menu_parts;")
 menu_parts = [i[0] for i in cursor.fetchall()]
@@ -53,9 +54,9 @@ for menu_part in menu_parts:
     filename = convertToKebabCase(menu_part) + IMAGE_JPG_EXTENSION
     image_upload[menu_part] = f"/menu_images/{filename}"
     
-    # Set image name in database
+    # Set image name in database only if it doesn't have one yet
     cursor.execute(
-        "UPDATE menu_parts SET image_name = %s WHERE part_name = %s;",
+        "UPDATE menu_parts SET image_name = %s WHERE part_name = %s AND image_name IS NULL;",
         (filename, menu_part),
     )
 
