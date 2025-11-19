@@ -1,4 +1,4 @@
-import {useOutletContext} from 'react-router';
+// import {useOutletContext} from 'react-router';
 import styles from './SetLanguage.module.css';
 import clsx from 'clsx';
 import { useEffect } from 'react';
@@ -20,6 +20,8 @@ export default function SetLanguage() {
             if(container) {
                 container.innerHTML = '';
             }
+            // ↓↓↓ this comment will disable a warning for the global `google` object
+            // eslint-disable-next-line no-undef
             new google.translate.TranslateElement({pageLanguage: 'en',
                 layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL
             }, 'google_translate_element');

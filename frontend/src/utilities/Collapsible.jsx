@@ -9,7 +9,7 @@ import clsx from 'clsx';
 export default function Collapsible(props) {
     const [collapsed, setCollapsed] = useState(true);
     return (
-        <div className="CollapsibleComponent">
+        <div className={clsx(styles.CollapsibleComponent, props.summaryClasses)}>
             <div className={clsx(styles.CollapsibleHeader, !collapsed && styles.UncollapsedHeader)} onClick={() => setCollapsed(!collapsed)}>
                 <span className={styles.CollapsibleSummary}>{props.summary}</span>
                 <IoArrowForwardCircleOutline className={clsx(!collapsed && styles.rotate90, styles.CollapsibleMarker)}/>

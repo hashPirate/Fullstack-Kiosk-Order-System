@@ -1,42 +1,56 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Collapsible from '../../utilities/Collapsible.jsx';
 import KioskMenuPart from './KioskMenuPart.jsx';
 import clsx from 'clsx';
 
 import styles from './OrderDetails.module.css';
+import CartContext from './CartContext.js';
 
-// sidePrompts: JS object of prompts and possible side choices
-// setSelections: callback for OrderDetails to set the selections
-export default function OrderDetails({sidePrompts, itemName}) {
-    const [selections, setSelections] = useState(new Array(sidePrompts.length).fill(""))
+// sidePrompts: list of JS objects that each contain a prompts and an array of possible side choices.
+export default function OrderDetails({sidePrompts, itemId, itemName}) {
+    // selectedParts is an array that functions like a dictionary. It maps the side prompt (the collapsible)
+    // to the id of the currently selected part in that collapsible.
+    // So, just to recap, each collapsible represents a "side prompt" (because it is prompting you to select a side).
+    const [selectedPartIds, setSelectedPartIds] = useState(new Array(sidePrompts.length).fill(undefined));
+
     const navigate = useNavigate();
 
-    function setSelectionI(idx, newVal) {
-        const newSelections = [...selections];
-        newSelections[idx] = newVal;
-        setSelections(newSelections);
+    const cartState = useContext(CartContext);
+
+    // Set selected menu part for a given "side prompt" (aka. collapsible)
+    function setSidePromptSelection(sidePromptIndex, selPartId) {
+        let newSelectedParts = [...selectedPartIds];
+        newSelectedParts[sidePromptIndex] = selPartId;
+        setSelectedPartIds(newSelectedParts);
     }
 
-    // Render a list of MenuParts, where each MenuPart is a JS object with img, name, price, callabck properties.
-    function renderMenuParts(menuPartsObj, selNum) {
-        return menuPartsObj.map((mpart, i) => {
-            // Render a red (selected) element if mpart's name matches the name of the selected part for this element
-            // (i hope that makes sense)
-            if (mpart.name == selections[selNum]) {
-                return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={newVal => setSelectionI(selNum, newVal)} selected={true}/>
-            } else {
-                return <KioskMenuPart key={i} img={mpart.img} name={mpart.name} price={mpart.price} selectionCallback={newVal => setSelectionI(selNum, newVal)} />
-            }
+    // Render the menu parts within each collapsible.
+    function renderMenuParts(menuPartsArray, sidePromptIndex) {
+        return menuPartsArray.map((mpart, i) => {
+            return <KioskMenuPart key={i}
+                    img={mpart.img}
+                    partId={mpart.menu_part_id}
+                    name={mpart.part_name}
+                    price={mpart.price}
+                    onClick={() => setSidePromptSelection(sidePromptIndex, mpart.menu_part_id)}
+                    selected={mpart.menu_part_id === selectedPartIds[sidePromptIndex]}
+                    />;
         });
     }
 
+    // Render the collapsibles
     function renderCollapsibles() {
-        return sidePrompts.map((sp, spNum) =>
-            <Collapsible key={spNum} detailsClasses={styles.menuPartCollapsible} summary={sp.prompt}>
-                {renderMenuParts(sp.menuParts, spNum)}
+        return sidePrompts.map((sp, sidePromptIndex) =>
+            <Collapsible key={sidePromptIndex} summaryClasses={styles.menuPartCollapsibleSummary} detailsClasses={styles.menuPartCollapsibleDetails} summary={sp.prompt}>
+                {renderMenuParts(sp.menuParts, sidePromptIndex)}
             </Collapsible>
         );
+    }
+
+    function handleOrderItem() {
+        cartState.addCompletedItem(itemId, selectedPartIds);
+        navigate("/kiosk");
     }
 
     return (
@@ -45,11 +59,11 @@ export default function OrderDetails({sidePrompts, itemName}) {
             { renderCollapsibles() }
 
             {/* DEBUG ONLY, delete this <p> later! */}
-            <p>[DEBUG]: selected parts: {selections.filter(item => item !== "").join(", ")}</p>
+            {/* <p>[DEBUG]: selected parts: {selectedPartIds.filter(item => item !== undefined).join(", ")}</p> */}
 
             <div className={styles.orderButtons}>
-                {/* For now, both buttons just take you back to the kiosk. */}
-                <button className={styles.completeOrderButton} onClick={() => navigate("/kiosk")}>Order Item</button>
+                {/* Only let the user order if all menu parts have been selected. */}
+                <button disabled={selectedPartIds.includes(undefined)} className={clsx(styles.orderItemButton, (selectedPartIds.includes(undefined)) && styles.buttonDisabled)} onClick={handleOrderItem}>Order Item</button>
                 <button className={styles.cancelOrderButton} onClick={() => navigate("/kiosk")}>Cancel</button>
             </div>
         </div>

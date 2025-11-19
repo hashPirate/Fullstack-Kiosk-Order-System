@@ -10,6 +10,7 @@ class MenuItem extends DatabaseEntry {
         this.item_name = result.item_name;
         this.price = result.price;
         this.for_sale = result.for_sale;
+        this.part_count = result.part_count;
     }
 
     getPrimaryKeyValue() {
@@ -32,8 +33,12 @@ class MenuItem extends DatabaseEntry {
         return this.for_sale;
     }
 
+    getPartCount() {
+        return this.part_count;
+    }
+
     toString() {
-        return `Menu Item ID: ${this.menu_item_id}, Item Name: ${this.item_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}`;
+        return `Menu Item ID: ${this.menu_item_id}, Item Name: ${this.item_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}, Part Count: ${this.part_count}`;
     }
 
     toJSON() {
@@ -42,6 +47,7 @@ class MenuItem extends DatabaseEntry {
             item_name: this.item_name,
             price: this.price,
             for_sale: this.for_sale,
+            part_count: this.part_count,
         };
     }
 }

@@ -1,3 +1,10 @@
+.selectionPrompt {
+    color: black;
+    font-family: "Futura", Arial, sans-serif;
+    font-size: 18pt;
+    font-weight: normal;
+    text-align: center;
+}
 
 .kioskMenuItemsContainer {
     display: flex;
