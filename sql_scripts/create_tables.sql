@@ -7,10 +7,11 @@ CREATE TABLE "users" (
     gaia_id VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE "menu_items" (
-    menu_item_id SERIAL PRIMARY KEY,
-    item_name VARCHAR,
+CREATE TABLE "menu_parts" (
+    menu_part_id SERIAL PRIMARY KEY,
+    part_name VARCHAR,
     price REAL,
+    part_count INTEGER DEFAULT 0,
     for_sale BOOLEAN
 );
 
