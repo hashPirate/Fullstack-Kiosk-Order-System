@@ -7,7 +7,7 @@ import styles from "./KioskHome.module.css";
     // price -- string
 export default function KioskMenuItem({img, name, price, itemId, partCount}) {
     return (
-        <Link to={`build_item?itemId=${itemId}&partCount=${partCount}`}>
+        <Link to={`build_item?itemId=${itemId}&itemName=${encodeURIComponent(name)}&partCount=${partCount}`}>
             <div className={styles.kioskMenuItem}>
                 <img className={styles.kioskMenuItemImage} src={img} alt={name} />
                 <span className={styles.menuItemName}>{name}</span>

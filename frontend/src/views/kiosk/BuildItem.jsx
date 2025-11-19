@@ -6,8 +6,9 @@ import axios from 'axios';
 
 export default function BuildItem() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const itemId = searchParams.get("itemId");
-    const partCount = searchParams.get("partCount");
+    const itemId = Number(searchParams.get("itemId"));
+    const itemName = decodeURIComponent(searchParams.get("itemName"));
+    const partCount = Number(searchParams.get("partCount"));
 
     const [sidePrompts, setSidePrompts] = useState();
     const [loading, setLoading] = useState(true);
@@ -39,9 +40,9 @@ export default function BuildItem() {
 
     function renderOrderDetails() {
         if (loading) {
-            return <HashLoader color={"#1FD5D4"}/>;
+            return <HashLoader color={"#DC143C"}/>;
         } else {
-            return <OrderDetails sidePrompts={sidePrompts} itemName="Plate" />;
+            return <OrderDetails sidePrompts={sidePrompts} itemId={itemId} itemName={itemName} />;
         }
     }
 
@@ -51,32 +52,3 @@ export default function BuildItem() {
         </>
     );
 }
-
-
-
-    // const sidePrompts = [
-    //     {
-    //         prompt: "Choose a Base",
-    //         menuParts: [
-    //             {img: "/menu_part_images/rice.jpg", name: "Rice", price: "$0.00"},
-    //             {img: "/menu_part_images/chow-mein.jpg", name: "Chow Mein", price: "$1.00"},
-    //         ]
-    //     },
-    //     {
-    //         prompt: "Choose Side 1",
-    //         menuParts: [
-    //             {img: "/menu_part_images/beijing-beef.jpg", name: "Beijing Beef", price: "$1.00"},
-    //             {img: "/menu_part_images/grilled-teriyaki-chicken.jpg", name: "Teriyaki Chicken", price: "$1.00"},
-    //             {img: "/menu_part_images/mushroom-chicken.jpg", name: "Mushroom Chicken", price: "$1.00"},
-    //         ]
-    //     },
-    //     {
-    //         prompt: "Choose Side 2",
-    //         menuParts: [
-    //             {img: "/menu_part_images/beijing-beef.jpg", name: "Beijing Beef", price: "$1.00"},
-    //             {img: "/menu_part_images/grilled-teriyaki-chicken.jpg", name: "Teriyaki Chicken", price: "$1.00"},
-    //             {img: "/menu_part_images/mushroom-chicken.jpg", name: "Mushroom Chicken", price: "$1.00"},
-    //         ]
-    //     },
-    // ]
-

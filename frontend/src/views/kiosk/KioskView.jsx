@@ -25,10 +25,25 @@ export default function KioskView() {
     // itemId: int
     // menuPartIds: Array(int)
     function addCompletedItem(itemId, menuPartIds) {
+        // Make sure itemId is a number, it will make our jobs a lot easier.
+        if (typeof itemId !== 'number') {
+            throw new Error(`itemId must be a number, got ${typeof itemId}`);
+        }
+        // Make sure every item in menuPartIds is a number
+        if (!Array.isArray(menuPartIds)) {
+            throw new Error(`menuPartIds must be an array, got ${typeof menuPartIds}`);
+        }
+        menuPartIds.forEach((partId, index) => {
+            if (typeof partId !== 'number') {
+                throw new Error(`menuPartIds[${index}] must be a number, got ${typeof partId}`);
+            }
+        });
+
         const newCartContent = [...cartContent, {
             itemId: itemId,
-            parts: menuPartIds
+            parts: [...menuPartIds]
         }];
+        setCartContent(newCartContent);
     }
     function removeCompletedItem(itemIndex) {
         const newCartContent = cartContent.filter((cc,i) => i !== itemIndex);
@@ -36,6 +51,7 @@ export default function KioskView() {
     }
     const cartContextValue = {
         cartContent,
+        setCartContent,
         addCompletedItem,
         removeCompletedItem,
     };

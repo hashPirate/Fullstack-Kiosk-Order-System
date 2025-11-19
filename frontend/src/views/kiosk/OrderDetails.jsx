@@ -1,26 +1,28 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Collapsible from '../../utilities/Collapsible.jsx';
 import KioskMenuPart from './KioskMenuPart.jsx';
 import clsx from 'clsx';
 
 import styles from './OrderDetails.module.css';
+import CartContext from './CartContext.js';
 
-// sidePrompts: JS object of prompts and possible side choices
-// setSelections: callback for OrderDetails to set the selections
-export default function OrderDetails({sidePrompts, itemName}) {
+// sidePrompts: list of JS objects that each contain a prompts and an array of possible side choices.
+export default function OrderDetails({sidePrompts, itemId, itemName}) {
     // selectedParts is an array that functions like a dictionary. It maps the side prompt (the collapsible)
     // to the id of the currently selected part in that collapsible.
     // So, just to recap, each collapsible represents a "side prompt" (because it is prompting you to select a side).
-    const [selectedParts, setSelectedParts] = useState(new Array(sidePrompts.length).fill(undefined));
+    const [selectedPartIds, setSelectedPartIds] = useState(new Array(sidePrompts.length).fill(undefined));
 
     const navigate = useNavigate();
 
+    const cartState = useContext(CartContext);
+
     // Set selected menu part for a given "side prompt" (aka. collapsible)
     function setSidePromptSelection(sidePromptIndex, selPartId) {
-        let newSelectedParts = [...selectedParts];
+        let newSelectedParts = [...selectedPartIds];
         newSelectedParts[sidePromptIndex] = selPartId;
-        setSelectedParts(newSelectedParts);
+        setSelectedPartIds(newSelectedParts);
     }
 
     // Render the menu parts within each collapsible.
@@ -32,7 +34,7 @@ export default function OrderDetails({sidePrompts, itemName}) {
                     name={mpart.part_name}
                     price={mpart.price}
                     onClick={() => setSidePromptSelection(sidePromptIndex, mpart.menu_part_id)}
-                    selected={mpart.menu_part_id === selectedParts[sidePromptIndex]}
+                    selected={mpart.menu_part_id === selectedPartIds[sidePromptIndex]}
                     />;
         });
     }
@@ -46,17 +48,22 @@ export default function OrderDetails({sidePrompts, itemName}) {
         );
     }
 
+    function handleOrderItem() {
+        cartState.addCompletedItem(itemId, selectedPartIds);
+        navigate("/kiosk");
+    }
+
     return (
         <div className={clsx(styles.orderDetailsPage, styles.itemName)}>
             <h3 className={styles.buildHeading}>Build your {itemName}.</h3>
             { renderCollapsibles() }
 
             {/* DEBUG ONLY, delete this <p> later! */}
-            <p>[DEBUG]: selected parts: {selectedParts.filter(item => item !== undefined).join(", ")}</p>
+            <p>[DEBUG]: selected parts: {selectedPartIds.filter(item => item !== undefined).join(", ")}</p>
 
             <div className={styles.orderButtons}>
-                {/* For now, both buttons just take you back to the kiosk. */}
-                <button className={styles.completeOrderButton} onClick={() => navigate("/kiosk")}>Order Item</button>
+                {/* Only let the user order if all menu parts have been selected. */}
+                <button disabled={selectedPartIds.includes(undefined)} className={clsx(styles.orderItemButton, (selectedPartIds.includes(undefined)) && styles.buttonDisabled)} onClick={handleOrderItem}>Order Item</button>
                 <button className={styles.cancelOrderButton} onClick={() => navigate("/kiosk")}>Cancel</button>
             </div>
         </div>

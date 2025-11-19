@@ -5,14 +5,17 @@ import { useLocation, useNavigate } from "react-router";
 import styles from "./KioskCart.module.css";
 import CartContext from "../CartContext.js";
 
-export default function CartMenuItem({name, price, itemIndex, children}) {
+export default function CartMenuItem({name, price, itemIndex, children, transCartContent, setTransCartContent}) {
     const cartState = useContext(CartContext);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const outletPath = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
 
+    // Right now, you have to remove the item from the underlying CartContext.cartContent
+    // state as well as the translatedCartContent state. I decided to do this because
+    // having translatedCartContent live-adjust to match CartContext.cartContent seems
+    // like it might be atrociously bad for CPU. But idk, I might refactor this in the future.
     function onXClick() {
-        // TODO
+        cartState.removeCompletedItem(itemIndex);
+        const newTransCartContent = transCartContent.filter((itm,i) => i !== itemIndex);
+        setTransCartContent(newTransCartContent);
     }
 
     return (
