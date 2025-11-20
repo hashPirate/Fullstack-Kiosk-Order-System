@@ -18,6 +18,11 @@ function App() {
       });
   }, []);
 
+const userScopes = user?.scopes || [];
+const hasManagerScope=userScopes.includes('manager');
+const hasAnyScope=userScopes.length>0;
+
+
   return (
     <>
       <h2>Welcome to Exsellence!</h2>
@@ -29,9 +34,15 @@ function App() {
       <p>Please choose a link to visit:</p>
       <ul>
         <li><NavLink to="/kiosk">Kiosk View</NavLink></li>
-        <li><NavLink to="/cashier">Cashier View</NavLink></li>
-        <li><NavLink to="/kitchen">Kitchen View</NavLink></li>
-        <li><NavLink to="/manager">Manager View</NavLink></li>
+        {hasAnyScope && (
+          <>
+            <li><NavLink to="/cashier">Cashier View</NavLink></li>
+            <li><NavLink to="/kitchen">Kitchen View</NavLink></li>
+          </>
+        )}
+        {hasManagerScope && (
+          <li><NavLink to="/manager">Manager View</NavLink></li>
+        )}
       </ul>
       
     </>

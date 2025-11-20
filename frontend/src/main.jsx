@@ -25,8 +25,10 @@ import Reports from "./views/manager/views/Reports.jsx";
 import ManageMenuParts from "./views/manager/views/ManageMenuParts.jsx";
 import ManageMenuItems from "./views/manager/views/ManageMenuItems.jsx";
 import SalesReport from "./views/manager/views/SalesReport.jsx";
+import LoginRoute from './utilities/LoginRoute.jsx';
 
 import App from './App.jsx';
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -35,21 +37,37 @@ createRoot(document.getElementById('root')).render(
         <Route index element={<App />} />
         <Route path="/login" element={<LoginView />} />
         <Route path="/logout" element={<LogoutView />} />
-        <Route path="/kiosk" element={<KioskView />}>
+        <Route path="/kiosk" element={
+          <LoginRoute requiredAccess="kiosk">
+            <KioskView />
+          </LoginRoute>
+        }>
           <Route index element={<KioskHome />}></Route>
           <Route path="build_item" element={<BuildItem />}></Route>
           <Route path="language" element={<SetLanguage />}></Route>
           <Route path="cart" element={<KioskCart />}></Route>
         </Route>
-        <Route path="/cashier" element={<CashierView />}>
+        <Route path="/cashier" element={
+          <LoginRoute requiredAccess="cashier">
+            <CashierView />
+          </LoginRoute>
+        }>
           <Route index element={<Navigate to="menu_items" replace />} />
           <Route path="menu_items" element={<CashierMenuItems />} />
           <Route path="menu_parts" element={<CashierMenuParts />} />
         </Route>
-        <Route path="/kitchen" element={<KitchenView />}>
+        <Route path="/kitchen" element={
+          <LoginRoute requiredAccess="kitchen">
+            <KitchenView />
+          </LoginRoute>
+        }>
           <Route index element={<KitchenHome />}></Route>
         </Route>
-        <Route path="/manager" element={<ManagerView />}>
+        <Route path="/manager" element={
+          <LoginRoute requiredAccess="manager">
+            <ManagerView />
+          </LoginRoute>
+        }>
           <Route index element={<Navigate to="/manager/servers" replace />} />
           <Route path="servers" element={<ManageServers />}></Route>
           <Route path="inventory" element={<Inventory />}></Route>
