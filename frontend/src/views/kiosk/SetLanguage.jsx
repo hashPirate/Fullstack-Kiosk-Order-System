@@ -23,6 +23,7 @@ export default function SetLanguage() {
             // ↓↓↓ this comment will disable a warning for the global `google` object
             // eslint-disable-next-line no-undef
             new google.translate.TranslateElement({pageLanguage: 'en',
+                includedLanguages: 'en,es',
                 layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL
             }, 'google_translate_element');
             setTimeout(() => {
@@ -66,5 +67,3 @@ export default function SetLanguage() {
         </div>
     );
 }
-
-
