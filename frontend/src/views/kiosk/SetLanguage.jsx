@@ -7,7 +7,7 @@ export default function SetLanguage() {
 
 
     useEffect(()=>{
-        //i intially used this to avoid multiple runs of the same google translate element but though using container would be more effective
+        //i intially used this to avoid multiple runs of the same google translate element but thought using container would be more effective
         // if (!window.translateAlrAdded){
         //     window.translateAlrAdded = false;
         // }
@@ -20,7 +20,8 @@ export default function SetLanguage() {
             if(container) {
                 container.innerHTML = '';
             }
-            new google.translate.TranslateElement({pageLanguage: 'en',
+            new google.translate.TranslateElement({pageLanguage: 'en', 
+                includedLanguages: 'en,es',
                 layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL
             }, 'google_translate_element');
             setTimeout(() => {
@@ -40,15 +41,13 @@ export default function SetLanguage() {
                 select.dataset.listenerAttached = 'true';
                 select.addEventListener('change', () =>{
                     if (select.value === 'en'){
-                        //when selected language is english, the original page is shown (i had to add this to not lose the og text on the pages)
+                        //when selected language is english, the original page is shown
                         setTimeout(() =>{
                             window.location.reload();
                         }, 200);
                     }
                 });
             }, 500);
-  
-            
             //this will automatically refresh the page every time we switch to a diff language, not sure if we need it yet...
             // window.location.reload(); 
         };
