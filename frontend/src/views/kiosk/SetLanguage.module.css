@@ -6,16 +6,13 @@
     font-size: 16pt;
     text-align: center;
 }
-.langButtonsDiv {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border: 2px solid #dd2929;
-    outline: none !important;
-    padding: 5px !important;
-    font-size: 14px !important;
+.langButtonsGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    padding: 20px;
+    max-width: 90vw;
+    margin: 0 auto;
 }
 .langButton {
     background-color: white;
@@ -23,20 +20,24 @@
     border-radius: 10px;    
     font-family: Futura, Arial, sans-serif;
     font-size: 16pt;
-    padding: 15px 30px 15px 30px;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 .langButton:hover {
     cursor: pointer;
+    background-color: #f0f0f0;
 }
 .langButton:active {
     background-color: whitesmoke;
+    transform: scale(0.98);
 }
-
-
-.englishButton:after {
-    content: "🇬🇧";
+.langName {
+    min-height: 40px;
 }
-.spanishButton:after {
-    content: "🇪🇸";
+.langEmoji {
+    font-size: 2.5em;
 }
-

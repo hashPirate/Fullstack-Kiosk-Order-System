@@ -1,16 +1,20 @@
 // import {useOutletContext} from 'react-router';
 import styles from './SetLanguage.module.css';
-import clsx from 'clsx';
+import { languages } from './languages.js';
 import { useEffect } from 'react';
 
 export default function SetLanguage() {
 
 
     useEffect(()=>{
-        //i intially used this to avoid multiple runs of the same google translate element but though using container would be more effective
-        // if (!window.translateAlrAdded){
-        //     window.translateAlrAdded = false;
-        // }
+        // Find script, and reload window if it exists
+        const existingScript = document.querySelector('script[src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"]');
+        if (existingScript) {
+            // To get things back into a good state, the page has to be reloaded.
+            window.location.reload();
+            return;
+        }
+
         const script = document.createElement('script');
         script.src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
         document.body.appendChild(script);
@@ -20,10 +24,13 @@ export default function SetLanguage() {
             if(container) {
                 container.innerHTML = '';
             }
+            
+            const languageCodes = languages.map(lang => lang.code).join(',');
+            
             // ↓↓↓ this comment will disable a warning for the global `google` object
             // eslint-disable-next-line no-undef
             new google.translate.TranslateElement({pageLanguage: 'en',
-                includedLanguages: 'en,es',
+                includedLanguages: languageCodes,
                 layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL
             }, 'google_translate_element');
             setTimeout(() => {
@@ -40,15 +47,6 @@ export default function SetLanguage() {
                     englishOption.textContent = 'English';
                     select.insertBefore(englishOption, select.firstChild);
                 }
-                select.dataset.listenerAttached = 'true';
-                select.addEventListener('change', () =>{
-                    if (select.value === 'en'){
-                        //when selected language is english, the original page is shown (i had to add this to not lose the og text on the pages)
-                        setTimeout(() =>{
-                            window.location.reload();
-                        }, 200);
-                    }
-                });
             }, 500);
   
             
@@ -59,11 +57,24 @@ export default function SetLanguage() {
 
     }, []);
     return (
-        
         <div id="setLanguage">
-  
             <h2 className={styles.langTitle}>Choose your preferred language</h2>
-            <div id='google_translate_element' className={styles.langButtonsDiv}></div>
+
+            {/* This div is still required for the Google Translate widget to function, but we hide it. */}
+            <div id='google_translate_element' style={{display: 'none'}}></div>
+
+            <div className={styles.langButtonsGrid}>
+                {languages.map((lang) => (
+                    <button key={lang.code} className={styles.langButton + " skiptranslate"} onClick={() => {
+                        const select = document.querySelector('.goog-te-combo');
+                        if (select) select.value = lang.code;
+                        select?.dispatchEvent(new Event('change'));
+                    }}>
+                        <span className={styles.langName}>{lang.name}</span>
+                        <span className={styles.langEmoji}>{lang.emoji}</span>
+                    </button>
+                ))}
+            </div>
         </div>
     );
 }
