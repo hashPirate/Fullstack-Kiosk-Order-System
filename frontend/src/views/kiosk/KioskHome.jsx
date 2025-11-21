@@ -31,7 +31,7 @@ export default function KioskHome() {
         } else {
             return (
                 menuItems.map(
-                    (itm, i) => <KioskMenuItem key={i} img="/menu_item_images/bowl.png" name={itm.item_name} price={itm.price} itemId={itm.menu_item_id} partCount={itm.part_count}/>
+                    (itm, i) => <KioskMenuItem key={i} img={"/api/images/" + itm.image_name} name={itm.item_name} price={itm.price} itemId={itm.menu_item_id} partCount={itm.part_count}/>
                 )
             );
         }
