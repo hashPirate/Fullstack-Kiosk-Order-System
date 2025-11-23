@@ -3,14 +3,8 @@ import { FaMinus } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
 import styles from "./KioskZoomMenu.module.css";
-import { useEffect, useState } from "react";
 
-export default function KioskZoomMenu({ setShowZoomMenu }) {
-    const [zoom, setZoom] = useState(100);
-
-    useEffect(() => {
-        document.body.style.zoom = `${zoom}%`;
-    }, [zoom]);
+export default function KioskZoomMenu({ setShowZoomMenu, zoomLevel, setZoomLevel }) {
 
     return (
         <>
@@ -18,9 +12,9 @@ export default function KioskZoomMenu({ setShowZoomMenu }) {
                 <div className={styles.kioskZoomMenu}>
                     <p className={styles.prompt}>Zoom In/Out</p>
                     <div className={styles.iconsContainer}>
-                        <FaMinus className={styles.icon} color="black" onClick={() => setZoom(z => z - 10)}/>
-                        <p className={styles.prompt}>{zoom}%</p>
-                        <FaPlus className={styles.icon} color={"black"} onClick={() => setZoom(z => z + 10)}/>
+                        <FaMinus className={styles.icon} color="black" onClick={() => setZoomLevel(z => z - 10)}/>
+                        <p className={styles.prompt}>{zoomLevel}%</p>
+                        <FaPlus className={styles.icon} color={"black"} onClick={() => setZoomLevel(z => z + 10)}/>
                     </div>
                 </div>
             </div>

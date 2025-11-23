@@ -66,9 +66,9 @@
     gap: 20px;
 }
 
-.magGlassIcon {
+/* .magGlassIcon {
     font-size: 2rem;
-}
+} */
 .magGlassIcon:hover {
     cursor: pointer;
 }
