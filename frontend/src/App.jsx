@@ -34,6 +34,7 @@ const hasAnyScope=userScopes.length>0;
       <p>Please choose a link to visit:</p>
       <ul>
         <li><NavLink to="/kiosk">Kiosk View</NavLink></li>
+        <li><NavLink to="/menu">Menu Board</NavLink></li>
         {hasAnyScope && (
           <>
             <li><NavLink to="/cashier">Cashier View</NavLink></li>
