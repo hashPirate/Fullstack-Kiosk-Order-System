@@ -11,7 +11,8 @@ export default function KitchenHome() {
     // These are useRefs because useRefs update instantly and do not cause a
     // re-render when they are updated.
     const menuItemsMapping = useRef(undefined);
-    const ordersLock = useRef(false);
+    const delOrderSem = useRef(0);      // Semaphore for order deletion.
+    const fetchOrdersLock = useRef(false);     // Lock for syncing the orders.
 
     // These are state because they do not need to be updated instantly and they
     // should cause a re-render when updated.
@@ -56,7 +57,7 @@ export default function KitchenHome() {
                 }
                 menuItemsMapping.current = newItemsMapping;
 
-                // No need to lock here, since this runs in on init.
+                // No need to use a semaphore here, since this function runs only in on init.
                 const incomingOrders = await fetchIncomingOrders();
                 setOrders(incomingOrders);
 
@@ -68,17 +69,18 @@ export default function KitchenHome() {
         })();
 
         async function refreshOrders() {
-            // Although a skilled programmer would make refreshOrders()
-            // wait for `ordersLock` to be released using a while loop or
-            // something, I'm just going to let it return early if the lock is
-            // on, since refreshOrders() is going to be running in an interval
-            // anyway.
+            // This isn't great code, I should probably make it wait
+            // to acquire the lock. However, it ain't broke, so I
+            // won't fix it.
+            console.log("Attempting to refresh kitchen orders....");
             const incomingOrders = await fetchIncomingOrders();
-            if (!ordersLock.current) {
-                ordersLock.current = true;
+            if (delOrderSem.current === 0) {
+                fetchOrdersLock.current = true;
                 setOrders(incomingOrders);
-                ordersLock.current = false;
+                fetchOrdersLock.current = false;
+                console.log("Kitchen orders refresh successful!");
             } else {
+                console.log("Kitchen orders refresh unsuccessful.");
                 return;
             }
         };
@@ -94,20 +96,26 @@ export default function KitchenHome() {
     async function removeOrder(id) {
         // Once again, I'm just going to return if the lock is locked.
         // Bad practice, but I don't want to overcomplicate this.
-        if (!ordersLock.current) {
-            ordersLock.current = true;
-            // optimistically remove order from screen
-            const newOrders = orders.filter(o => o.order_id !== id);
-            setOrders(newOrders);
-            // update in db
-            const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: true });
-            if (!setCookedResponse.data.success) {
-                console.log("ERROR: order could not actually be removed from database. Failing silently...");
-            } else {
-                console.log("Order successfully removed from database.");
+        console.log(`Attempting to remove order ${id}...`);
+        if (!fetchOrdersLock.current) {
+            try {
+                delOrderSem.current++;
+                // optimistically remove order from screen
+                const newOrders = orders.filter(o => o.order_id !== id);
+                setOrders(newOrders);
+                // update in db
+                const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: true });
+                if (!setCookedResponse.data.success) {
+                    console.log("ERROR: order could not actually be removed from database. Failing silently...");
+                } else {
+                    console.log("Order successfully removed from database.");
+                }
+            } finally {
+                delOrderSem.current--;
+                console.log(`Successfully removed order ${id}!`);
             }
-            ordersLock.current = false;
         } else {
+            console.log(`Could not remove order ${id}.`);
             return;
         }
     }
