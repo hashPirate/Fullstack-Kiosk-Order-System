@@ -48,8 +48,8 @@
 }
 
 .navSpacer {
-    width: 2.5em;
-    height: 2.5em;
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 .navLeft {
@@ -66,4 +66,9 @@
     gap: 20px;
 }
 
-
+.magGlassIcon {
+    font-size: 2rem;
+}
+.magGlassIcon:hover {
+    cursor: pointer;
+}

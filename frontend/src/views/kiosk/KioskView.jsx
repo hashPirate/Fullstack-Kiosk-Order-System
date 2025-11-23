@@ -4,11 +4,13 @@ import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
 import { CiGlobe } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
 
 import styles from "./KioskView.module.css";
 import CartContext from "./CartContext.js";
+import KioskZoomMenu from "./KioskZoomMenu.jsx";
 
 const langIcons = {
     "English": "🇬🇧",
@@ -17,6 +19,7 @@ const langIcons = {
 
 export default function KioskView() {
     const [temp, setTemp] = useState("...");
+    const [showZoomMenu, setShowZoomMenu] = useState(false);
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
 
@@ -96,8 +99,12 @@ export default function KioskView() {
                     {/* This conditional rendering just makes sure that there is a back button on the language / cart page. */}
                     { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink}><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
                     <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon}/></Link>
+                    <FaMagnifyingGlass className={styles.kioskIcon + " " + styles.magGlassIcon} onClick={() => setShowZoomMenu(!showZoomMenu)} />
+                    { (showZoomMenu)
+                    ? <KioskZoomMenu setShowZoomMenu={setShowZoomMenu} />
+                    : <></> }
                     {/* navSpacers just exist to balance things out and make sure the title is centered. */}
-                    { (outletLocation === "language" || outletLocation === "cart") ? <></> : <div className={styles.navSpacer}></div> }
+                    {/* { (outletLocation === "language" || outletLocation === "cart") ? <></> : <div className={styles.navSpacer}></div> } */}
                 </div>
                 <Link to="/kiosk" className={styles.headerLink}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
                 <div className={styles.navRight}>

@@ -1,0 +1,69 @@
+.clickoutPane {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+.kioskZoomMenu {
+    position: absolute;
+    top: 3rem;
+    left: -3.5rem;
+    /* min-height: 10rem; */
+    min-width: 15rem;
+    z-index: 6;
+    background-color: white;
+    border: 4px solid crimson;
+    border-radius: 10px;
+
+    padding: 0.5rem;
+}
+
+/* Speech bubble effect */
+.kioskZoomMenu:before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: -12px;
+    left: 12px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 12px solid crimson;
+}
+
+/* Trick I found on Stack Overflow to position something relatively
+   while taking the thing out of flow. */
+.kioskZoomMenuContainer {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 0;
+    width: 0;
+    z-index: 5;
+}
+
+/* This is also used to style the XXX% indicator */
+.prompt {
+    font-family: 'Futura', Arial, sans-serif;
+    font-size: 20pt;
+    text-align: center;
+    color: black;
+}
+
+.iconsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Color for these has to be set in React... */
+.icon, .icon * {
+    font-size: 20pt;
+    color: black;
+}
+
+.icon:hover {
+    cursor: pointer;
+}
