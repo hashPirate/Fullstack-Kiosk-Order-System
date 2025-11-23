@@ -4,6 +4,7 @@ import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
 import { CiGlobe } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
+import { FiLogIn } from "react-icons/fi";
 import { HiMagnifyingGlassPlus } from "react-icons/hi2";
 import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
@@ -11,6 +12,7 @@ import { fetchWeatherApi } from 'openmeteo';
 import styles from "./KioskView.module.css";
 import CartContext from "./CartContext.js";
 import KioskZoomMenu from "./KioskZoomMenu.jsx";
+import KioskLoginPopup from "./KioskLoginPopup.jsx";
 
 const langIcons = {
     "English": "🇬🇧",
@@ -20,6 +22,7 @@ const langIcons = {
 export default function KioskView() {
     const [temp, setTemp] = useState("...");
     const [showZoomMenu, setShowZoomMenu] = useState(false);
+    const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [zoomLevel, setZoomLevel] = useState(100);
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
@@ -69,6 +72,9 @@ export default function KioskView() {
     useEffect(() => {
         let alive = true;
 
+        // Show the login popup every time the page loads.
+        setShowLoginPopup(true);
+
         (async () => {
         try {
             const url = "https://api.open-meteo.com/v1/forecast";
@@ -106,6 +112,7 @@ export default function KioskView() {
                     { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink}><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
                     <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon}/></Link>
                     <HiMagnifyingGlassPlus className={styles.kioskIcon + " " + styles.magGlassIcon} onClick={() => setShowZoomMenu(!showZoomMenu)} />
+                    <FiLogIn className={styles.kioskIcon} onClick={() => setShowLoginPopup(true)} />
                     { (showZoomMenu)
                     ? <KioskZoomMenu setShowZoomMenu={setShowZoomMenu} zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />
                     : <></> }
@@ -116,6 +123,7 @@ export default function KioskView() {
                     <Link to="cart" className={styles.headerLink}><LuShoppingCart className={styles.kioskIcon}/></Link>
                 </div>
             </nav>
+            {showLoginPopup && <KioskLoginPopup setShowLoginPopup={setShowLoginPopup} />}
             <Outlet />
         </CartContext.Provider>
     );
