@@ -12,6 +12,11 @@ export default function MenuPart({style, id, name, price}) {
     const navigate = useNavigate();
 
     function onPartClick() {
+        if (orderState.isProcessing) {
+            console.log("ERROR: cannot add parts to a new order while processing another order.");
+            return;
+        }
+
         if (orderState.orderContent.length === 0) {
             console.log("ERROR: cannot add menu parts when there are no menu items!");
             navigate("/cashier/menu_items");

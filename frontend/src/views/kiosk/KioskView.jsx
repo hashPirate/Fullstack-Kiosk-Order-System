@@ -4,11 +4,13 @@ import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
 import { CiGlobe } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
+import { HiMagnifyingGlassPlus } from "react-icons/hi2";
 import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
 
 import styles from "./KioskView.module.css";
 import CartContext from "./CartContext.js";
+import KioskZoomMenu from "./KioskZoomMenu.jsx";
 
 const langIcons = {
     "English": "🇬🇧",
@@ -17,6 +19,8 @@ const langIcons = {
 
 export default function KioskView() {
     const [temp, setTemp] = useState("...");
+    const [showZoomMenu, setShowZoomMenu] = useState(false);
+    const [zoomLevel, setZoomLevel] = useState(100);
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
 
@@ -56,6 +60,11 @@ export default function KioskView() {
         removeCompletedItem,
     };
 
+    // Change the actual zoom on `zoomLevel` change
+    useEffect(() => {
+        document.body.style.zoom = `${zoomLevel}%`;
+    }, [zoomLevel]);
+
     // Fetch weather as soon as this component loads.
     useEffect(() => {
         let alive = true;
@@ -92,20 +101,26 @@ export default function KioskView() {
     return (
         <CartContext.Provider value={cartContextValue}>
             <nav className={styles.kioskNav + " skiptranslate"}>
-                <div className={styles.navLeft}>
+            <div className={styles.navLeft}>
                     {/* This conditional rendering just makes sure that there is a back button on the language / cart page. */}
-                    { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink} aria-label="Go back to kiosk menu" ><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
-                    <Link to="language" className={styles.headerLink} aria-label="Change language" ><CiGlobe className={styles.kioskIcon}/></Link>
-                    {/* navSpacers just exist to balance things out and make sure the title is centered. */}
-                    { (outletLocation === "language" || outletLocation === "cart") ? <></> : <div className={styles.navSpacer}></div> }
+                    { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink} aria-label="Go back to kiosk menu"><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
+                    <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon} aria-label="Change language" /></Link>
+                    <HiMagnifyingGlassPlus className={styles.kioskIcon + " " + styles.magGlassIcon} onClick={() => setShowZoomMenu(!showZoomMenu)} />
+                    { (showZoomMenu)
+                    ? <KioskZoomMenu setShowZoomMenu={setShowZoomMenu} zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />
+                    : <></> }
                 </div>
                 <Link to="/kiosk" className={styles.headerLink}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
                 <div className={styles.navRight}>
-                    <div className={styles.weather} aria-label={`Current temperature: ${temp}`} ><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
-                    <Link to="cart" className={styles.headerLink} aria-label="View cart" ><LuShoppingCart className={styles.kioskIcon}/></Link>
+                    <div className={styles.weather}><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
+                    <Link to="cart" className={styles.headerLink}><LuShoppingCart className={styles.kioskIcon}/></Link>
                 </div>
             </nav>
             <Outlet />
         </CartContext.Provider>
     );
 };
+
+// Removed nav spacer code (I feel like it doesn't really matter tbh):
+    // {/* navSpacers just exist to balance things out and make sure the title is centered. */}
+    // {/* { (outletLocation === "language" || outletLocation === "cart") ? <></> : <div className={styles.navSpacer}></div> } */}

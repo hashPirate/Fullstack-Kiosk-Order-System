@@ -18,6 +18,7 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "build-front": "vite build ./frontend",
+    "build-front-dev": "vite build --mode development ./frontend",
     "heroku-prebuild": "npm install && cd frontend && npm install && npm run build"
   },
   "dependencies": {

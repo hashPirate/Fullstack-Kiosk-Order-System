@@ -40,7 +40,7 @@ export default function PendingOrder({orderId, menuItems, handleRemoveOrder}) {
                 <h3 className={styles.orderTitle}>Order #{orderId}</h3>
                 <IoIosCloseCircleOutline className={styles.orderIcon} onClick={() => handleRemoveOrder(orderId)}/>
             </div>
-            { menuItems.map((mni, i) => <PendingOrderItem key={i} itemName={mni.itemName} menuParts={mni.menuParts}/>) }
+            { menuItems.map((mni, i) => <PendingOrderItem key={i} itemName={mni.item_name} menuParts={mni.menu_parts}/>) }
         </div>
     );
 }
