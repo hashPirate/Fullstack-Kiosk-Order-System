@@ -35,3 +35,7 @@
     color: white;
     font-size: 32pt;
 }
+
+.navLink:hover {
+    cursor: pointer;
+}

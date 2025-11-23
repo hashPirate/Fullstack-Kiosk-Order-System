@@ -1,6 +1,7 @@
 const DbModelManager = require('./DbModelManager');
 const Order = require('../model/Order');
 const OrderItem = require('../model/OrderItem');
+const MenuPart = require('../model/MenuPart');
 const ItemSalesReport = require('../model/ItemSalesReport');
 const HourlySales = require('../model/HourlySales');
 
@@ -49,6 +50,16 @@ class OrderManager extends DbModelManager {
     async getOrderItems(order) {
         const result = await this.db.query('SELECT * FROM order_items WHERE order_id = $1 ORDER BY created_at', [order.getOrderID()]);
         return result.rows.map(row => new OrderItem(this.db, row));
+    }
+
+    // [Donnell]: made this to get menu parts for an order item.
+    async getMenuPartsFromOrderItem(orderItemId) {
+        const query = `
+        SELECT menu_parts.menu_part_id, part_name, image_name, price, for_sale FROM menu_parts_to_order_items
+        INNER JOIN menu_parts ON menu_parts.menu_part_id = menu_parts_to_order_items.menu_part_id
+        WHERE order_item_id = $1;`;
+        const result = await this.db.query(query, [orderItemId]);
+        return result.rows.map(row => new MenuPart(this.db, row));
     }
 
     async createOrder() {

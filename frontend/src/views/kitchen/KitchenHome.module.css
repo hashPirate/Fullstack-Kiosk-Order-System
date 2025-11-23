@@ -1,8 +1,11 @@
 
 .kitchenHome {
-    padding: 2.5rem;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 1.5rem;
 }
-
 .placeholderTitle, .placeholderBody {
     padding: 0;
     margin: 0;
@@ -18,6 +21,10 @@
 .placeholderBody {
     margin: 10pt 0 10pt 0;
     font-size: 12pt;
+}
+
+.hashLoader {
+    margin: 0 auto;
 }
 
 

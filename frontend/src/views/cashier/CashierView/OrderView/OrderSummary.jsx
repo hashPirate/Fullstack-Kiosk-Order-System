@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import clsx from "clsx";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import styles from "./OrderView.module.css";
 import OrderContext from "../../OrderContext";
@@ -8,6 +9,9 @@ import OrderContext from "../../OrderContext";
 export default function OrderSummary() {
     const orderState = useContext(OrderContext);
     const [confirmDisabled, setConfirmDisabled] = useState(false);
+    const location = useLocation();
+    const locationHead = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
+    const navigate = useNavigate();
 
     function getOrderTotal() {
         let total = 0;
@@ -27,10 +31,16 @@ export default function OrderSummary() {
     // TODO: add flag for errors and use it to retry the confirmation if errors occurred.
     async function confirmOrder() {
         setConfirmDisabled(true);
+        orderState.setIsProcessing(true);
         if (orderState.orderContent.length === 0) {
             console.log("Cannot make order without at least one item!");
             setConfirmDisabled(false);
             return;
+        }
+
+        // Move to menu_items screen if the order is made while on menu_parts screen.
+        if (locationHead === "menu_parts") {
+            navigate("/cashier/menu_items");
         }
         
         try {
@@ -68,6 +78,7 @@ export default function OrderSummary() {
             console.log("ERROR during order confirmation:", error);
         } finally {
             setConfirmDisabled(false);
+            orderState.setIsProcessing(false);
         }
     };
 

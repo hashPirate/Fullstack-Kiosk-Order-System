@@ -147,6 +147,17 @@ router.post('/items/:id/parts', async (req, res) => {
     }
 });
 
+// [Donnell]: made this to get menu parts for an order item.
+router.get('/items/:id/parts', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const menuParts = await db.orderManager.getMenuPartsFromOrderItem(id)
+        res.json(menuParts);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.delete('/items/:id/parts', async (req, res) => {
     try {
         const { id } = req.params;

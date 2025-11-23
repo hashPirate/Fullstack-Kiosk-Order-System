@@ -1,5 +1,15 @@
 /* NOTE: this CSS file is shared by PendingOrder and PendingOrderItem. */
 
+.pendingOrder {
+    padding: 10px;
+    margin: 0 0 20px 0;
+    display: block;
+    padding: 0 0 10px 0;
+    background-color: lightblue;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
 .itemName {
     margin: 0;
     padding: 0;
@@ -45,7 +55,11 @@
 }
 
 .orderTitle {
-    font-size: 21pt;
+    font-size: 18pt;
+    font-family: 'Futura', Arial, sans-serif;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
 }
 
 .itemName {
@@ -53,13 +67,4 @@
     font-size: 18pt;
 }
 
-.pendingOrder {
-    padding: 10px;
-    margin: 0 0 20px 0;
-    display: block;
-    padding: 0 0 10px 0;
-    background-color: lightblue;
-    border: 2px solid black;
-    border-radius: 10px;
-}
 
