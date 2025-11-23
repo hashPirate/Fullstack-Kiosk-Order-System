@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import clsx from "clsx";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import styles from "./OrderView.module.css";
 import OrderContext from "../../OrderContext";
@@ -8,6 +9,9 @@ import OrderContext from "../../OrderContext";
 export default function OrderSummary() {
     const orderState = useContext(OrderContext);
     const [confirmDisabled, setConfirmDisabled] = useState(false);
+    const location = useLocation();
+    const locationHead = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
+    const navigate = useNavigate();
 
     function getOrderTotal() {
         let total = 0;
@@ -31,6 +35,11 @@ export default function OrderSummary() {
             console.log("Cannot make order without at least one item!");
             setConfirmDisabled(false);
             return;
+        }
+
+        // Move to menu_items screen if the order is made while on menu_parts screen.
+        if (locationHead === "menu_parts") {
+            navigate("/cashier/menu_items");
         }
         
         try {
