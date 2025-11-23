@@ -6,6 +6,7 @@ import { HashLoader } from "react-spinners";
 
 import styles from "./KitchenHome.module.css";
 import PendingOrder from "./PendingOrder.jsx";
+import ConfirmationScreen from "./ConfirmationScreen.jsx";
 
 export default function KitchenHome() {
     // These are useRefs because useRefs update instantly and do not cause a
@@ -18,6 +19,7 @@ export default function KitchenHome() {
     // should cause a re-render when updated.
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [orderToRemove, setOrderToRemove] = useState(null);    // used for confirming removed order
 
     async function fetchIncomingOrders() {
         try {
@@ -96,7 +98,7 @@ export default function KitchenHome() {
     async function removeOrder(id) {
         // Once again, I'm just going to return if the lock is locked.
         // Bad practice, but I don't want to overcomplicate this.
-        console.log(`Attempting to remove order ${id}...`);
+        console.log(`Attempting to mark order ${id}...`);
         if (!fetchOrdersLock.current) {
             try {
                 delOrderSem.current++;
@@ -106,25 +108,30 @@ export default function KitchenHome() {
                 // update in db
                 const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: true });
                 if (!setCookedResponse.data.success) {
-                    console.log("ERROR: order could not actually be removed from database. Failing silently...");
+                    console.log("ERROR: order could not actually be marked in database. Failing silently...");
                 } else {
-                    console.log("Order successfully removed from database.");
+                    console.log("Order successfully marked in database.");
                 }
             } finally {
                 delOrderSem.current--;
-                console.log(`Successfully removed order ${id}!`);
+                console.log(`Successfully marked order ${id}!`);
             }
         } else {
-            console.log(`Could not remove order ${id}.`);
+            console.log(`Could not mark order ${id}.`);
             return;
         }
+    }
+
+    // Confirm the removal of the order by bringing up the confirmation screen.
+    async function confirmRemoveOrder(id) {
+        setOrderToRemove(id);
     }
 
    function renderOrders() {
         if (!loading) {
             // Render main content if initial load is complete.
             if (!orders.length == 0) {
-                return orders.map((ord, i) => <PendingOrder key={ord.order_id} orderId={ord.order_id} menuItems={ord.menu_items} handleRemoveOrder={removeOrder} />);
+                return orders.map((ord, i) => <PendingOrder key={ord.order_id} orderId={ord.order_id} menuItems={ord.menu_items} handleRemoveOrder={confirmRemoveOrder} />);
             } else {
                 return (
                     <>
@@ -141,6 +148,9 @@ export default function KitchenHome() {
 
     return (
         <div className={styles.kitchenHome}>
+            { (orderToRemove !== null)
+            ? <ConfirmationScreen orderToRemove={orderToRemove} setOrderToRemove={setOrderToRemove} handleRemoveOrder={removeOrder}/>
+            : <></> }
             { renderOrders() }
         </div>
     );
