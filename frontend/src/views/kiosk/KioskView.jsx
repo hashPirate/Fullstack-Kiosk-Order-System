@@ -94,15 +94,15 @@ export default function KioskView() {
             <nav className={styles.kioskNav + " skiptranslate"}>
                 <div className={styles.navLeft}>
                     {/* This conditional rendering just makes sure that there is a back button on the language / cart page. */}
-                    { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink}><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
-                    <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon}/></Link>
+                    { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink} aria-label="Go back to kiosk menu" ><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
+                    <Link to="language" className={styles.headerLink} aria-label="Change language" ><CiGlobe className={styles.kioskIcon}/></Link>
                     {/* navSpacers just exist to balance things out and make sure the title is centered. */}
                     { (outletLocation === "language" || outletLocation === "cart") ? <></> : <div className={styles.navSpacer}></div> }
                 </div>
                 <Link to="/kiosk" className={styles.headerLink}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
                 <div className={styles.navRight}>
-                    <div className={styles.weather}><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
-                    <Link to="cart" className={styles.headerLink}><LuShoppingCart className={styles.kioskIcon}/></Link>
+                    <div className={styles.weather} aria-label={`Current temperature: ${temp}`} ><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
+                    <Link to="cart" className={styles.headerLink} aria-label="View cart" ><LuShoppingCart className={styles.kioskIcon}/></Link>
                 </div>
             </nav>
             <Outlet />

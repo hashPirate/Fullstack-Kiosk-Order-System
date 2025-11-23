@@ -21,7 +21,7 @@ export default function CartMenuItem({name, price, itemIndex, children, transCar
     return (
     <div className={styles.cartMenuItem}>
         <div className={styles.itemHeader}>
-            <GoXCircle className={styles.itemXButton} onClick={onXClick}/>
+            <GoXCircle className={styles.itemXButton} onClick={onXClick} aria-label={`Remove ${name}`} />
             <h4 className={styles.itemTitle}>{name}</h4>
             <span className={styles.itemPrice}>{price}</span>
         </div>

@@ -19,7 +19,6 @@ export default function ManageMenuItems() {
     const handleUpdateMenuItem = (item, field, value) => {
         console.log('Update menu item (demo mode):', item.item_name, field, value);
     };
-
     const handleCellEdit = (item, field, currentValue) => {
         if (field === 'for_sale') {
             handleUpdateMenuItem(item, field, !currentValue);
