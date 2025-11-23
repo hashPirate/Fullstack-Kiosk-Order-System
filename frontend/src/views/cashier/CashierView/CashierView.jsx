@@ -28,6 +28,7 @@ export default function CashierView() {
         //     partPrice: 9.99
         // }
     const [orderContent, setOrderContent] = useState([]);
+    const [isProcessing, setIsProcessing] = useState(false);
     
     function addMenuItem(menuItemId, menuItemName, menuItemPrice) {
         setOrderContent([ ...orderContent, {itemId: menuItemId, itemName: menuItemName, itemPrice: menuItemPrice, parts: []} ]);
@@ -65,6 +66,8 @@ export default function CashierView() {
 
     const orderContextVal = {
         orderContent,
+        isProcessing,
+        setIsProcessing,
         setOrderContent,
         addMenuItem,
         removeMenuItem,

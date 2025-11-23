@@ -4,6 +4,8 @@ import { createContext } from "react";
 
 const OrderContext = createContext({
     orderContent: [],
+    isProcessing: false,
+    setIsProcessing: null,
     setOrderContent: null,
     addMenuItem: null,
     removeMenuItem: null,

@@ -11,6 +11,11 @@ export default function MenuItem({id, name, price, style}) {
     const orderState = useContext(OrderContext);
 
     function onItemClick() {
+        if (orderState.isProcessing) {
+            console.log("ERROR: cannot add items to a new order while processing another order.");
+            return;
+        }
+
         orderState.addMenuItem(id, name, price);
         navigate(`/cashier/menu_parts?menuItemID=${id}`);
     }

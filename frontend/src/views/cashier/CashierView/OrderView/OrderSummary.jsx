@@ -31,6 +31,7 @@ export default function OrderSummary() {
     // TODO: add flag for errors and use it to retry the confirmation if errors occurred.
     async function confirmOrder() {
         setConfirmDisabled(true);
+        orderState.setIsProcessing(true);
         if (orderState.orderContent.length === 0) {
             console.log("Cannot make order without at least one item!");
             setConfirmDisabled(false);
@@ -77,6 +78,7 @@ export default function OrderSummary() {
             console.log("ERROR during order confirmation:", error);
         } finally {
             setConfirmDisabled(false);
+            orderState.setIsProcessing(false);
         }
     };
 
