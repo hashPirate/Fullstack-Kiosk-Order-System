@@ -56,11 +56,21 @@ export default function KioskView() {
         const newCartContent = cartContent.filter((cc,i) => i !== itemIndex);
         setCartContent(newCartContent);
     }
+    function signOut() {
+        setUser(null);
+
+        // Queue sign in prompt and navigate back to home after 3 seconds
+        setTimeout(() => {
+            setShowLoginPopup(true);
+            window.location.href = "/kiosk";
+        }, 3000);
+    }
     const cartContextValue = {
         cartContent,
         setCartContent,
         addCompletedItem,
         removeCompletedItem,
+        signOut,
     };
 
     // Change the actual zoom on `zoomLevel` change

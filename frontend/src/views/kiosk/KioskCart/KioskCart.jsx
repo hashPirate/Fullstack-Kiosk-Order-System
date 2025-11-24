@@ -153,6 +153,7 @@ export default function KioskCart() {
             console.log("Order completed successfully!");
             setOrderCompleted(true);    // Set this so that header shows visual feedback.
             cartState.setCartContent([]);    // This should update the order screen, right?
+            cartState.signOut(); // Sign out for the next user.
         } catch (error) {
             console.log("ERROR while completing order:", error);
         } finally {

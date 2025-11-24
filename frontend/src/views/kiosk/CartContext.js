@@ -6,6 +6,7 @@ const CartContext = createContext({
     setCartContent: null,
     addCompletedItem: null,
     removeCompletedItem: null,
+    signOut: null,
 });
 
 export default CartContext;
