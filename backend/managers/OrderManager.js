@@ -113,8 +113,10 @@ class OrderManager extends DbModelManager {
         return result.rows.map(row => new Order(this.db, row));
     }
 
-    async finalizeOrder(order) {
+    async finalizeOrder(order, userId) {
         await this.ensureNotFinal(order.getOrderID());
+        if (userId !== null)
+            await this.db.query('UPDATE orders SET user_id = $1 WHERE order_id = $2', [userId, order.getOrderID()])
         await this.db.query('UPDATE orders SET is_final = true WHERE order_id = $1', [order.getOrderID()]);
         await this.db.query('UPDATE ingredients SET current_quantity = ingredients.current_quantity - (ingredients_to_menu_parts.quantity_cost * order_items.quantity) FROM menu_parts_to_order_items INNER JOIN order_items ON menu_parts_to_order_items.order_item_id = order_items.order_item_id INNER JOIN ingredients_to_menu_parts ON menu_parts_to_order_items.menu_part_id = ingredients_to_menu_parts.menu_part_id WHERE ingredients.ingredient_id = ingredients_to_menu_parts.ingredient_id AND order_items.order_id = $1', [order.getOrderID()]);
     }

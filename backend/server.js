@@ -15,6 +15,7 @@ const session = require('./controllers/session');
 const reportsController = require('./controllers/reports');
 const usersController = require('./controllers/users');
 const imagesController = require('./controllers/images');
+const kioskLoginController = require('./controllers/kioskLogin');
 
 // Middleware
 app.use(express.json());
@@ -34,6 +35,7 @@ app.use("/api/session", session.router);
 app.use("/api/reports", reportsController);
 app.use("/api/users", usersController);
 app.use("/api/images", imagesController);
+app.use("/api/kiosk-login", kioskLoginController);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, '../frontend/dist')));

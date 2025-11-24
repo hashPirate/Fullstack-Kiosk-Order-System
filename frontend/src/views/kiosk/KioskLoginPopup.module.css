@@ -1,0 +1,76 @@
+.popupBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popupContent {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    font-family: "Futura", Arial, sans-serif;
+    text-align: center;
+    position: relative;
+    color: #333;
+    max-width: 480px;
+    width: 90%;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.closeButton:hover {
+    color: #000;
+}
+
+.qrCodeContainer {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.loggedInMessage {
+    padding: 2rem;
+}
+
+.loggedInMessage h3 {
+    color: #28a745;
+    font-size: 1.5rem;
+}
+
+.noThanksButton {
+    background-color: #e0e0e0; /* A light grey background */
+    border: none;
+    color: #333; /* Dark grey text for contrast */
+    text-decoration: none;
+    cursor: pointer;
+    font-family: "Futura", Arial, sans-serif;
+    font-size: 1rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem; /* Make the button bigger */
+    border-radius: 8px;
+    font-weight: bold;
+    width: 80%;
+    max-width: 250px;
+}
+
+.noThanksButton:hover {
+    background-color: #d0d0d0; /* Slightly darker on hover */
+}

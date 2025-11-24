@@ -4,6 +4,7 @@ import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
 import { CiGlobe } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
+import { FiLogIn } from "react-icons/fi";
 import { HiMagnifyingGlassPlus } from "react-icons/hi2";
 import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
@@ -11,6 +12,7 @@ import { fetchWeatherApi } from 'openmeteo';
 import styles from "./KioskView.module.css";
 import CartContext from "./CartContext.js";
 import KioskZoomMenu from "./KioskZoomMenu.jsx";
+import KioskLoginPopup from "./KioskLoginPopup.jsx";
 
 const langIcons = {
     "English": "🇬🇧",
@@ -20,6 +22,8 @@ const langIcons = {
 export default function KioskView() {
     const [temp, setTemp] = useState("...");
     const [showZoomMenu, setShowZoomMenu] = useState(false);
+    const [showLoginPopup, setShowLoginPopup] = useState(false);
+    const [user, setUser] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(100);
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
@@ -43,21 +47,30 @@ export default function KioskView() {
             }
         });
 
-        const newCartContent = [...cartContent, {
-            itemId: itemId,
-            parts: [...menuPartIds]
-        }];
-        setCartContent(newCartContent);
+        setCartContent(prevCartContent => [
+            ...prevCartContent,
+            { itemId: itemId, parts: [...menuPartIds] }
+        ]);
     }
     function removeCompletedItem(itemIndex) {
         const newCartContent = cartContent.filter((cc,i) => i !== itemIndex);
         setCartContent(newCartContent);
+    }
+    function signOut() {
+        setUser(null);
+
+        // Queue sign in prompt and navigate back to home after 3 seconds
+        setTimeout(() => {
+            setShowLoginPopup(true);
+            window.location.href = "/kiosk";
+        }, 3000);
     }
     const cartContextValue = {
         cartContent,
         setCartContent,
         addCompletedItem,
         removeCompletedItem,
+        signOut,
     };
 
     // Change the actual zoom on `zoomLevel` change
@@ -68,6 +81,9 @@ export default function KioskView() {
     // Fetch weather as soon as this component loads.
     useEffect(() => {
         let alive = true;
+
+        // Show the login popup every time the page loads.
+        setShowLoginPopup(true);
 
         (async () => {
         try {
@@ -106,17 +122,23 @@ export default function KioskView() {
                     { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink} aria-label="Go back to kiosk menu"><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
                     <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon} aria-label="Change language" /></Link>
                     <HiMagnifyingGlassPlus className={styles.kioskIcon + " " + styles.magGlassIcon} onClick={() => setShowZoomMenu(!showZoomMenu)} />
+                    {user ? (
+                        <span className={styles.loggedInUser}>Hi, {user.username}</span>
+                    ) : (
+                        <FiLogIn className={styles.kioskIcon} onClick={() => setShowLoginPopup(true)} />
+                    )}
                     { (showZoomMenu)
                     ? <KioskZoomMenu setShowZoomMenu={setShowZoomMenu} zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />
                     : <></> }
                 </div>
-                <Link to="/kiosk" className={styles.headerLink}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
+                <Link to="/kiosk" className={`${styles.headerLink} ${styles.kioskTitleContainer}`}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
                 <div className={styles.navRight}>
                     <div className={styles.weather}><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
                     <Link to="cart" className={styles.headerLink}><LuShoppingCart className={styles.kioskIcon}/></Link>
                 </div>
             </nav>
-            <Outlet />
+            {showLoginPopup && <KioskLoginPopup setShowLoginPopup={setShowLoginPopup} setUser={setUser} />}
+            <Outlet context={{ user: user }} />
         </CartContext.Provider>
     );
 };

@@ -10,6 +10,7 @@
     display: flex;
     justify-content: space-between;
     padding: 5px 20px 5px 20px;
+    position: relative;
     align-items: center;
 }
 
@@ -33,6 +34,13 @@
     font-family: 'Playwrite US Trad';
     font-size: 24pt;
     text-decoration: none;
+}
+
+.kioskTitleContainer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .weather {
@@ -71,4 +79,10 @@
 } */
 .magGlassIcon:hover {
     cursor: pointer;
+}
+.loggedInUser {
+    font-family: Futura, Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    white-space: nowrap;
 }

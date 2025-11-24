@@ -69,8 +69,29 @@ router.get('/my-orders', async (req, res) => {
     
     try {
         const { limit, offset } = req.query;
-        const orders = await db.orderManager.getOrdersForUserId(req.user.getUserId(), limit, offset);
-        res.json(orders);
+        var orders = await db.orderManager.getOrdersForUserId(req.user.getUserId(), limit, offset);
+
+        var ordersWithItems = []
+        
+        // Fill orders with order items
+        for (var order of orders) {
+            const orderItems = await db.orderManager.getOrderItems(order);
+            order = order.toJSON();
+            order.order_items = orderItems;
+
+            // Add menu item info and parts for each order item
+            for (let i = 0; i < order.order_items.length; i++) {
+                const menuItem = await order.order_items[i].getMenuItem();
+                const menuParts = await db.orderManager.getMenuPartsFromOrderItem(order.order_items[i].getOrderItemID());
+                order.order_items[i] = order.order_items[i].toJSON();
+                order.order_items[i].menu_item = menuItem;
+                order.order_items[i].menu_parts = menuParts;
+            }
+
+            ordersWithItems.push(order);
+        }
+        
+        res.json(ordersWithItems);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -184,7 +205,8 @@ router.put('/:id/finalize', async (req, res) => {
     try {
         const { id } = req.params;
         const order = await db.orderManager.getOrderById(id);
-        await db.orderManager.finalizeOrder(order);
+        const userId = req.user ? req.user.getUserId() : null;
+        await db.orderManager.finalizeOrder(order, userId);
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
