@@ -63,7 +63,7 @@ export default function OrderDetails({sidePrompts, itemId, itemName}) {
 
             <div className={styles.orderButtons}>
                 {/* Only let the user order if all menu parts have been selected. */}
-                <button disabled={selectedPartIds.includes(undefined)} className={clsx(styles.orderItemButton, (selectedPartIds.includes(undefined)) && styles.buttonDisabled)} onClick={handleOrderItem}>Order Item</button>
+                <button disabled={selectedPartIds.includes(undefined)} className={clsx(styles.orderItemButton, (selectedPartIds.includes(undefined)) && styles.buttonDisabled)} onClick={handleOrderItem}>Add to Cart</button>
                 <button className={styles.cancelOrderButton} onClick={() => navigate("/kiosk")}>Cancel</button>
             </div>
         </div>
