@@ -27,7 +27,7 @@ export default function KioskHome() {
 
     function renderKioskItems() {
         if (loading) {
-            return <HashLoader color={"#DC143C"}/>;
+            return <HashLoader color={"#DC143C"} aria-label="Loading kiosk items..." />;
         } else {
             return (
                 menuItems.map(

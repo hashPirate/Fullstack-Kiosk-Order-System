@@ -162,7 +162,7 @@ export default function KioskCart() {
 
     // This is the return for component function.
     if (loading) {
-        return <HashLoader color={"#DC143C"}/>;
+        return <HashLoader color={"#DC143C"} aria-label="Loading cart..." />;
     } else {
         return (
             <div className={styles.kioskCart}>

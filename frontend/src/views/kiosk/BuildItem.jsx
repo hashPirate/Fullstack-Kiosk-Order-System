@@ -40,7 +40,7 @@ export default function BuildItem() {
 
     function renderOrderDetails() {
         if (loading) {
-            return <HashLoader color={"#DC143C"}/>;
+            return <HashLoader color={"#DC143C"} aria-label="Loading item details..." />;
         } else {
             return <OrderDetails sidePrompts={sidePrompts} itemId={itemId} itemName={itemName} />;
         }

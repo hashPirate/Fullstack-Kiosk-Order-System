@@ -10,7 +10,8 @@ export default function SetLanguage() {
         // Find script, and reload window if it exists
         const existingScript = document.querySelector('script[src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"]');
         if (existingScript) {
-            // To get things back into a good state, the page has to be reloaded.
+            // To get things back into a goo
+            //d state, the page has to be reloaded.
             window.location.reload();
             return;
         }
@@ -65,7 +66,7 @@ export default function SetLanguage() {
 
             <div className={styles.langButtonsGrid}>
                 {languages.map((lang) => (
-                    <button key={lang.code} className={styles.langButton + " skiptranslate"} onClick={() => {
+                    <button key={lang.code} className={styles.langButton + " skiptranslate"} aria-label={`Change language to ${lang.name}`} onClick={() => {
                         const select = document.querySelector('.goog-te-combo');
                         if (select) select.value = lang.code;
                         select?.dispatchEvent(new Event('change'));

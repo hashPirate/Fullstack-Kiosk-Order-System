@@ -101,10 +101,10 @@ export default function KioskView() {
     return (
         <CartContext.Provider value={cartContextValue}>
             <nav className={styles.kioskNav + " skiptranslate"}>
-                <div className={styles.navLeft}>
+            <div className={styles.navLeft}>
                     {/* This conditional rendering just makes sure that there is a back button on the language / cart page. */}
-                    { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink}><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
-                    <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon}/></Link>
+                    { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink} aria-label="Go back to kiosk menu"><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
+                    <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon} aria-label="Change language" /></Link>
                     <HiMagnifyingGlassPlus className={styles.kioskIcon + " " + styles.magGlassIcon} onClick={() => setShowZoomMenu(!showZoomMenu)} />
                     { (showZoomMenu)
                     ? <KioskZoomMenu setShowZoomMenu={setShowZoomMenu} zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />

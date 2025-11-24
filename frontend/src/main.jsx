@@ -26,6 +26,7 @@ import ManageMenuParts from "./views/manager/views/ManageMenuParts.jsx";
 import ManageMenuItems from "./views/manager/views/ManageMenuItems.jsx";
 import SalesReport from "./views/manager/views/SalesReport.jsx";
 import LoginRoute from './utilities/LoginRoute.jsx';
+import MenuBoardHome from "./views/menu/MenuBoard.jsx";
 
 import App from './App.jsx';
 
@@ -37,6 +38,8 @@ createRoot(document.getElementById('root')).render(
         <Route index element={<App />} />
         <Route path="/login" element={<LoginView />} />
         <Route path="/logout" element={<LogoutView />} />
+        <Route path="/menu" element={
+          <MenuBoardHome />} />
         <Route path="/kiosk" element={
           <LoginRoute requiredAccess="kiosk">
             <KioskView />
