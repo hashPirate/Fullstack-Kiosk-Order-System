@@ -5,7 +5,7 @@ import axios from "axios";
 
 import styles from "./KioskLoginPopup.module.css";
 
-export default function KioskLoginPopup({ setShowLoginPopup }) {
+export default function KioskLoginPopup({ setShowLoginPopup, setUser }) {
     const [sessionId, setSessionId] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -32,9 +32,9 @@ export default function KioskLoginPopup({ setShowLoginPopup }) {
                 const response = await axios.get(`/api/kiosk-login/status/${sessionId}`);
                 if (response.data.status === 'completed') {
                     setIsLoggedIn(true);
-                    // Here you could update the app's global state with response.data.user
+                    setUser(response.data.user);
                     console.log("Successfully signed in as:", response.data.user);
-                    clearInterval(interval);
+                    clearInterval(interval); // Stop polling
                     setTimeout(() => setShowLoginPopup(false), 2000);
                 }
             } catch (error) {
@@ -43,9 +43,11 @@ export default function KioskLoginPopup({ setShowLoginPopup }) {
         }, 3000);
 
         return () => clearInterval(interval);
-    }, [sessionId, isLoggedIn, setShowLoginPopup]);
+    }, [sessionId, isLoggedIn, setShowLoginPopup, setUser]);
 
     const loginUrl = sessionId ? `${window.location.origin}/api/kiosk-login/authenticate/${sessionId}` : "";
+
+    console.log("loginUrl:", loginUrl);
 
     return (
         <div className={styles.popupBackdrop} onClick={() => setShowLoginPopup(false)}>

@@ -23,6 +23,7 @@ export default function KioskView() {
     const [temp, setTemp] = useState("...");
     const [showZoomMenu, setShowZoomMenu] = useState(false);
     const [showLoginPopup, setShowLoginPopup] = useState(false);
+    const [user, setUser] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(100);
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
@@ -46,11 +47,10 @@ export default function KioskView() {
             }
         });
 
-        const newCartContent = [...cartContent, {
-            itemId: itemId,
-            parts: [...menuPartIds]
-        }];
-        setCartContent(newCartContent);
+        setCartContent(prevCartContent => [
+            ...prevCartContent,
+            { itemId: itemId, parts: [...menuPartIds] }
+        ]);
     }
     function removeCompletedItem(itemIndex) {
         const newCartContent = cartContent.filter((cc,i) => i !== itemIndex);
@@ -112,19 +112,23 @@ export default function KioskView() {
                     { (outletLocation === "language" || outletLocation === "cart") ? <Link to="/kiosk" className={styles.headerLink}><IoArrowBack className={styles.kioskIcon}/></Link> : <></> }
                     <Link to="language" className={styles.headerLink}><CiGlobe className={styles.kioskIcon}/></Link>
                     <HiMagnifyingGlassPlus className={styles.kioskIcon + " " + styles.magGlassIcon} onClick={() => setShowZoomMenu(!showZoomMenu)} />
-                    <FiLogIn className={styles.kioskIcon} onClick={() => setShowLoginPopup(true)} />
+                    {user ? (
+                        <span className={styles.loggedInUser}>Hi, {user.username}</span>
+                    ) : (
+                        <FiLogIn className={styles.kioskIcon} onClick={() => setShowLoginPopup(true)} />
+                    )}
                     { (showZoomMenu)
                     ? <KioskZoomMenu setShowZoomMenu={setShowZoomMenu} zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />
                     : <></> }
                 </div>
-                <Link to="/kiosk" className={styles.headerLink}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
+                <Link to="/kiosk" className={`${styles.headerLink} ${styles.kioskTitleContainer}`}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
                 <div className={styles.navRight}>
                     <div className={styles.weather}><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
                     <Link to="cart" className={styles.headerLink}><LuShoppingCart className={styles.kioskIcon}/></Link>
                 </div>
             </nav>
-            {showLoginPopup && <KioskLoginPopup setShowLoginPopup={setShowLoginPopup} />}
-            <Outlet />
+            {showLoginPopup && <KioskLoginPopup setShowLoginPopup={setShowLoginPopup} setUser={setUser} />}
+            <Outlet context={{ user: user }} />
         </CartContext.Provider>
     );
 };
