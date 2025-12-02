@@ -1,10 +1,10 @@
 // import {useOutletContext} from 'react-router';
 import styles from './SetLanguage.module.css';
 import { languages } from './languages.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import clsx from "clsx";
 
 export default function SetLanguage() {
-
 
     useEffect(()=>{
         // Find script, and reload window if it exists
@@ -57,6 +57,9 @@ export default function SetLanguage() {
 
 
     }, []);
+
+    const [selectedLang, setSelectedLang] = useState(null);
+
     return (
         <div id="setLanguage">
             <h2 className={styles.langTitle}>Choose your preferred language</h2>
@@ -66,10 +69,11 @@ export default function SetLanguage() {
 
             <div className={styles.langButtonsGrid}>
                 {languages.map((lang) => (
-                    <button key={lang.code} className={styles.langButton + " skiptranslate"} aria-label={`Change language to ${lang.name}`} onClick={() => {
+                    <button key={lang.code} className={clsx(styles.langButton, "skiptranslate", (selectedLang === lang.code) && styles.langSelected)} aria-label={`Change language to ${lang.name}`} onClick={() => {
                         const select = document.querySelector('.goog-te-combo');
                         if (select) select.value = lang.code;
                         select?.dispatchEvent(new Event('change'));
+                        setSelectedLang(lang.code);
                     }}>
                         <span className={styles.langName}>{lang.name}</span>
                         <span className={styles.langEmoji}>{lang.emoji}</span>
