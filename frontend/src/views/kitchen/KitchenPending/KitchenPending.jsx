@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from "axios";
 import { HashLoader } from "react-spinners";
 
-import styles from "./KitchenHome.module.css";
+import styles from "./KitchenPending.module.css";
 import PendingOrder from "./PendingOrder.jsx";
 import ConfirmationScreen from "./ConfirmationScreen.jsx";
 

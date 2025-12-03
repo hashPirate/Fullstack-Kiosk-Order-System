@@ -59,13 +59,15 @@ for day in range(365):
         random_hour = random.randint(10,20)
         random_minute = random.randint(0,59)
         random_second = random.randint(0,59)
+        random_cook_time = random.randint(5,9)
         
         date_with_hour = datetime.datetime(from_date.year, from_date.month, from_date.day, random_hour, random_minute, random_second)
-        multiple_orders.append(f"('{date_with_hour}', TRUE)")
+        # [Donnell]: made sure cooked_at and is_cooked are populated.
+        multiple_orders.append(f"('{date_with_hour}', TRUE, {date_with_hour + datetime.timedelta(minutes=random_cook_time)}), TRUE")
     
     multiple_orders = ", ".join(multiple_orders)
     print(multiple_orders)
-    insert_and_print_query(f"INSERT INTO orders (created_at, is_final) VALUES {multiple_orders}\nRETURNING order_id, created_at;")
+    insert_and_print_query(f"INSERT INTO orders (created_at, is_final, cooked_at, is_cooked) VALUES {multiple_orders}\nRETURNING order_id, created_at;")
     orders = cursor.fetchall()
     
     multiple_order_items = []

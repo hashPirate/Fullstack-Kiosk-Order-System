@@ -16,7 +16,8 @@ import CashierMenuItems from "./views/cashier/CashierMenuItems/CashierMenuItems.
 import CashierMenuParts from "./views/cashier/CashierMenuParts/CashierMenuParts.jsx";
 
 import KitchenView from "./views/kitchen/KitchenView.jsx";
-import KitchenHome from "./views/kitchen/KitchenHome.jsx";
+import KitchenPending from "./views/kitchen/KitchenPending/KitchenPending.jsx";
+import KitchenCompleted from "./views/kitchen/KitchenCompleted/KitchenCompleted.jsx";
 
 import ManagerView from "./views/manager/ManagerView.jsx";
 import ManageServers from "./views/manager/views/ManageServers.jsx";
@@ -64,7 +65,9 @@ createRoot(document.getElementById('root')).render(
             <KitchenView />
           </LoginRoute>
         }>
-          <Route index element={<KitchenHome />}></Route>
+          <Route index element={<Navigate to="pending" replace />}></Route>
+          <Route path="pending" element={<KitchenPending />}></Route>
+          <Route path="completed" element={<KitchenCompleted />}></Route>
         </Route>
         <Route path="/manager" element={
           <LoginRoute requiredAccess="manager">

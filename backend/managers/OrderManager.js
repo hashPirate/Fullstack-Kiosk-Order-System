@@ -31,6 +31,12 @@ class OrderManager extends DbModelManager {
         return result.rows.map(row => new Order(this.db, row));
     }
 
+    // [Donnell]: for Kitchen View
+    async getLatestCookedOrders(limit, offset) {
+        const result = await this.db.query('SELECT * FROM orders WHERE is_cooked = TRUE ORDER BY cooked_at DESC LIMIT $1 OFFSET $2', [limit, offset]);
+        return result.rows.map(row => new Order(this.db, row));
+    }
+
     // [Donnell]: get all the orders that haven't been cooked yet.
     async getUncookedOrders() {
         const result = await this.db.query('SELECT * FROM orders WHERE is_cooked = FALSE ORDER BY created_at');
@@ -122,7 +128,7 @@ class OrderManager extends DbModelManager {
     }
 
     async setIsCooked(order, is_cooked) {
-        await this.db.query('UPDATE orders SET is_cooked = $1 WHERE order_id = $2', [is_cooked, order.getOrderID()]);
+        await this.db.query('UPDATE orders SET is_cooked = $1, cooked_at = NOW() WHERE order_id = $2', [is_cooked, order.getOrderID()]);
     }
 
     async getSalesByItem(startTime, endTime) {
