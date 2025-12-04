@@ -2,13 +2,13 @@
 import { NavLink, Outlet } from "react-router";
 import { useEffect, useRef, useState } from 'react';
 import axios from "axios";
-import { HashLoader } from "react-spinners";
+
 
 import styles from "./KitchenPending.module.css";
 import PendingOrder from "./PendingOrder.jsx";
-import ConfirmationScreen from "./ConfirmationScreen.jsx";
+import LoadingPopup from "../LoadingPopup.jsx";
 
-export default function KitchenHome() {
+export default function KitchenPending() {
     // These are useRefs because useRefs update instantly and do not cause a
     // re-render when they are updated.
     const menuItemsMapping = useRef(undefined);
@@ -19,7 +19,6 @@ export default function KitchenHome() {
     // should cause a re-render when updated.
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [orderToRemove, setOrderToRemove] = useState(null);    // used for confirming removed order
 
     async function fetchIncomingOrders() {
         try {
@@ -101,7 +100,7 @@ export default function KitchenHome() {
         console.log(`Attempting to mark order ${id}...`);
         if (!fetchOrdersLock.current) {
             try {
-                delOrderSem.current++;
+                setLoading(true);
                 // optimistically remove order from screen
                 const newOrders = orders.filter(o => o.order_id !== id);
                 setOrders(newOrders);
@@ -113,7 +112,7 @@ export default function KitchenHome() {
                     console.log("Order successfully marked in database.");
                 }
             } finally {
-                delOrderSem.current--;
+                setLoading(false);
                 console.log(`Successfully marked order ${id}!`);
             }
         } else {
@@ -122,16 +121,11 @@ export default function KitchenHome() {
         }
     }
 
-    // Confirm the removal of the order by bringing up the confirmation screen.
-    async function confirmRemoveOrder(id) {
-        setOrderToRemove(id);
-    }
-
    function renderOrders() {
         if (!loading) {
             // Render main content if initial load is complete.
             if (!orders.length == 0) {
-                return orders.map((ord, i) => <PendingOrder key={ord.order_id} orderId={ord.order_id} menuItems={ord.menu_items} handleRemoveOrder={confirmRemoveOrder} />);
+                return orders.map((ord, i) => <PendingOrder key={ord.order_id} orderId={ord.order_id} menuItems={ord.menu_items} handleRemoveOrder={removeOrder} />);
             } else {
                 return (
                     <>
@@ -142,15 +136,12 @@ export default function KitchenHome() {
             }
         } else {
             // Render loader if still loading.
-            return <HashLoader className={styles.hashLoader} color={"#3CC7D1"}/>;
+            return <LoadingPopup/>;
         }
    } 
 
     return (
         <div className={styles.kitchenHome}>
-            { (orderToRemove !== null)
-            ? <ConfirmationScreen orderToRemove={orderToRemove} setOrderToRemove={setOrderToRemove} handleRemoveOrder={removeOrder}/>
-            : <></> }
             { renderOrders() }
         </div>
     );

@@ -52,6 +52,15 @@ router.get('/cooked', async (req, res) => {
     }
 });
 
+router.get('/cooked/count', async (req, res) => {
+    try {
+        const cookedCount = await db.orderManager.getNumCookedOrders();
+        res.json({ count: cookedCount });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.put('/:id/set-cooked', async (req, res) => {
     try {
         const { id } = req.params;

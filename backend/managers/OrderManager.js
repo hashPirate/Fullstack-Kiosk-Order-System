@@ -37,6 +37,11 @@ class OrderManager extends DbModelManager {
         return result.rows.map(row => new Order(this.db, row));
     }
 
+    async getNumCookedOrders() {
+        const result = await this.db.query('SELECT COUNT(*) FROM orders WHERE is_cooked = TRUE');
+        return result.rows[0].count;    // Only return the actual count.
+    }
+
     // [Donnell]: get all the orders that haven't been cooked yet.
     async getUncookedOrders() {
         const result = await this.db.query('SELECT * FROM orders WHERE is_cooked = FALSE ORDER BY created_at');
