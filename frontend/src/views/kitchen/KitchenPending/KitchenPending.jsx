@@ -100,17 +100,18 @@ export default function KitchenPending() {
         console.log(`Attempting to mark order ${id}...`);
         if (!fetchOrdersLock.current) {
             try {
+                // show loader while marking
                 setLoading(true);
-                // optimistically remove order from screen
-                const newOrders = orders.filter(o => o.order_id !== id);
-                setOrders(newOrders);
-                // update in db
+
+                // non-optimistically mark order as complete
                 const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: true });
                 if (!setCookedResponse.data.success) {
                     console.log("ERROR: order could not actually be marked in database. Failing silently...");
                 } else {
                     console.log("Order successfully marked in database.");
                 }
+                const newOrders = orders.filter(o => o.order_id !== id);
+                setOrders(newOrders);
             } finally {
                 setLoading(false);
                 console.log(`Successfully marked order ${id}!`);

@@ -12,7 +12,6 @@ export default function KitchenCompleted() {
     // re-render when they are updated.
     const menuItemsMapping = useRef(undefined);
     const numCooked = useRef(undefined);
-    const delOrderSem = useRef(0);      // Semaphore for order deletion.
     const fetchOrdersLock = useRef(false);     // Lock for syncing the orders.
 
     // These are state because they do not need to be updated instantly and they
@@ -20,8 +19,9 @@ export default function KitchenCompleted() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pageNum, setPageNum] = useState(1);    // Start at page 1
+    const pageOrderLimit = 10;
 
-    async function fetchIncomingOrders(limit, offset) {
+    async function fetchIncomingOrders() {
         try {
             // This could be optimized, but tbh it's pretty fast as-is.
             if (menuItemsMapping.current === undefined) {
@@ -29,7 +29,9 @@ export default function KitchenCompleted() {
             }
 
             // Get the number of cooked orders
-            numCooked.current = (await axios.get("/api/orders/cooked/count")).data;
+            const cookedCount = (await axios.get("/api/orders/cooked/count")).data;
+            const limit = pageOrderLimit;
+            const offset = limit * (pageNum - 1);
 
             // Get an array of all currently uncooked order IDs
             let cookedOrders = (await axios.get(`/api/orders/cooked?limit=${limit}&offset=${offset}`)).data;
@@ -43,14 +45,14 @@ export default function KitchenCompleted() {
                 order.menu_items = orderItems;
             }
 
-            return cookedOrders;
+            return {cookedOrders, cookedCount};
         } catch (error) {
             console.log("ERROR while refreshing orders:", error);
         }
     }
 
     useEffect(() => {
-        // This has to be an immediately invoked function. I forget why.
+        // This has to be an immediately invoked function for async purposes.
         (async function () {
             try {
                 // Fetch menu items mapping and set it.
@@ -63,8 +65,9 @@ export default function KitchenCompleted() {
                 menuItemsMapping.current = newItemsMapping;
 
                 // No need to use a semaphore here, since this function runs only in on init.
-                const incomingOrders = await fetchIncomingOrders();
-                setOrders(incomingOrders);
+                const { cookedOrders, cookedCount } = await fetchIncomingOrders();
+                setOrders(cookedOrders);
+                numCooked.current = cookedCount;
 
                 // Stop displaying the spinner after initial load.
                 setLoading(false);
@@ -78,16 +81,14 @@ export default function KitchenCompleted() {
             // to acquire the lock. However, it ain't broke, so I
             // won't fix it.
             console.log("Attempting to refresh kitchen orders....");
-            const incomingOrders = await fetchIncomingOrders();
-            if (delOrderSem.current === 0) {
-                fetchOrdersLock.current = true;
-                setOrders(incomingOrders);
-                fetchOrdersLock.current = false;
-                console.log("Kitchen orders refresh successful!");
-            } else {
-                console.log("Kitchen orders refresh unsuccessful.");
-                return;
-            }
+            const {cookedOrders, cookedCount} = await fetchIncomingOrders();
+
+            fetchOrdersLock.current = true;
+            setOrders(cookedOrders);
+            numCooked.current = cookedCount;
+            fetchOrdersLock.current = false;
+
+            console.log("Kitchen orders refresh successful!");
         };
 
         const msRefreshRate = 5000;
@@ -98,23 +99,24 @@ export default function KitchenCompleted() {
         };
     }, []);
 
-    async function removeOrder(id) {
+    async function reviveOrder(id) {
         // Once again, I'm just going to return if the lock is locked.
         // Bad practice, but I don't want to overcomplicate this.
         console.log(`Attempting to mark order ${id}...`);
         if (!fetchOrdersLock.current) {
             try {
+                // show loader while reviving
                 setLoading(true);
-                // optimistically remove order from screen
-                const newOrders = orders.filter(o => o.order_id !== id);
-                setOrders(newOrders);
-                // update in db
-                const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: true });
+
+                // non-optimistically revive order
+                const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: false });
                 if (!setCookedResponse.data.success) {
                     console.log("ERROR: order could not actually be marked in database. Failing silently...");
                 } else {
                     console.log("Order successfully marked in database.");
                 }
+                const newOrders = orders.filter(o => o.order_id !== id);
+                setOrders(newOrders);
             } finally {
                 setLoading(false);
                 console.log(`Successfully marked order ${id}!`);
@@ -129,7 +131,7 @@ export default function KitchenCompleted() {
         if (!loading) {
             // Render main content if initial load is complete.
             if (!orders.length == 0) {
-                return orders.map((ord, i) => <CompletedOrder key={ord.order_id} orderId={ord.order_id} menuItems={ord.menu_items} handleRemoveOrder={removeOrder} />);
+                return orders.map((ord, i) => <CompletedOrder key={ord.order_id} orderId={ord.order_id} menuItems={ord.menu_items} handleRemoveOrder={reviveOrder} />);
             } else {
                 return (
                     <>
