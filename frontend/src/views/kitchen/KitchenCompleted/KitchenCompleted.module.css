@@ -26,4 +26,13 @@
     margin: 0 auto;
 }
 
+.pageSwitcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 14pt;
+    font-family: Arial;
+}
+
 

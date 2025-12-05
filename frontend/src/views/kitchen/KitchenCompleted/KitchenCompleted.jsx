@@ -6,128 +6,133 @@ import LoadingPopup from "../LoadingPopup.jsx";
 
 import styles from "./KitchenCompleted.module.css";
 import CompletedOrder from "./CompletedOrder.jsx";
+import PageSwitcher from "./PageSwitcher.jsx";
 
 export default function KitchenCompleted() {
-    // These are useRefs because useRefs update instantly and do not cause a
-    // re-render when they are updated.
-    const menuItemsMapping = useRef(undefined);
-    const numCooked = useRef(undefined);
-    const fetchOrdersLock = useRef(false);     // Lock for syncing the orders.
-
     // These are state because they do not need to be updated instantly and they
     // should cause a re-render when updated.
     const [orders, setOrders] = useState([]);
+    const [numOrders, setNumOrders] = useState(0);
     const [loading, setLoading] = useState(true);
     const [pageNum, setPageNum] = useState(1);    // Start at page 1
+
     const pageOrderLimit = 10;
+    const totalPages = (numOrders / pageOrderLimit) + 1;
 
-    async function fetchIncomingOrders() {
-        try {
-            // This could be optimized, but tbh it's pretty fast as-is.
-            if (menuItemsMapping.current === undefined) {
-                throw new Error("Somehow, the menu items mapping or numCooked is empty.");
+    function getMenuItemsMapping() {
+        let menuItemsMapping = {};
+        axios.get('/api/menu/items').then((response) => {
+            for (const item of response.data) {
+                const {menu_item_id, ...itemRest} = item;
+                menuItemsMapping[menu_item_id] = itemRest;
             }
-
-            // Get the number of cooked orders
-            const cookedCount = (await axios.get("/api/orders/cooked/count")).data;
-            const limit = pageOrderLimit;
-            const offset = limit * (pageNum - 1);
-
-            // Get an array of all currently uncooked order IDs
-            let cookedOrders = (await axios.get(`/api/orders/cooked?limit=${limit}&offset=${offset}`)).data;
-            for (const order of cookedOrders) {
-                let orderItems = (await axios.get(`/api/orders/${order.order_id}/items`)).data;
-                for (const item of orderItems) {
-                    const menuParts = (await axios.get(`/api/orders/items/${item.order_item_id}/parts`)).data;
-                    item.menu_parts = menuParts;
-                    item.item_name = menuItemsMapping.current[item.menu_item_id].item_name;
-                }
-                order.menu_items = orderItems;
-            }
-
-            return {cookedOrders, cookedCount};
-        } catch (error) {
-            console.log("ERROR while refreshing orders:", error);
-        }
+        }).catch((error) => {
+            console.log("Error while getting menu items mapping.");
+        });
+        return menuItemsMapping;
     }
 
-    useEffect(() => {
-        // This has to be an immediately invoked function for async purposes.
-        (async function () {
-            try {
-                // Fetch menu items mapping and set it.
-                const menuItemsData = await axios.get('/api/menu/items');
-                let newItemsMapping = {};
-                for (const item of menuItemsData.data) {
-                    const {menu_item_id, ...itemRest} = item;
-                    newItemsMapping[menu_item_id] = itemRest;
-                }
-                menuItemsMapping.current = newItemsMapping;
+    function fetchCookedOrders() {
+        // Get the menu items mapping.
+        const menuItemsMapping = getMenuItemsMapping();
 
-                // No need to use a semaphore here, since this function runs only in on init.
-                const { cookedOrders, cookedCount } = await fetchIncomingOrders();
-                setOrders(cookedOrders);
-                numCooked.current = cookedCount;
+        const limit = pageOrderLimit;
+        const offset = limit * (pageNum - 1);
 
-                // Stop displaying the spinner after initial load.
-                setLoading(false);
-            } catch (error) {
-                console.log("ERROR while doing initial fetches:", error);
+        // Get an array of all currently uncooked order IDs
+        let cookedOrders;
+        axios.get(`/api/orders/cooked?limit=${limit}&offset=${offset}`).then((response) => {
+            cookedOrders = response.data;
+        }).catch((error) => {
+            console.log("Error while fetching recent cooked orders.");
+        });
+
+        for (const order of cookedOrders) {
+            let orderItems;
+            axios.get(`/api/orders/${order.order_id}/items`).then((response => {
+                orderItems = response.data;
+            })).catch((error) => {
+                console.log("Error while getting order items.");
+            });
+            for (const item of orderItems) {
+                let menuParts;
+                axios.get(`/api/orders/items/${item.order_item_id}/parts`).then((response) => {
+                    menuParts = response.data;
+                }).catch((error) => {
+                    console.log("Error while getting order item menu parts.");
+                });
+                item.menu_parts = menuParts;
+                item.item_name = menuItemsMapping[item.menu_item_id].item_name;
             }
-        })();
+            order.menu_items = orderItems;
+        }
 
-        async function refreshOrders() {
-            // This isn't great code, I should probably make it wait
-            // to acquire the lock. However, it ain't broke, so I
-            // won't fix it.
-            console.log("Attempting to refresh kitchen orders....");
-            const {cookedOrders, cookedCount} = await fetchIncomingOrders();
+        return cookedOrders;
+    }
 
-            fetchOrdersLock.current = true;
-            setOrders(cookedOrders);
-            numCooked.current = cookedCount;
-            fetchOrdersLock.current = false;
+    function refreshCookedOrders() {
+        console.log("Refreshing kitchen orders...");
 
-            console.log("Kitchen orders refresh successful!");
-        };
+        // Get the number of cooked orders
+        let newNumOrders;
+        axios.get("/api/orders/cooked/count").then((response) => {
+            newNumOrders = response.data;
+        }).catch((error) => {
+            console.log("Error while getting count of cooked orders.");
+        });
+        setNumOrders(newNumOrders);
+
+        const newOrders = fetchCookedOrders();
+        setOrders(newOrders);
+    };
+
+    // On initial load.
+    useEffect(() => {
+        // Initial refresh
+        refreshCookedOrders();
+        setLoading(false);
 
         const msRefreshRate = 5000;
-        const ordersInterval = setInterval(refreshOrders, msRefreshRate);
+        const ordersInterval = setInterval(refreshCookedOrders, msRefreshRate);
 
         return () => {
             clearInterval(ordersInterval);
         };
     }, []);
 
-    async function reviveOrder(id) {
-        // Once again, I'm just going to return if the lock is locked.
-        // Bad practice, but I don't want to overcomplicate this.
-        console.log(`Attempting to mark order ${id}...`);
-        if (!fetchOrdersLock.current) {
-            try {
-                // show loader while reviving
-                setLoading(true);
+    // On pageNum change
+    useEffect(() => {
+        setLoading(true)
+        refreshCookedOrders();
+        setLoading(false)
+    }, [pageNum]);
 
-                // non-optimistically revive order
-                const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: false });
-                if (!setCookedResponse.data.success) {
-                    console.log("ERROR: order could not actually be marked in database. Failing silently...");
-                } else {
-                    console.log("Order successfully marked in database.");
-                }
-                const newOrders = orders.filter(o => o.order_id !== id);
-                setOrders(newOrders);
-            } finally {
-                setLoading(false);
-                console.log(`Successfully marked order ${id}!`);
+    async function reviveOrder(id) {
+        console.log(`Attempting to revive order ${id}...`);
+        try {
+            // show loader while reviving
+            setLoading(true);
+
+            // non-optimistically revive order
+            const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, { is_cooked: false });
+            if (!setCookedResponse.data.success) {
+                console.log("ERROR: order could not actually be marked in database. Failing silently...");
+                return;
+            } else {
+                console.log("Order successfully marked in database.");
             }
-        } else {
-            console.log(`Could not mark order ${id}.`);
-            return;
+            
+            // Then refresh page, so that there are always 10 elements.
+            await refreshCookedOrders();
+            console.log(`Successfully revived order ${id}!`);
+        } catch (error) {
+            console.log("Error while trying to revive order:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
-   function renderCookedOrders() {
+    function renderCookedOrders() {
         if (!loading) {
             // Render main content if initial load is complete.
             if (!orders.length == 0) {
@@ -142,13 +147,16 @@ export default function KitchenCompleted() {
             }
         } else {
             // Render loader if still loading.
-            return <LoadingPopup/>;
+            // return <LoadingPopup/>;
+            return <HashLoader className={styles.hashLoader} color={"#3CC7D1"}/>;
         }
-   } 
+    }
 
     return (
         <div className={styles.kitchenHome}>
+            <PageSwitcher pageNum={pageNum} totalPages={totalPages} setPageNum={setPageNum} />
             { renderCookedOrders() }
+            <PageSwitcher pageNum={pageNum} totalPages={totalPages} setPageNum={setPageNum} />
         </div>
     );
 };
