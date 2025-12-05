@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.12",
     "@vitejs/plugin-react": "^5.0.4",
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
