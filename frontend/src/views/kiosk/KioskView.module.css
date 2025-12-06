@@ -86,3 +86,27 @@
     font-weight: bold;
     white-space: nowrap;
 }
+
+/* Partent selector. Makes position: absolute work in .cartNumber */
+*:has(.cartNumber) {
+    position: relative;
+}
+.cartNumber {
+    position: absolute;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    top: -16pt;
+    left: 18pt;
+    font-family: Arial;
+    font-size: 12pt;
+    padding: 2pt;
+    font-weight: bold;
+    /* padding: 4pt 4pt; */
+    color: crimson;
+    width: 18pt;
+    aspect-ratio: 1 / 1;
+    background-color: white;
+    border-radius: 50%;
+    z-index: 6;
+}

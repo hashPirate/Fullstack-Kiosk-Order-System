@@ -1,0 +1,61 @@
+
+.kitchenHome {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.placeholderTitle, .placeholderBody {
+    padding: 0;
+    margin: 0;
+    font-family: Futura, Arial, sans-serif;
+    font-weight: normal;
+    text-align: center;
+}
+
+.placeholderTitle {
+    font-size: 20pt;
+}
+
+.placeholderBody {
+    margin: 10pt 0 10pt 0;
+    font-size: 12pt;
+}
+
+.hashLoader {
+    margin: 0 auto;
+}
+
+.pageSwitcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 14pt;
+    font-family: Arial;
+}
+
+.loaderDiv {
+    margin-top: 2rem;
+}
+
+.pageArrow {
+    font-size: 1.5rem;
+}
+.pageArrow:hover {
+    cursor: pointer;
+}
+
+.pageInput {
+    padding: 0.5rem;
+    border: 2px solid black;
+    font-family: 'Futura', Arial, sans-serif;
+    font-size: 14pt;
+    border-radius: 10px;
+    max-width: 9rem;
+}
+
+.pagePrompt {
+    font-family: 'Futura', Arial, sans-serif;
+    font-size: 14pt;
+}

@@ -41,6 +41,26 @@ router.get('/uncooked', async (req, res) => {
     }
 });
 
+router.get('/cooked', async (req, res) => {
+    try {
+        const limit = Number.parseInt(req.query.limit);
+        const offset = Number.parseInt(req.query.offset);
+        const orders = await db.orderManager.getLatestCookedOrders(limit, offset);
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/cooked/count', async (req, res) => {
+    try {
+        const cookedCount = await db.orderManager.getNumCookedOrders();
+        res.json({ count: cookedCount });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.put('/:id/set-cooked', async (req, res) => {
     try {
         const { id } = req.params;
