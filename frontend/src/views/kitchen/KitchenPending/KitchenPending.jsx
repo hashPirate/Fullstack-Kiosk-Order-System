@@ -20,6 +20,8 @@ export default function KitchenPending() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
+    
     async function fetchIncomingOrders() {
         try {
             // This could be optimized, but tbh it's pretty fast as-is.

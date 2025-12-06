@@ -1,8 +1,5 @@
-
-import { NavLink, Outlet } from "react-router";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from "axios";
-import LoadingPopup from "../LoadingPopup.jsx";
 import { HashLoader } from "react-spinners";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -10,127 +7,143 @@ import styles from "./KitchenCompleted.module.css";
 import CompletedOrder from "./CompletedOrder.jsx";
 import PageSwitcher from "./PageSwitcher.jsx";
 
-// Number of orders that should appear per page.
 const pageOrderLimit = 10;
 
 async function getMenuItemsMapping() {
-    try {
-        let menuItemsMapping = {};
-        let response = await axios.get('/api/menu/items');
-        for (const item of response.data) {
-            const {menu_item_id, ...itemRest} = item;
-            menuItemsMapping[menu_item_id] = itemRest;
-        }
-
-        return menuItemsMapping;
-    } catch (error) {
-        console.log(error);
-        return undefined;
+    let menuItemsMapping = {};
+    const response = await axios.get('/api/menu/items');
+    for (const item of response.data) {
+        const {menu_item_id, ...itemRest} = item;
+        menuItemsMapping[menu_item_id] = itemRest;
     }
+    return menuItemsMapping;
 }
 
 async function fetchCookedOrders(pageNum) {
-    try {
-        // Get the menu items mapping.
-        const menuItemsMapping = await getMenuItemsMapping();
+    // Get the menu items mapping.
+    const menuItemsMapping = await getMenuItemsMapping();
 
-        const limit = pageOrderLimit;
-        const offset = limit * (pageNum - 1);
+    const limit = pageOrderLimit;
+    const offset = limit * (pageNum - 1);
 
-        // Get an array of all currently uncooked order IDs
-        let cookedOrders = (await axios.get(`/api/orders/cooked?limit=${limit}&offset=${offset}`)).data;
+    // Get an array of all currently uncooked orders
+    let cookedOrders = (await axios.get(`/api/orders/cooked?limit=${limit}&offset=${offset}`)).data;
 
-        for (const order of cookedOrders) {
-            const orderItems = (await axios.get(`/api/orders/${order.order_id}/items`)).data;
-            for (const item of orderItems) {
-                const menuParts = (await axios.get(`/api/orders/items/${item.order_item_id}/parts`)).data;
-                item.menu_parts = menuParts;
+    await Promise.all(cookedOrders.map(async (order) => {
+        const orderItems = (await axios.get(`/api/orders/${order.order_id}/items`)).data;
+
+        await Promise.all(orderItems.map(async (item) => {
+            const menuParts = (await axios.get(`/api/orders/items/${item.order_item_id}/parts`)).data;
+            item.menu_parts = menuParts;
+
+            // Guard clause in case mapping is missing
+            if (menuItemsMapping[item.menu_item_id]) {
                 item.item_name = menuItemsMapping[item.menu_item_id].item_name;
+            } else {
+                throw new Error("Menu items mapping is invalid.");
             }
-            order.menu_items = orderItems;
-        }
+        }));
 
-        return cookedOrders;
-    } catch (error) {
-        console.log(error);
-    }
+        order.menu_items = orderItems;
+    }));
+
+    return cookedOrders;
 }
 
 async function refreshCookedOrders(pageNum) {
     console.log("Refreshing kitchen orders...");
 
-    // Get the number of cooked orders
-    let numOrders = (await axios.get("/api/orders/cooked/count")).data;
+    const countResponse = await axios.get("/api/orders/cooked/count");
+    const numOrders = countResponse.data.count
+
     const orders = await fetchCookedOrders(pageNum);
 
-    return {orders, numOrders}
+    return { orders, numOrders };
 };
 
 export default function KitchenCompleted() {
-    // These are state because they do not need to be updated instantly and they
-    // should cause a re-render when updated.
-    const [pageNum, setPageNum] = useState(1);    // Start at page 1
-
+    const [pageNum, setPageNum] = useState(1);
     const queryClient = useQueryClient();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ["completedOrders", pageNum],
-        queryFn: async () => { await refreshCookedOrders(pageNum) },
-        refetchInterval: 5000
+        queryFn: () => refreshCookedOrders(pageNum),
+        refetchInterval: 5000,
     });
 
     const mutation = useMutation({
         mutationKey: ['setIsCooked'],
-        mutationFn: async (payload) => {
-            const setCookedResponse = await axios.put(`/api/orders/${id}/set-cooked`, payload);
-            if (!setCookedResponse.data.success) {
+        mutationFn: async ({ order_id, is_cooked }) => {
+            // Ensure order_id is valid before sending
+            if (!order_id) {
+                throw new Error("No Order ID provided to mutation");
+            }
+
+            const setCookedResponse = await axios.put(`/api/orders/${order_id}/set-cooked`, { is_cooked: is_cooked });
+            
+            if (setCookedResponse.data.success === false) {
                 throw new Error("Could not update is_cooked in db.");
             }
+            return setCookedResponse.data;
         },
         onMutate: async () => {
-            // Cancel any pending refreshes.
             await queryClient.cancelQueries({ queryKey: ['completedOrders'] });
         },
-        onSettled: () => {
-            // Invalidate bc data has been updated.
-            queryClient.invalidateQueries({ queryKey: ['completedOrders'] });
+        onSuccess: async () => {
+            console.log("Order revived successfully. Refreshing list...");
+            await queryClient.invalidateQueries({ queryKey: ['completedOrders'] });
+        },
+        onError: (err) => {
+            // Just in case there was an error while reviving the order
+            console.error("Failed to revive order:", err);
         }
     });
 
-    async function reviveOrder(id) {
+    // "Revive" the order, aka. mark it as pending again
+    function reviveOrder(id) {
         console.log(`Attempting to revive order ${id}...`);
-        try {
-            mutation.mutate({ is_cooked: false });
-        } catch (error) {
-            console.log(error);
-        }
+        mutation.mutate({ order_id: id, is_cooked: false });
     }
 
-    function renderCookedOrders() {
-        if (!isLoading) {
-            // Render main content if initial load is complete.
-            if (!data.orders.length == 0) {
-                return data.orders.map((ord, i) => <CompletedOrder key={ord.order_id} orderId={ord.order_id} menuItems={ord.menu_items} handleRemoveOrder={reviveOrder} />);
-            } else {
-                return (
-                    <>
-                        <h3 className={styles.placeholderTitle}>You're all caught up!</h3>
-                        <p className={styles.placeholderBody}>Check back soon...</p>
-                    </>
-                );
-            }
-        } else {
-            // Render loader if still loading.
-            // return <LoadingPopup/>;    // Overlay loader.
-            return <HashLoader className={styles.hashLoader} color={"#3CC7D1"}/>;    // "In-page" loader.
-        }
+    if (isLoading || mutation.isPending) {
+        return <div className={styles.loaderDiv}> <HashLoader className={styles.hashLoader} color={"#3CC7D1"} /> </div>;
     }
+
+    if (error) {
+        return <div className={styles.error}>Error loading orders: {error.message}</div>;
+    }
+
+    const totalPages = data?.numOrders ? Math.ceil(data.numOrders / pageOrderLimit) : 1;
 
     return (
         <div className={styles.kitchenHome}>
-            <PageSwitcher pageNum={pageNum} totalPages={(data.numOrders / pageOrderLimit) + 1} setPageNum={setPageNum} />
-            { renderCookedOrders() }
-            <PageSwitcher pageNum={pageNum} totalPages={(data.numOrders / pageOrderLimit) + 1} setPageNum={setPageNum} />
+            <PageSwitcher 
+                pageNum={pageNum} 
+                totalPages={totalPages} 
+                setPageNum={setPageNum} 
+            />
+            
+            {data?.orders?.length > 0 ? (
+                data.orders.map((ord) => (
+                    <CompletedOrder 
+                        key={ord.order_id} 
+                        orderId={ord.order_id} 
+                        menuItems={ord.menu_items} 
+                        handleReviveOrder={reviveOrder}      // NOTE to self: is this calling with actual `id`?
+                    />
+                ))
+            ) : (
+                <>
+                    <h3 className={styles.placeholderTitle}>You're all caught up!</h3>
+                    <p className={styles.placeholderBody}>Check back soon...</p>
+                </>
+            )}
+
+            <PageSwitcher 
+                pageNum={pageNum} 
+                totalPages={totalPages} 
+                setPageNum={setPageNum} 
+            />
         </div>
     );
 };

@@ -33,7 +33,11 @@ class OrderManager extends DbModelManager {
 
     // [Donnell]: for Kitchen View
     async getLatestCookedOrders(limit, offset) {
-        const result = await this.db.query('SELECT * FROM orders WHERE is_cooked = TRUE ORDER BY cooked_at DESC LIMIT $1 OFFSET $2', [limit, offset]);
+        const query = `SELECT * FROM orders
+WHERE is_cooked = TRUE
+ORDER BY cooked_at DESC NULLS LAST, created_at DESC
+LIMIT $1 OFFSET $2;`;
+        const result = await this.db.query(query, [limit, offset]);
         return result.rows.map(row => new Order(this.db, row));
     }
 
