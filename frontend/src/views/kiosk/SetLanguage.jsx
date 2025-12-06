@@ -3,8 +3,11 @@ import styles from './SetLanguage.module.css';
 import { languages } from './languages.js';
 import { useEffect, useState } from 'react';
 import clsx from "clsx";
+import { useOutletContext } from 'react-router';
 
 export default function SetLanguage() {
+    const { selectedLang, setSelectedLang } = useOutletContext();
+
     useEffect(()=>{
         // Put the existing Google translate element back into container if translate already initialized
         if (window.googleTranslateElement) {
@@ -49,8 +52,6 @@ export default function SetLanguage() {
 
 
     }, []);
-
-    const [selectedLang, setSelectedLang] = useState(null);
 
     return (
         <div id="setLanguage">
