@@ -4,7 +4,7 @@ const router = express.Router();
 // In-memory store for kiosk login sessions.
 const kioskSessions = {};
 
-router.get('/status/:sessionId', (req, res) => {
+router.get('/status/:sessionId', (req, res, next) => {
     const { sessionId } = req.params;
 
     // If the session doesn't exist, create it as pending.
@@ -21,8 +21,13 @@ router.get('/status/:sessionId', (req, res) => {
 
     if (session.status === 'completed') {
         // The mobile device has authenticated.
-        // Log the user in on the kiosk's session.
+        // Check if employee is active (on_staff must be true)
+        if (session.user.on_staff !== true) {
+            delete kioskSessions[sessionId];
+            return res.json({ status: 'denied', message: 'Your account is inactive. Please contact a manager.' });
+        }
         
+        // Log the user in on the kiosk's session.
         req.login(session.user, (err) => {
             if (err) { return next(err); }
 
@@ -43,6 +48,11 @@ router.get('/authenticate/:sessionId', (req, res) => {
         // Redirect to the main login page if the user isn't logged in on their device.
         // Pass the session ID so we can come back to this after login.
         return res.redirect(`/login?redirect=/api/kiosk-login/authenticate/${sessionId}`);
+    }
+
+    // Check if employee is active (on_staff must be true)
+    if (req.user.on_staff!==true) {
+        return res.send('<div style="font-family: sans-serif; text-align: center; padding-top: 50px;"><h1>Access Denied</h1><p>Your account is inactive. Please contact a manager.</p></div>');
     }
 
     // If the session ID is valid and pending, update its status and store user data.
