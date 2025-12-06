@@ -1,7 +1,6 @@
 
 import PendingOrderItem from "./PendingOrderItem.jsx";
-import { IoIosCloseCircleOutline } from "react-icons/io";
-
+import { FaRegSquareCheck } from "react-icons/fa6";
 
 import styles from "./PendingOrder.module.css";
 
@@ -32,13 +31,13 @@ import styles from "./PendingOrder.module.css";
 // ]
 
 
-export default function PendingOrder({orderId, menuItems, handleRemoveOrder}) {
+export default function PendingOrder({orderId, menuItems, handleCompleteOrder}) {
 
     return (
         <div className={styles.pendingOrder}>
             <div className={styles.orderHeading}>
                 <h3 className={styles.orderTitle}>Order #{orderId}</h3>
-                <IoIosCloseCircleOutline className={styles.orderIcon} onClick={() => handleRemoveOrder(orderId)}/>
+                <FaRegSquareCheck className={styles.orderIcon} onClick={() => handleCompleteOrder(orderId)}/>
             </div>
             { menuItems.map((mni, i) => <PendingOrderItem key={i} itemName={mni.item_name} menuParts={mni.menu_parts}/>) }
         </div>

@@ -72,7 +72,7 @@ export default function KitchenCompleted() {
     });
 
     const mutation = useMutation({
-        mutationKey: ['setIsCooked'],
+        mutationKey: ['completedOrdersSetIsCooked'],
         mutationFn: async ({ order_id, is_cooked }) => {
             // Ensure order_id is valid before sending
             if (!order_id) {
@@ -110,7 +110,7 @@ export default function KitchenCompleted() {
     }
 
     if (error) {
-        return <div className={styles.error}>Error loading orders: {error.message}</div>;
+        return <div className={styles.error}>Error loading completed orders: {error.message}</div>;
     }
 
     const totalPages = data?.numOrders ? Math.ceil(data.numOrders / pageOrderLimit) : 1;
@@ -134,8 +134,8 @@ export default function KitchenCompleted() {
                 ))
             ) : (
                 <>
-                    <h3 className={styles.placeholderTitle}>You're all caught up!</h3>
-                    <p className={styles.placeholderBody}>Check back soon...</p>
+                    <h3 className={styles.placeholderTitle}>No past orders!</h3>
+                    <p className={styles.placeholderBody}>Wait for some orders to come in...</p>
                 </>
             )}
 
