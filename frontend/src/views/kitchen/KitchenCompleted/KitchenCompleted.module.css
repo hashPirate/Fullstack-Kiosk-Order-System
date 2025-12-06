@@ -39,4 +39,23 @@
     margin-top: 2rem;
 }
 
+.pageArrow {
+    font-size: 1.5rem;
+}
+.pageArrow:hover {
+    cursor: pointer;
+}
 
+.pageInput {
+    padding: 0.5rem;
+    border: 2px solid black;
+    font-family: 'Futura', Arial, sans-serif;
+    font-size: 14pt;
+    border-radius: 10px;
+    max-width: 9rem;
+}
+
+.pagePrompt {
+    font-family: 'Futura', Arial, sans-serif;
+    font-size: 14pt;
+}
