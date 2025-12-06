@@ -44,10 +44,14 @@ passport.deserializeUser(async function(userPayload, cb) {
     }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
     const { username, password } = req.body;
     const user = await db.userManager.getUser(username);
     if (user && user.passwordMatches(password)) {
+        //Check if employee is active (on_staff must be true)
+        if (user.on_staff!==true) {
+            return res.status(403).json({ success: false, message: 'Your account is inactive. Please contact a manager.' });
+        }
         req.login(user, (err) => {
             if (err) { return next(err); }
             return res.json({ success: true, user });
