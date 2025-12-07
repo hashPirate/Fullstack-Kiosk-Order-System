@@ -17,16 +17,34 @@ export default function BuildItem() {
         (async () => {
             try {
                 let newSidePrompts = [];
+
                 let loadedMenuParts = await axios.get(`/api/menu/items/${itemId}/parts`);
 
                 // Get the parts data in the right format
                 loadedMenuParts = loadedMenuParts.data.filter(mp => mp.for_sale);    // Filter out menu parts that are not for_sale 
                 loadedMenuParts = loadedMenuParts.map( mp => ({...mp, img: "/api/images/" + mp.image_name}) );
                 for (let i = 0; i < partCount; i++) {
-                    newSidePrompts.push({
-                        prompt: `Choose Side ${i+1}`,
-                        menuParts: loadedMenuParts.map( mp => ({...mp, img: "/api/images/" + mp.image_name}) )
-                    });
+                    // "Drinks" item (which has an ID of 5), and "Appetizer"
+                    // item (which has an ID of 4) must be treated specially.
+                    switch (itemId) {
+                        case 4:
+                            newSidePrompts.push({
+                                prompt: `Choose an appetizer`,
+                                menuParts: loadedMenuParts.map( mp => ({...mp, img: "/api/images/" + mp.image_name}) )
+                            });
+                            break;
+                        case 5:
+                            newSidePrompts.push({
+                                prompt: `Choose a drink`,
+                                menuParts: loadedMenuParts.map( mp => ({...mp, img: "/api/images/" + mp.image_name}) )
+                            });
+                            break;
+                        default:
+                            newSidePrompts.push({
+                                prompt: `Choose side ${i+1}`,
+                                menuParts: loadedMenuParts.map( mp => ({...mp, img: "/api/images/" + mp.image_name}) )
+                            });
+                    }
                 }
 
                 setSidePrompts(newSidePrompts);
@@ -40,7 +58,7 @@ export default function BuildItem() {
 
     function renderOrderDetails() {
         if (loading) {
-            return <HashLoader color={"#DC143C"} aria-label="Loading item details..." />;
+            return <HashLoader color={"#DC143C"} cssOverride={{"display": "block", "margin": "4rem auto"}} aria-label="Loading item details..." />;
         } else {
             return <OrderDetails sidePrompts={sidePrompts} itemId={itemId} itemName={itemName} />;
         }
