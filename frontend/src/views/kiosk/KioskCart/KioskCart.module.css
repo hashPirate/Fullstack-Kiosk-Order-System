@@ -31,13 +31,13 @@
 .itemTitle {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Futura', Arial, Helvetica, sans-serif;
     font-size: 18pt;
 }
 .itemPrice {
     margin-left: auto;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Futura', Arial, Helvetica, sans-serif;
     font-size: 18pt;
 }
 .itemXButton {
@@ -62,13 +62,13 @@
 .partTitle {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Futura', Arial, Helvetica, sans-serif;
     font-size: 14pt;
 }
 .partPrice {
     margin-left: auto;     /* NOTE: margin-<direction>: auto is DANGEROUS. Use it sparingly... */
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Futura', Arial, Helvetica, sans-serif;
     font-size: 14pt;
 }
 
@@ -81,7 +81,7 @@
 
 .completeOrderButton {
     background-color: crimson;
-    font-family: Futura, Arial, sans-serif;
+    font-family: 'Futura', Arial, sans-serif;
     font-size: 14pt;
     color: white;
     border-radius: 5px;
@@ -91,8 +91,8 @@
 }
 
 .completeOrderButton.buttonDisabled {
-    background-color: rgb(210, 112, 132);
-    color: black;
+    background-color: rgb(209, 133, 148);
+    color: white;
 }
 
 .completeOrderButton:not(.buttonDisabled):active {

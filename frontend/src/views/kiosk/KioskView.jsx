@@ -20,6 +20,8 @@ export default function KioskView() {
     const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [user, setUser] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(100);
+    const [selectedLang, setSelectedLang] = useState("en");
+
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
 
@@ -145,7 +147,7 @@ export default function KioskView() {
                 </div>
             </nav>
             {showLoginPopup && <KioskLoginPopup setShowLoginPopup={setShowLoginPopup} setUser={setUser} />}
-            <Outlet context={{ user: user }} />
+            <Outlet context={{ user: user, selectedLang: selectedLang, setSelectedLang: setSelectedLang }} />
         </CartContext.Provider>
     );
 };

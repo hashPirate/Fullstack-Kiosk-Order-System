@@ -17,7 +17,6 @@ export default function CashierMenuParts() {
         
         axios.get("/api/menu/items/" + menuItemID + "/parts")
         .then(response => {
-            console.log(response.data);
             setParts(response.data);
             setPartsLoaded(true);
         })

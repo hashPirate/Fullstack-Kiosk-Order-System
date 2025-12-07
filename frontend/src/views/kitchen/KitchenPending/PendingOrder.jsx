@@ -3,6 +3,7 @@ import PendingOrderItem from "./PendingOrderItem.jsx";
 import { FaRegSquareCheck } from "react-icons/fa6";
 
 import styles from "./PendingOrder.module.css";
+import timeAgo from "../../../utilities/timeAgo.js";
 
 // menuItems example:
 // [
@@ -31,12 +32,12 @@ import styles from "./PendingOrder.module.css";
 // ]
 
 
-export default function PendingOrder({orderId, menuItems, handleCompleteOrder}) {
+export default function PendingOrder({orderId, creationTime, menuItems, handleCompleteOrder}) {
 
     return (
         <div className={styles.pendingOrder}>
             <div className={styles.orderHeading}>
-                <h3 className={styles.orderTitle}>Order #{orderId}</h3>
+                <h3 className={styles.orderTitle}>Order #{orderId} &nbsp; (Created {timeAgo(creationTime)})</h3>
                 <FaRegSquareCheck className={styles.orderIcon} onClick={() => handleCompleteOrder(orderId)}/>
             </div>
             { menuItems.map((mni, i) => <PendingOrderItem key={i} itemName={mni.item_name} menuParts={mni.menu_parts}/>) }

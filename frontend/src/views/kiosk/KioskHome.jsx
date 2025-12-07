@@ -82,7 +82,7 @@ export default function KioskHome() {
 
     function renderKioskItems() {
         if (loading) {
-            return <HashLoader color={"#DC143C"} aria-label="Loading kiosk items..." />;
+            return <HashLoader color={"#DC143C"} cssOverride={{"display": "block", "margin": "4rem auto"}} aria-label="Loading kiosk items..." />;
         } else {
             return (
                 menuItems.map(

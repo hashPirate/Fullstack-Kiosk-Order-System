@@ -51,7 +51,7 @@ export default function KitchenPending() {
     const { data: ordersData, isLoading, error } = useQuery({
         queryKey: ["pendingOrders"],
         queryFn: () => refreshPendingOrders(),
-        refetchInterval: 5000,
+        refetchInterval: 4000,
     });
 
     const mutation = useMutation({
@@ -101,6 +101,7 @@ export default function KitchenPending() {
                 {ordersData.map((ord) => (
                     <PendingOrder 
                         key={ord.order_id} 
+                        creationTime={ord.created_at}
                         orderId={ord.order_id} 
                         menuItems={ord.menu_items} 
                         handleCompleteOrder={completeOrder}
