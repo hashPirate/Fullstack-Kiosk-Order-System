@@ -1,7 +1,17 @@
-const { Pool } = require('pg');
+const pg = require('pg');
+const Pool = pg.Pool;
 
 // Load in process env vars from dotenv
 require('dotenv').config();
+
+// [Donnell]: this code forces the parser for the TIMESTAMP WITHOUT TIME ZONE
+// type (code 1114) to return a standard JS time string with a Z at the end,
+// which indicates that JS should parse the time string as though it were a UTC
+// timestamp. I needed to do this because the default `pg` parser thought it was
+// parsing a CST (Texas time) string.
+pg.types.setTypeParser(1114, (stringValue) => {
+  return (stringValue.replaceAll(" ", "T") + "Z"); 
+});
 
 const pool = new Pool({
   user: process.env.DB_USER,

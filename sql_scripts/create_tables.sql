@@ -37,7 +37,8 @@ CREATE TABLE "orders" (
     created_at TIMESTAMP NOT NULL,
     user_id INTEGER REFERENCES "users" (user_id),
     is_final BOOLEAN,
-    is_cooked BOOLEAN
+    is_cooked BOOLEAN,
+    cooked_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "ingredients_to_menu_parts" (

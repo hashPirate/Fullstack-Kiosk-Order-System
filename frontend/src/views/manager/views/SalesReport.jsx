@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { useEffect, useState } from 'react';
 import styles from './SalesReport.module.css';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid,Legend, ResponsiveContainer,} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer} from 'recharts';
 export default function SalesReport() {
   const dateToday = new Date();
   const twoDaysBefToday = new Date(dateToday);
@@ -48,7 +48,7 @@ export default function SalesReport() {
             totalQuantity += itemRows[i].totalQuantity;
         }
         else{
-            
+          // Do nothing? -- Donnell
         }
     }
   }
@@ -177,13 +177,15 @@ export default function SalesReport() {
       {error && <p className={styles.errorText}>Error: {error}</p>}
       {!loading && (<>{freqRows.length === 0 ? (
             <p className={styles.outputText}>No sales found</p>): 
-            (<><p className={styles.summary}>Viewing {reportType === 'menuItems' ? 'Menu Items' : 'Menu Parts'}{' '}</p>
+            (<><p className={styles.summary}>Sales report for {reportType === 'menuItems' ? 'menu items' : 'menu parts'}{' '}</p>
               <div className={styles.chartBox}>
                 <ResponsiveContainer width="100%" height={310}>
-                  <BarChart data={chartVals} margin={{ top: 12, right: 20, left: 0, bottom: 60 }}>
+                  <BarChart data={chartVals} margin={{ top: 12, right: 20, left: 0, bottom: 90 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0}tick={{ fill: "#000", fontSize: "15px" }} />
-                    <YAxis /> <Legend verticalAlign="top" align="center" wrapperStyle={{ color: "black", fontSize: "17px", marginTop: "-20px"}}/> <Bar dataKey="quantity" name="Sales Count" fill="#ff7518"/>
+                    <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} tick={{ fill: "#000", fontSize: "15px", fontFamily: "'Futura', Arial, sans-serif" }} style={{fontFamily: "'Futura', Arial, sans-serif"}} />
+                    <YAxis style={{fontFamily: "'Futura', Arial, sans-serif"}} />
+                    <Legend verticalAlign="top" align="center" wrapperStyle={{ color: "black", fontSize: "17px", fontFamily: "'Futura', Arial, sans-serif", marginTop: "-20px"}} />
+                    <Bar dataKey="quantity" name="Sales Count" fill="#ff7518"/>
                   </BarChart>
                 </ResponsiveContainer>
               </div>

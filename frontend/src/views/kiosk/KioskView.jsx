@@ -14,22 +14,21 @@ import CartContext from "./CartContext.js";
 import KioskZoomMenu from "./KioskZoomMenu.jsx";
 import KioskLoginPopup from "./KioskLoginPopup.jsx";
 
-const langIcons = {
-    "English": "🇬🇧",
-    "Spanish": "🇪🇸",
-};
-
 export default function KioskView() {
     const [temp, setTemp] = useState("...");
     const [showZoomMenu, setShowZoomMenu] = useState(false);
     const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [user, setUser] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(100);
+    const [selectedLang, setSelectedLang] = useState("en");
+
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
 
     // Defining the cart context stuff here so that everything in the app can use it.
     const [cartContent, setCartContent] = useState([]);
+    const cartCount = cartContent.length;
+
     // itemId: int
     // menuPartIds: Array(int)
     function addCompletedItem(itemId, menuPartIds) {
@@ -52,10 +51,12 @@ export default function KioskView() {
             { itemId: itemId, parts: [...menuPartIds] }
         ]);
     }
+
     function removeCompletedItem(itemIndex) {
         const newCartContent = cartContent.filter((cc,i) => i !== itemIndex);
         setCartContent(newCartContent);
     }
+
     function signOut() {
         setUser(null);
 
@@ -65,13 +66,6 @@ export default function KioskView() {
             window.location.href = "/kiosk";
         }, 3000);
     }
-    const cartContextValue = {
-        cartContent,
-        setCartContent,
-        addCompletedItem,
-        removeCompletedItem,
-        signOut,
-    };
 
     // Change the actual zoom on `zoomLevel` change
     useEffect(() => {
@@ -114,6 +108,15 @@ export default function KioskView() {
         return () => { alive = false; };
     }, []);
 
+    const cartContextValue = {
+        cartContent,
+        cartCount,
+        setCartContent,
+        addCompletedItem,
+        removeCompletedItem,
+        signOut,
+    };
+
     return (
         <CartContext.Provider value={cartContextValue}>
             <nav className={styles.kioskNav + " skiptranslate"}>
@@ -134,11 +137,17 @@ export default function KioskView() {
                 <Link to="/kiosk" className={`${styles.headerLink} ${styles.kioskTitleContainer}`}><h1 className={styles.kioskTitle}>Ex-sell-ence</h1></Link>
                 <div className={styles.navRight}>
                     <div className={styles.weather}><TiWeatherCloudy className={styles.kioskIcon}/> <span className={styles.weatherText}>{temp}</span></div>
-                    <Link to="cart" className={styles.headerLink}><LuShoppingCart className={styles.kioskIcon}/></Link>
+                    <Link to="cart" className={styles.headerLink}>
+                        <LuShoppingCart className={styles.kioskIcon}>
+                        </LuShoppingCart>
+                        { (cartCount > 0)
+                        ? <p className={styles.cartNumber}>{cartCount}</p>
+                        : <></> }
+                    </Link>
                 </div>
             </nav>
             {showLoginPopup && <KioskLoginPopup setShowLoginPopup={setShowLoginPopup} setUser={setUser} />}
-            <Outlet context={{ user: user }} />
+            <Outlet context={{ user: user, selectedLang: selectedLang, setSelectedLang: setSelectedLang }} />
         </CartContext.Provider>
     );
 };

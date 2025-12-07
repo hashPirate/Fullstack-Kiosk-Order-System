@@ -10,7 +10,7 @@ export default function CartMenuPart({name, price}) {
     return (
     <div className={styles.cartMenuPart}>
         <span className={styles.partTitle}>{name}</span>
-        <span className={styles.partPrice}>{price}</span>
+        <span className={styles.partPrice}>${price}</span>
     </div>
     );
 }
