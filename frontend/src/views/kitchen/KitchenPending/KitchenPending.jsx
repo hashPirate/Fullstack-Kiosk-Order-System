@@ -101,6 +101,7 @@ export default function KitchenPending() {
                 {ordersData.map((ord) => (
                     <PendingOrder 
                         key={ord.order_id} 
+                        creationTime={ord.created_at}
                         orderId={ord.order_id} 
                         menuItems={ord.menu_items} 
                         handleCompleteOrder={completeOrder}
