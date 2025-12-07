@@ -37,8 +37,8 @@
 }
 
 .orderItemButton.buttonDisabled {
-    background-color: rgb(210, 112, 132);
-    color: black;
+    background-color: rgb(209, 133, 148);
+    color: white;
 }
 
 .orderItemButton:not(.buttonDisabled):active {
