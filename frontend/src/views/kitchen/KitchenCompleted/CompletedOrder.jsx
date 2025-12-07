@@ -32,12 +32,19 @@ import styles from "./CompletedOrder.module.css";
 // ]
 
 
-export default function PendingOrder({orderId, menuItems, handleReviveOrder}) {
+export default function PendingOrder({orderId, completionTime, menuItems, handleReviveOrder}) {
+    const prettyCompletionTime = completionTime 
+    ?   (
+            completionTime.slice(0, completionTime.indexOf("T"))
+            + " "
+            + completionTime.slice(completionTime.indexOf("T") + 1, completionTime.lastIndexOf(":"))
+        ).replaceAll("-", "/")
+    :   "???";
 
     return (
         <div className={styles.completedOrder}>
             <div className={styles.orderHeading}>
-                <h3 className={styles.orderTitle}>Order #{orderId}</h3>
+                <h3 className={styles.orderTitle}>Order #{orderId} &nbsp; [Completed at {prettyCompletionTime}]</h3>
                 <LuUndo2 className={styles.orderIcon} onClick={() => handleReviveOrder(orderId)}/>
             </div>
             { menuItems.map((mni, i) => <CompletedOrderItem key={i} itemName={mni.item_name} menuParts={mni.menu_parts}/>) }

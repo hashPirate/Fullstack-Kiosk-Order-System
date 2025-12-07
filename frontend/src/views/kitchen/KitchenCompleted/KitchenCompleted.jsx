@@ -127,6 +127,7 @@ export default function KitchenCompleted() {
                 data.orders.map((ord) => (
                     <CompletedOrder 
                         key={ord.order_id} 
+                        completionTime={ord.cooked_at}
                         orderId={ord.order_id} 
                         menuItems={ord.menu_items} 
                         handleReviveOrder={reviveOrder}      // NOTE to self: is this calling with actual `id`?
