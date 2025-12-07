@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+import { Link, NavLink, Outlet, useLocation } from "react-router";
 import styles from "./MenuBoard.module.css";
 import MenuParts from "./MenuBoardParts.jsx";
 import MenuItem from "./MenuItems.jsx";
 import MenuMeals from "./MenuMeals.jsx";
+import { IoMdArrowBack } from "react-icons/io";
 import axios from "axios";
 import {drinkImages,sidesSection,baseSection,mealsSection,} from "./MenuData.js";
 const menuSideImg = Object.fromEntries(sidesSection.items.map((s) => [s.name, { imgLink: s.imgLink, imageAlt: s.imageAlt },]));
 const menuBaseImg = Object.fromEntries(baseSection.items.map((b) => [b.name,{ imgLink: b.imgLink, imageAlt: b.imageAlt },]));
 const menuMealImg = Object.fromEntries(mealsSection.options.map((m) =>[m.name,{ icon: m.icon, iconAlt: m.iconAlt },]));
 export default function MenuBoardView() {
-  const [sides, setSides] = useState([]);
+  const [sides, setSides] = useStae([]);
   const [base, setBase] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [meals, setMeals] = useState([]);
@@ -26,13 +28,16 @@ export default function MenuBoardView() {
   }, []);
   return (
     <main className={styles.menuBoardHome}>
+      <div className={styles.navLeft}>
+        <Link to="/"><IoMdArrowBack className={styles.backToHome}/></Link>
+      </div>
       <div className={styles.menuBoardFrame}>
         <h1 className={styles.menuTitle}>MENU BOARD</h1>
           {/* BOARD: The board is divided into a left column containing the SIDES and a right column containing BASE, DRINK, and MEAL sections */}
           <div className={styles.boardLayout}>
             {/* Left Column (sides) */}
             <div className={styles.leftColumn}>
-            <MenuParts title="SIDES" subtitle="+$2.10 for each extra side">
+            <MenuParts title="SIDES" subtitle="">
                 <div className={styles.sidesGrid}>
                   {sides.map((item) => {const img = menuSideImg[item.item_name]|| {imgLink: "/menu_images/beijing-beef.jpg",imageAlt: item.item_name,};
                   return (<MenuItem key={item.menu_board_item_id} name={item.item_name} calories={item.calories} 
