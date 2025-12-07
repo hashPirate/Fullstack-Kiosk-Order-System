@@ -11,7 +11,7 @@ export default function KioskMenuItem({img, name, price, itemId, partCount}) {
             <div className={styles.kioskMenuItem}>
                 <img className={styles.kioskMenuItemImage} src={img} alt={name} />
                 <span className={styles.menuItemName}>{name}</span>
-                <span className={styles.menuItemPrice}>{price}</span>
+                <span className={styles.menuItemPrice}>${price}</span>
             </div>
         </Link>
     );
