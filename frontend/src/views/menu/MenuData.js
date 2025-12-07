@@ -1,3 +1,4 @@
+//Since the menu board is dynamic now, these hardcoded vals will just used to initialized the menu board
 export const sidesSection = {
     title: "SIDES",
     subtitle: "+$2.10 for each extra side",

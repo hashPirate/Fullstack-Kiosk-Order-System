@@ -1,9 +1,29 @@
+import { useEffect, useState } from "react";
 import styles from "./MenuBoard.module.css";
 import MenuParts from "./MenuBoardParts.jsx";
 import MenuItem from "./MenuItems.jsx";
 import MenuMeals from "./MenuMeals.jsx";
-import {sidesSection, baseSection, drinksSection, mealsSection, drinkImages,} from "./MenuData.js";
+import axios from "axios";
+import {drinkImages,sidesSection,baseSection,mealsSection,} from "./MenuData.js";
+const menuSideImg = Object.fromEntries(sidesSection.items.map((s) => [s.name, { imgLink: s.imgLink, imageAlt: s.imageAlt },]));
+const menuBaseImg = Object.fromEntries(baseSection.items.map((b) => [b.name,{ imgLink: b.imgLink, imageAlt: b.imageAlt },]));
+const menuMealImg = Object.fromEntries(mealsSection.options.map((m) =>[m.name,{ icon: m.icon, iconAlt: m.iconAlt },]));
 export default function MenuBoardView() {
+  const [sides, setSides] = useState([]);
+  const [base, setBase] = useState([]);
+  const [drinks, setDrinks] = useState([]);
+  const [meals, setMeals] = useState([]);
+  useEffect(() => {
+    axios .get("/api/menu-board")
+      .then((res) => {
+        const items = res.data;
+        setSides(items.filter((i) => i.section === "sides"));
+        setBase(items.filter((i) => i.section === "base"));
+        setDrinks(items.filter((i) => i.section === "drinks"));
+        setMeals(items.filter((i) => i.section === "meals"));
+      })
+      .catch((err) => {console.error(err);});
+  }, []);
   return (
     <main className={styles.menuBoardHome}>
       <div className={styles.menuBoardFrame}>
@@ -12,41 +32,48 @@ export default function MenuBoardView() {
           <div className={styles.boardLayout}>
             {/* Left Column (sides) */}
             <div className={styles.leftColumn}>
-              <MenuParts title={sidesSection.title} subtitle={sidesSection.subtitle}>
+            <MenuParts title="SIDES" subtitle="+$2.10 for each extra side">
                 <div className={styles.sidesGrid}>
-                  {sidesSection.items.map((item) => (<MenuItem key={item.id} {...item} />))}
+                  {sides.map((item) => {const img = menuSideImg[item.item_name]|| {imgLink: "/menu_images/beijing-beef.jpg",imageAlt: item.item_name,};
+                  return (<MenuItem key={item.menu_board_item_id} name={item.item_name} calories={item.calories} 
+                  imgLink={img.imgLink} imageAlt={img.imageAlt} />)})} 
                 </div>
               </MenuParts>
             </div>
             {/* Right column contains: Base, Drinks, Meals */}
             <div className={styles.rightColumn}>
               {/* Base:- */}
-              <MenuParts title={baseSection.title}>
+              <MenuParts title="BASE">
                 <div className={styles.baseGrid}>
-                  {baseSection.items.map((item) => (<MenuItem key={item.id} {...item}/>))}
+                  {base.map((item) => { const img = menuBaseImg[item.item_name] ||{imgLink: "/menu_images/beijing-beef.jpg",imageAlt: item.item_name,};
+                  return (<MenuItem key={item.menu_board_item_id} name={item.item_name} calories={item.calories} 
+                  imgLink={img.imgLink} imageAlt={img.imageAlt}/>)})}
                 </div>
               </MenuParts>
               {/* Drinks:- */}
               <MenuParts
-              title={drinksSection.title} headerRight={
+              title="DRINKS" headerRight={
                 <div className={styles.drinkIconRow}>
                   {drinkImages.map((icon) =>(<img key={icon.id} src={icon.src} alt={icon.alt} className={styles.drinkIcon}/>))}
                 </div>}>
               <div className={styles.drinksList}>
-                {drinksSection.items.map((drink) => (
-                  <div key={drink.id} className={styles.drinkRow}>
+                {drinks.map((drink) => (
+                  <div key={drink.menu_board_item_id} className={styles.drinkRow}>
                     <div className={styles.drinkInfo}>
-                      <span className={styles.drinkName}>{drink.name}</span>
-                      <span className={styles.drinkCalories}>{drink.calorieR}</span>
+                      <span className={styles.drinkName}>{drink.item_name}</span>
+                      <span className={styles.drinkCalories}>{drink.calorie_range}</span>
                     </div>
-                    <span className={styles.drinkPrice}>${drink.price.toFixed(2)}</span>
+                    <span className={styles.drinkPrice}>{drink.price==null? "": `$${Number(drink.price).toFixed(2)}` }
+                    </span>
                   </div>))}
               </div>
             </MenuParts>
                 {/* Meal types */}
-                <MenuParts title={mealsSection.title}>
+                <MenuParts title="Pick a Meal">
                   <div className={styles.mealsColumn}>
-                    {mealsSection.options.map((opt) => (<MenuMeals key={opt.id} {...opt} />))}
+                    {meals.map((opt) => {const img = menuMealImg[opt.item_name] || {imgLink: "/menu_images/beijing-beef.jpg",imageAlt: item.item_name,};
+                    return (<MenuMeals key={opt.menu_board_item_id} name={opt.item_name} calorieR={opt.calorie_range} 
+                    description={opt.description} price={opt.price==null? 0: Number(opt.price)} icon={img.icon} iconAlt={img.iconAlt} />)})}
                   </div>
                 </MenuParts>
             </div>

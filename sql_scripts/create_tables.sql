@@ -72,3 +72,13 @@ CREATE TABLE "images" (
     image_name VARCHAR(255) PRIMARY KEY,
     image_data BYTEA
 );
+
+CREATE TABLE "menu_board_items" (
+    menu_board_item_id SERIAL PRIMARY KEY,
+    section VARCHAR(255) NOT NULL ,           
+    item_name VARCHAR(255) NOT NULL,
+    calories INTEGER,
+    calorie_range VARCHAR,
+    price REAL,
+    description VARCHAR
+);

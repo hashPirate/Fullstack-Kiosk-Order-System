@@ -27,6 +27,7 @@ import ManageMenuItems from "./views/manager/views/ManageMenuItems.jsx";
 import SalesReport from "./views/manager/views/SalesReport.jsx";
 import LoginRoute from './utilities/LoginRoute.jsx';
 import MenuBoardHome from "./views/menu/MenuBoard.jsx";
+import MenuBoardManager from "./views/manager/views/MenuBoardManager.jsx";
 
 import App from './App.jsx';
 
@@ -78,6 +79,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="menu-parts" element={<ManageMenuParts />}></Route>
           <Route path="menu-items" element={<ManageMenuItems />}></Route>
           <Route path="sales-report" element={<SalesReport />}></Route>
+          <Route path="menu-manager" element={<MenuBoardManager />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>
