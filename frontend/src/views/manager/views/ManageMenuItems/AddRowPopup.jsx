@@ -24,12 +24,12 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
                 { errorString ? <p className={styles.errorMessage}>{errorString}</p> : <></> }
 
                 <label>
-                    Name:
+                    Name:<br/>
                     <input value={name} onChange={handleNameChange} className={styles.input} />
                 </label>
 
                 <label>
-                    Price:
+                    Price:<br/>
                     <input value={price} onChange={handlePriceChange} className={styles.input} />
                 </label>
 
@@ -37,10 +37,8 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
                     For sale: <input type="checkbox" checked={forSale} onChange={handleForSaleChange}/>
                 </label>
 
-                <input value={name} onChange={handleNameChange} className={styles.input} />
-
                 <div className={styles.buttons}>
-                    <button className={styles.confirmButton} onClick={() => onCommit(inputVal)}>Add</button>
+                    <button className={styles.confirmButton} onClick={() => onCommit(name, price, forSale)}>Add</button>
                     <button className={styles.cancelButton} onClick={onCancel}>Cancel</button>
                 </div>
             </div>

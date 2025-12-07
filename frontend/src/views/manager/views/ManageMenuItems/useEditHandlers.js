@@ -1,6 +1,6 @@
 import editType from "./editType";
 
-export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, mutation) {
+export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation) {
     // Begin editing an item by showing the popup
     function handleEditStart(id, type) {
         setCurrentEditID(id);
@@ -19,7 +19,7 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
                 throw new Error(`newData must have type 'string' to update name. Current type is ${typeof newData}`);
             }
 
-            mutation.mutate({menu_item_id: id, item_name: newData});
+            editMutation.mutate({menu_item_id: id, item_name: newData});
             setCurrentEditID(null);
             setCurrentEditType(null);
             setEditErrorString(null);
@@ -37,7 +37,7 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
                 return;
             }
 
-            mutation.mutate({menu_item_id: id, price: Number(newData)});
+            editMutation.mutate({menu_item_id: id, price: Number(newData)});
             setCurrentEditID(null);
             setCurrentEditType(null);
             setEditErrorString(null);
@@ -47,7 +47,7 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
                 throw new Error("Invalid data type for for_sale.");
             }
 
-            mutation.mutate({menu_item_id: id, for_sale: newData});
+            editMutation.mutate({menu_item_id: id, for_sale: newData});
             setCurrentEditID(null);
             setCurrentEditType(null);
             setEditErrorString(null);
