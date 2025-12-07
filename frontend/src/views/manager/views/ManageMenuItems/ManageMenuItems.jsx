@@ -21,11 +21,11 @@ export default function ManageMenuItems() {
     const [editErrorString, setEditErrorString] = useState(null);     // Stores an error message that may be displayed in the edit popup.
     const queryClient = useQueryClient();
 
-    // Refresh data every 10 seconds just in case something changed somehow.
+    // Refresh data every 15 seconds just in case something changed somehow.
     const { data: menuItemsData, isLoading, error } = useQuery({
         queryKey: ["managerMenuItems"],
         queryFn: fetchMenuItems,
-        refetchInterval: 10_000,
+        refetchInterval: 15_000,
     });
 
     const mutation = useMutation({
@@ -67,7 +67,7 @@ export default function ManageMenuItems() {
         }
     });
 
-    // Begin editing an item by showing the popup.
+    // Begin editing an item by showing the popup
     function handleEditStart(id, type) {
         setCurrentEditID(id);
         setCurrentEditType(type);
@@ -104,6 +104,16 @@ export default function ManageMenuItems() {
             }
 
             mutation.mutate({menu_item_id: id, price: Number(newData)});
+            setCurrentEditID(null);
+            setCurrentEditType(null);
+            setEditErrorString(null);
+        } else if (type === editType.FOR_SALE) {
+            // Check data type
+            if (typeof newData !== 'boolean') {
+                throw new Error("Invalid data type for for_sale.");
+            }
+
+            mutation.mutate({menu_item_id: id, for_sale: newData});
             setCurrentEditID(null);
             setCurrentEditType(null);
             setEditErrorString(null);
@@ -150,7 +160,16 @@ export default function ManageMenuItems() {
                             </tr>
                         </thead>
                         <tbody>
-                            { menuItemsData.map(item => <MenuItemRow  menuItemId={item.menu_item_id} itemName={item.item_name} price={item.price} forSale={item.for_sale} onCellEdit={handleEditStart}/>) }
+                            { menuItemsData.map(item => <MenuItemRow
+                                        menuItemId={item.menu_item_id}
+                                        itemName={item.item_name}
+                                        price={item.price}
+                                        forSale={item.for_sale}
+                                        onEditStart={handleEditStart}
+                                        handleEditCommit={handleEditCommit}
+                                    />
+                                )
+                            }
                         </tbody>
                     </table>
                 </div>
