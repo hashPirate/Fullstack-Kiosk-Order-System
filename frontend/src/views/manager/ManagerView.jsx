@@ -83,6 +83,9 @@ export default function ManagerView() {
                 <NavLink to="/manager/sales-report" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     Sales Report
                 </NavLink>
+                <NavLink to="/manager/menu-manager" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
+                    Menu Manager
+                </NavLink>
             </div>
             <Outlet context={{lang, setLang}} />
         </>
