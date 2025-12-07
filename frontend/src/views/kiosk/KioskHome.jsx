@@ -1,6 +1,7 @@
 import { useOutletContext, useNavigate } from "react-router";
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
+import { initGoogleTranslate, changeLanguage } from './languages.js';
 import { HashLoader } from "react-spinners";
 
 import styles from "./KioskHome.module.css";
@@ -78,7 +79,15 @@ export default function KioskHome() {
                 console.log("ERROR while fetching menu items:", error);
             }
         })();
-    }, []);
+
+        // Initialize Google Translate when needed.
+        if (!window.googleTranslateElement && user?.language && user.language !== 'en') {
+            initGoogleTranslate('google_translate_element');
+            changeLanguage(user.language).catch(error => {
+                console.error("Failed to set user's preferred language:", error);
+            });
+        }
+    }, [user]);
 
     function renderKioskItems() {
         if (loading) {
@@ -94,6 +103,9 @@ export default function KioskHome() {
 
     return (
         <>
+            {/* This div is still required for the Google Translate widget to initialize, but we hide it. */}
+            <div id='google_translate_element' style={{display: 'none'}}></div>
+
             <h2 className={styles.selectionPrompt}>Please select a menu item.</h2>
             <div className={styles.kioskMenuItemsContainer}>
                 {/* Remember: files in `public` are served as though they are in the project root. */}

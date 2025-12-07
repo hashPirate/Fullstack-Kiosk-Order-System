@@ -2,6 +2,7 @@ const DbModelManager = require('./DbModelManager');
 const MenuItem = require('../model/MenuItem');
 const MenuPart = require('../model/MenuPart');
 const MenuPartIngredient = require('../model/MenuPartIngredient');
+const DietaryRestriction = require('../model/DietaryRestriction');
 
 class MenuManager extends DbModelManager {
     constructor(db) {
@@ -75,6 +76,19 @@ class MenuManager extends DbModelManager {
     async getIngredientsFromMenuPart(menuPart) {
         const result = await this.db.query('SELECT *, itmp.quantity_cost FROM ingredients AS i JOIN ingredients_to_menu_parts AS itmp ON i.ingredient_id = itmp.ingredient_id WHERE itmp.menu_part_id = $1', [menuPart.getMenuPartId()]);
         return result.rows.map(row => new MenuPartIngredient(this.db, row));
+    }
+
+    async getDietaryRestrictionsForMenuPart(menuPart) {
+        const query = `
+            SELECT DISTINCT dr.*
+            FROM dietary_restrictions dr
+            JOIN ingredient_dietary_restrictions idr ON dr.dietary_restriction_id = idr.dietary_restriction_id
+            JOIN ingredients_to_menu_parts itmp ON idr.ingredient_id = itmp.ingredient_id
+            WHERE itmp.menu_part_id = $1
+            ORDER BY dr.dietary_restriction_name;
+        `;
+        const result = await this.db.query(query, [menuPart.getMenuPartId()]);
+        return result.rows.map(row => new DietaryRestriction(this.db, row));
     }
 
     async updateIngredientToMenuPartList(menuPart, ingredientQuantityMap) {

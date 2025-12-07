@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 import styles from './Inventory.module.css';
 
 export default function Inventory() {
@@ -7,6 +8,8 @@ export default function Inventory() {
     const [ingredients,setIngredients] = useState([]);
     const [loading,setLoading]=useState(true);
     const [error,setError]=useState(null);
+    const [editingIngredient, setEditingIngredient] = useState(null);
+
     useEffect(() => {
         const fetchIngredients = async () => {
             setLoading(true);
@@ -98,6 +101,10 @@ export default function Inventory() {
         }
     };
 
+    const handleEditRestrictions = (ingredient) => {
+        setEditingIngredient(ingredient);
+    };
+
     return (
         <div className={styles.inventory}>
             <div className={styles.filterButtons}>
@@ -149,6 +156,7 @@ export default function Inventory() {
                                 <th>Quantity</th>
                                 <th>Quantity Unit</th>
                                 <th>Alert Threshold</th>
+                                <th>Dietary Restrictions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -190,6 +198,13 @@ export default function Inventory() {
                                         >
                                             {ingredient.alert_threshold}
                                         </td>
+                                        <td>
+                                            <button
+                                                onClick={() => handleEditRestrictions(ingredient)}
+                                                className={styles.editButton}>
+                                                Edit
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))
                             )}
@@ -209,6 +224,150 @@ export default function Inventory() {
                 <button disabled title="Remove functionality not implemented">
                     Remove
                 </button>
+            </div>
+            {editingIngredient && (
+                <EditRestrictionsModal
+                    ingredient={editingIngredient}
+                    onClose={() => setEditingIngredient(null)}
+                />
+            )}
+        </div>
+    );
+}
+
+function EditRestrictionsModal({ ingredient, onClose }) {
+    const [allRestrictions, setAllRestrictions] = useState([]);
+    const [ingredientRestrictionIds, setIngredientRestrictionIds] = useState(new Set());
+    const [initialIngredientRestrictionIds, setInitialIngredientRestrictionIds] = useState(new Set());
+    const [newRestrictionName, setNewRestrictionName] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const [allRes, ingredientRes] = await Promise.all([
+                    axios.get('/api/dietary-restrictions'),
+                    axios.get(`/api/dietary-restrictions/ingredient/${ingredient.ingredient_id}`)
+                ]);
+                setAllRestrictions(allRes.data);
+                const initialIds = new Set(ingredientRes.data.map(r => r.dietary_restriction_id));
+                setIngredientRestrictionIds(initialIds);
+                setInitialIngredientRestrictionIds(initialIds);
+            } catch (error) {
+                console.error('Error fetching restrictions:', error);
+                alert('Failed to load restriction data.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [ingredient.ingredient_id]);
+
+    const handleToggleRestriction = (restrictionId) => {
+        setIngredientRestrictionIds(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(restrictionId)) {
+                newSet.delete(restrictionId);
+            } else {
+                newSet.add(restrictionId);
+            }
+            return newSet;
+        });
+    };
+
+    const handleSave = async () => {
+        try {
+            const toAdd = [...ingredientRestrictionIds].filter(id => !initialIngredientRestrictionIds.has(id));
+            const toRemove = [...initialIngredientRestrictionIds].filter(id => !ingredientRestrictionIds.has(id));
+
+            const addPromises = toAdd.map(restrictionId =>
+                axios.post(`/api/dietary-restrictions/ingredient/${ingredient.ingredient_id}/${restrictionId}`)
+            );
+
+            const removePromises = toRemove.map(restrictionId =>
+                axios.delete(`/api/dietary-restrictions/ingredient/${ingredient.ingredient_id}/${restrictionId}`)
+            );
+
+            await Promise.all([...addPromises, ...removePromises]);
+
+            onClose();
+        } catch (error) {
+            console.error('Error saving restrictions:', error);
+            alert('Failed to save restrictions.');
+        }
+    };
+
+    const handleAddNewRestriction = async () => {
+        if (!newRestrictionName.trim()) {
+            alert('Please enter a name for the new restriction.');
+            return;
+        }
+        try {
+            const response = await axios.post('/api/dietary-restrictions', { name: newRestrictionName });
+            setAllRestrictions(prev => [...prev, response.data]);
+            setNewRestrictionName('');
+        } catch (error) {
+            console.error('Error adding new restriction:', error);
+            alert('Failed to add new restriction.');
+        }
+    };
+
+    const handleDeleteRestriction = async (restrictionId) => {
+        if (window.confirm('Are you sure you want to permanently delete this dietary restriction from the system? This cannot be undone.')) {
+            try {
+                await axios.delete(`/api/dietary-restrictions/${restrictionId}`);
+                setAllRestrictions(prev => prev.filter(r => r.dietary_restriction_id !== restrictionId));
+                setIngredientRestrictionIds(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(restrictionId);
+                    return newSet;
+                });
+            } catch (error) {
+                console.error('Error deleting restriction:', error);
+                alert('Failed to delete restriction.');
+            }
+        }
+    };
+
+    return (
+        <div className={styles.popupOverlay} onClick={onClose}>
+            <div className={styles.popupContent} onClick={(e) => e.stopPropagation()}>
+                <h2>Edit Restrictions for {ingredient.name}</h2>
+                {loading ? <p>Loading...</p> : (
+                    <div className={styles.formField}>
+                        {allRestrictions.map(res => (
+                            <div key={res.dietary_restriction_id} className={styles.restrictionItem}>
+                                <label className={styles.checkboxLabel}>
+                                    <input
+                                        type="checkbox"
+                                        checked={ingredientRestrictionIds.has(res.dietary_restriction_id)}
+                                        onChange={() => handleToggleRestriction(res.dietary_restriction_id)}
+                                    />
+                                    {res.dietary_restriction_name}
+                                </label>
+                                <button onClick={() => handleDeleteRestriction(res.dietary_restriction_id)} className={styles.deleteButton} title="Delete restriction permanently">
+                                    <FaTrash />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                <div className={styles.addNewRestriction}>
+                    <input
+                        type="text"
+                        value={newRestrictionName}
+                        onChange={(e) => setNewRestrictionName(e.target.value)}
+                        placeholder="New restriction name"
+                    />
+                    <button onClick={handleAddNewRestriction} title="Add new restriction">
+                        <FaPlus />
+                    </button>
+                </div>
+                <div className={styles.popupActions}>
+                    <button onClick={onClose}>Cancel</button>
+                    <button onClick={handleSave}>Save</button>
+                </div>
             </div>
         </div>
     );

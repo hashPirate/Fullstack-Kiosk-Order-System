@@ -30,3 +30,30 @@
     border: 3px solid white;
 }
 
+.menuPartInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dietaryChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.dietaryChip {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.menuPartName, .menuPartPrice {
+    padding: 0 0.25rem;
+}

@@ -31,8 +31,70 @@ export const languages = [
     { name: 'Basa Jawa', code: 'jw', emoji: '🇮🇩' },
 ];
 
-/**
- * NOTE: Some languages from the request list are not included due to limitations with Google Translate:
- * - Nigerian Pidgin, Wu Chinese (Shanghainese): No dedicated language code available.
- * - Dialects like Egyptian Arabic are grouped under the main language code ('ar' for Arabic).
- */
+export function initGoogleTranslate(elementId) {
+    const script = document.createElement('script');
+    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    document.body.appendChild(script);
+    window.googleTranslateElementInit = () =>{
+        const languageCodes = languages.map(lang => lang.code).join(',');
+        
+        // ↓↓↓ this comment will disable a warning for the global `google` object
+        // eslint-disable-next-line no-undef
+        window.googleTranslateElement = new google.translate.TranslateElement({pageLanguage: 'en',
+            includedLanguages: languageCodes,
+            layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL
+        }, elementId);
+    };
+}
+
+export function getCurrentLanguage() {
+    const cookieMatch = document.cookie.match(/googtrans=([^;]+)/);
+    if (!cookieMatch || cookieMatch[1] === 'null') return 'en';
+    return cookieMatch[1].split('/')[2];
+}
+
+async function awaitGoogleTranslate(timeout = 2000) {
+    return new Promise((resolve, reject) => {
+        const start = Date.now();
+        const interval = setInterval(() => {
+            if (window.googleTranslateElement?.Z) {
+                clearInterval(interval);
+                resolve(window.googleTranslateElement.Z);
+                return;
+            }
+            if (Date.now() - start > timeout) {
+                clearInterval(interval);
+                reject(new Error("Google Translate failed to initialize."));
+            }
+        }, 100);
+    });
+}
+
+export async function changeLanguage(langCode) {
+    // Set the language, with retries.
+    const changePromise = new Promise(async (resolve, reject) => {
+        const start = Date.now();
+        const timeout = 5000; // 5 seconds timeout for the whole operation
+
+        while (Date.now() - start < timeout) {
+            if (getCurrentLanguage() === langCode) {
+                return resolve();
+            }
+
+            try {
+                const googleTranslateContainer = await awaitGoogleTranslate();
+                const select = googleTranslateContainer.querySelector('.goog-te-combo');
+                if (select) {
+                    select.value = langCode;
+                    select.dispatchEvent(new Event('change'));
+                }
+            } catch (e) {
+                // Ignore initialization errors and retry
+            }
+
+            await new Promise(r => setTimeout(r, 250)); // wait before retrying
+        }
+        reject(new Error("Failed to change language within the time limit."));
+    });
+    return changePromise;
+}

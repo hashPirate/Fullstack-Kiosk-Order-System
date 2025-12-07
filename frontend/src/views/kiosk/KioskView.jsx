@@ -7,7 +7,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { FiLogIn } from "react-icons/fi";
 import { HiMagnifyingGlassPlus } from "react-icons/hi2";
 import { useEffect, useState } from "react";
-import { fetchWeatherApi } from 'openmeteo';
+import axios from "axios";
 
 import styles from "./KioskView.module.css";
 import CartContext from "./CartContext.js";
@@ -21,6 +21,8 @@ export default function KioskView() {
     const [user, setUser] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(100);
     const [selectedLang, setSelectedLang] = useState("en");
+    const [allRestrictions, setAllRestrictions] = useState([]);
+    const [selectedRestrictions, setSelectedRestrictions] = useState([]);
 
     const location = useLocation();
     const outletLocation = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
@@ -61,8 +63,10 @@ export default function KioskView() {
         setUser(null);
 
         // Queue sign in prompt and navigate back to home after 3 seconds
+        // Also set language back to English
         setTimeout(() => {
             setShowLoginPopup(true);
+            setSelectedLang("en");
             window.location.href = "/kiosk";
         }, 3000);
     }
@@ -80,7 +84,7 @@ export default function KioskView() {
         setShowLoginPopup(true);
 
         (async () => {
-        try {
+            try {
             const url = "https://api.open-meteo.com/v1/forecast";
             const params = {
             latitude: [30.601389],          // College Station, TX
@@ -95,18 +99,44 @@ export default function KioskView() {
             const current = res.current();
             const f = current.variables(0).value(); // temperature_2m in °F
 
-            if (alive) {
+                if (alive) {
                 setTemp(Math.round(f).toString() + "°");
+                }
+            } catch (e) {
+                if (alive) {
+                    console.log("ERROR: could not load temperature.");
+                }
             }
-        } catch (e) {
-            if (alive) {
-                console.log("ERROR: could not load temperature.");
+            try {
+                const restrictionsResponse = await axios.get('/api/dietary-restrictions');
+                setAllRestrictions(restrictionsResponse.data);
+                setSelectedRestrictions(restrictionsResponse.data.map(r => r.dietary_restriction_name));
+            } catch (error) {
+                console.log("ERROR: could not load dietary restrictions.");
             }
-        }
         })();
 
         return () => { alive = false; };
     }, []);
+
+    // Effect to update restrictions when user logs in or out
+    useEffect(() => {
+        (async () => {
+            if (user) {
+                try {
+                    const response = await axios.get('/api/dietary-restrictions/my-restrictions');
+                    const userRestrictionNames = response.data.map(r => r.dietary_restriction_name);
+                    const newSelected = allRestrictions.map(r => r.dietary_restriction_name).filter(name => !userRestrictionNames.includes(name));
+                    setSelectedRestrictions(newSelected);
+                } catch (error) {
+                    console.error("Failed to fetch user restrictions", error);
+                }
+            } else {
+                // Reset to all checked when logged out
+                setSelectedRestrictions(allRestrictions.map(r => r.dietary_restriction_name));
+            }
+        })();
+    }, [user, allRestrictions]);
 
     const cartContextValue = {
         cartContent,
@@ -147,7 +177,14 @@ export default function KioskView() {
                 </div>
             </nav>
             {showLoginPopup && <KioskLoginPopup setShowLoginPopup={setShowLoginPopup} setUser={setUser} />}
-            <Outlet context={{ user: user, selectedLang: selectedLang, setSelectedLang: setSelectedLang }} />
+            <Outlet context={{
+                user: user,
+                selectedLang: selectedLang,
+                setSelectedLang: setSelectedLang,
+                allRestrictions,
+                selectedRestrictions,
+                setSelectedRestrictions
+            }} />
         </CartContext.Provider>
     );
 };

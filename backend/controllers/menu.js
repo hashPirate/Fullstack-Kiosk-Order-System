@@ -17,7 +17,13 @@ router.get('/full-menu', async (req, res) => {
         const items = [];
         for (const menuItem of menuItems) {
             const parts = await db.menuManager.getMenuPartsForMenuItem(menuItem);
-            items.push({ ...menuItem.toJSON(), applicable_parts: parts.map(p => p.toJSON()) });
+            const partsWithRestrictions = await Promise.all(parts.map(async (part) => {
+                const restrictions = await part.getDietaryRestrictions();
+                // Add in the dietary restrictions
+                return { ...part.toJSON(), dietary_restrictions: restrictions.map(r => r.toJSON()) };
+            }));
+
+            items.push({ ...menuItem.toJSON(), applicable_parts: partsWithRestrictions });
         }
         res.json(items);
     } catch (error) {
@@ -40,7 +46,12 @@ router.get('/items/:id/parts', async (req, res) => {
         const { id } = req.params;
         const menuItem = await db.menuManager.getMenuItemById(id);
         const parts = await db.menuManager.getMenuPartsForMenuItem(menuItem);
-        res.json(parts);
+        const partsWithRestrictions = await Promise.all(parts.map(async (part) => {
+            const restrictions = await part.getDietaryRestrictions();
+            // Add in the dietary restrictions
+            return { ...part.toJSON(), dietary_restrictions: restrictions.map(r => r.dietary_restriction_name) };
+        }));
+        res.json(partsWithRestrictions);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

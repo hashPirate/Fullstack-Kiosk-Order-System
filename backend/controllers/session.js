@@ -20,7 +20,8 @@ passport.use(new GoogleStrategy({
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {
-        const user = await db.userManager.findOrCreateFromGoogleProfile(profile);
+        const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+        const user = await db.userManager.findOrCreateFromGoogleProfile(profile, email);
         return cb(null, user);
     } catch (err) {
         return cb(err);
