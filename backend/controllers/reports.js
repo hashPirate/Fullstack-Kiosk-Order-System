@@ -22,7 +22,7 @@ router.get('/z-report/:day', async (req, res) => {
         const totalOrdersSql = `
             SELECT COUNT(DISTINCT currOrders.order_id)
             FROM orders currOrders
-            JOIN order_items oi ON oi.order_id = currOrders.order_id
+            JOIN order_items oi ON oi.order_id = currOrders.order_idconst { pool } = require('../database');const { pool } = require('../database');
             WHERE currOrders.is_final = TRUE
               AND oi.created_at::date = $1
         `;
@@ -149,6 +149,33 @@ router.get('/menu-item-sales', async (req, res) => {
             `;
         }
         const result = await db.query(sql, [from, to]);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+router.get('/item-sales-report', async (req, res) => {
+    const { from, to, onlyCurrentlySold } = req.query;
+    try {
+        let sql = `
+            SELECT mi.menu_item_id AS "menuItemId",
+            mi.item_name AS "itemName",
+            COALESCE(SUM(oi.quantity), 0) AS "totalQuantity",
+            COALESCE(SUM(oi.current_price), 0) AS "totalSales"
+            FROM order_items oi
+            JOIN orders o ON o.order_id = oi.order_id
+            JOIN menu_items mi ON mi.menu_item_id = oi.menu_item_id
+            WHERE o.is_final = TRUE AND oi.created_at BETWEEN $1 AND $2
+        `;
+        const dates = [from, to];
+        if (onlyCurrentlySold === 'true') {
+            sql += ` AND mi.for_sale = TRUE`;
+        }
+        sql += `
+            GROUP BY mi.menu_item_id, mi.item_name
+            ORDER BY "totalSales" DESC
+        `;
+        const result = await db.query(sql, dates);
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
