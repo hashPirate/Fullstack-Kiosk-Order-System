@@ -23,8 +23,8 @@ import ManagerView from "./views/manager/ManagerView.jsx";
 import ManageServers from "./views/manager/views/ManageServers.jsx";
 import Inventory from "./views/manager/views/Inventory.jsx";
 import Reports from "./views/manager/views/Reports.jsx";
-import ManageMenuParts from "./views/manager/views/ManageMenuParts.jsx";
-import ManageMenuItems from "./views/manager/views/ManageMenuItems.jsx";
+import ManageMenuParts from "./views/manager/views/ManageMenuParts/ManageMenuParts.jsx";
+import ManageMenuItems from "./views/manager/views/ManageMenuItems/ManageMenuItems.jsx";
 import SalesReport from "./views/manager/views/SalesReport.jsx";
 
 import LoginRoute from "./utilities/LoginRoute.jsx";
