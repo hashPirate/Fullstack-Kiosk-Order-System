@@ -1,0 +1,157 @@
+.menuManagerPage {
+    padding: 25px 35px;
+    max-width: 1310px;
+    margin: auto auto;
+}
+.menuSections {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    background-color: crimson;      
+    padding: 0.4rem 1rem;
+    margin-bottom: 1.3rem;
+    border-radius: 3px;
+}
+.sectionBar {
+    flex: 1;
+    padding: 0.4rem 0;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0 0.3rem;
+    background: transparent;        
+    border: none;
+    color: white;               
+}
+.activeSectionBar {
+    color: white;
+    font-weight: 1000;
+    border-bottom: 2.4px solid white;  
+}
+.quickItemActions {
+    margin-bottom: 12px;
+}
+.addButtonNew {
+    padding: 7px 16.8px;
+    border-radius: 2px;
+    background: black;
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 0.9rem;
+    color: white;
+}
+.itemBoxInput input {
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 1rem;
+    border: 1px solid black;
+}
+.addButton {
+    padding: 8px 14px;
+    border-radius: 4px;
+    background: #000;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.cancelButton {
+    padding: 8px 14px;
+    border-radius: 4px;
+    color:black;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    font-weight: 490;
+} 
+.boxButtonRow {
+    display: flex;
+    gap: 0.92rem;
+    margin-top: 8px;
+}
+.currItemBox {   
+    margin-top: 12px;
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.currItem{
+    background: white;
+    border-radius: 12px;
+    min-height: 110px;
+    border: 1px solid #e3dede;
+    padding: 12px 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.currItemHeader {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+.currItemTitle {
+    font-size: 1rem;
+    min-height: 2.4rem;
+    font-weight: 620;
+}
+.currItemActions {
+    display: flex;
+    gap: 0.6rem;
+}
+.currItemField {
+    display: flex;
+    gap: 0.7rem;
+    margin-top: 1px;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+.currItemFieldLabel {
+    font-weight: 600;
+}
+.currItemFieldValue {
+    color: #2f2f2f;
+}
+.currItemActions {
+    /* border: 1px solid #e3e2e2; */
+    background: white;
+    border-radius: 3px;
+    padding: 0.22rem 0.68rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+.currItemActionsDel {
+    background: crimson;
+    color: white;
+    border-radius: 3px;
+    padding: 0.22rem 0.68rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+.currItemBody {
+    font-size: 0.85rem;
+}
+.itemDetailsBox {
+    margin-bottom: 0.9rem;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    background-color: #f69fb1;  
+    border: 1px solid black;
+}  
+.itemDetailsBox h3{
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+.itemBoxInput{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 10px;
+}
+.itemBoxInput label {
+    font-size: 1rem;
+    font-weight: 400;
+}
+  
