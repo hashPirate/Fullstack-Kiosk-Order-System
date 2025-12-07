@@ -1,22 +1,21 @@
 import styles from "./ManageMenuItems.module.css";
+import editType from "./editType.js";
 
-export default function MenuItemRow({ menuItemId, itemName, price, forSale }) {
-    // TODO
-    function handleCellEdit() {}
+export default function MenuItemRow({ menuItemId, itemName, price, forSale, onCellEdit}) {
 
     return (
         <tr>
             <td>{menuItemId}</td>
             <td
                 className={styles.editableCell}
-                onClick={() => handleCellEdit()}
+                onClick={() => onCellEdit(menuItemId, editType.NAME)}
                 title="Click to edit"
             >
                 {itemName}
             </td>
             <td
                 className={styles.editableCell}
-                onClick={() => handleCellEdit()}
+                onClick={() => onCellEdit(menuItemId, editType.PRICE)}
                 title="Click to edit"
             >
                 ${parseFloat(price).toFixed(2)}
@@ -25,7 +24,7 @@ export default function MenuItemRow({ menuItemId, itemName, price, forSale }) {
                 <input
                     type="checkbox"
                     checked={forSale}
-                    onChange={() => handleCellEdit()}
+                    onChange={() => {}}
                 />
             </td>
         </tr>

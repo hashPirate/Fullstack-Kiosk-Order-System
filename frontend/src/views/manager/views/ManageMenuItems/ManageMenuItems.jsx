@@ -6,17 +6,14 @@ import MenuItemRow from "./MenuItemRow.jsx";
 import EditCellPopup from "./EditCellPopup";
 import styles from './ManageMenuItems.module.css';
 import axios from 'axios';
+import editType from "./editType.js";
 
 async function fetchMenuItems() {
+    console.log("[Menu Items]: refreshing menu items...");
     const menuItems = (await axios.get("/api/menu/items")).data;
     return menuItems;
 }
 
-// Types of edits you can make using the popup.
-const editType = {
-    PRICE: "PRICE",
-    NAME: "NAME",
-}
 
 export default function ManageMenuItems() {
     const [currentEditID, setCurrentEditID] = useState(null);     // Stores the ID of the menu item to edit.
@@ -24,7 +21,7 @@ export default function ManageMenuItems() {
     const [editErrorString, setEditErrorString] = useState(null);     // Stores an error message that may be displayed in the edit popup.
     const queryClient = useQueryClient();
 
-    // Refresh data every 10 seconds just in case something changed.
+    // Refresh data every 10 seconds just in case something changed somehow.
     const { data: menuItemsData, isLoading, error } = useQuery({
         queryKey: ["managerMenuItems"],
         queryFn: fetchMenuItems,
@@ -47,8 +44,8 @@ export default function ManageMenuItems() {
             }
             
             // Copy over any changed properties from the payload into the new item object.
-            for (const key of itemUpdatePayload) {
-                newItemData[key] = itemUpdatePayload[key];
+            for (const [key, val] of Object.entries(itemUpdatePayload)) {
+                newItemData[key] = val;
             }
 
             const updateItemResponse = await axios.put(`/api/menu/items/${itemUpdatePayload.menu_item_id}`, newItemData);
@@ -85,7 +82,7 @@ export default function ManageMenuItems() {
                 return;
             }
             if (typeof newData !== "string") {
-                throw new Error("newData must have type 'string' to update name.");
+                throw new Error(`newData must have type 'string' to update name. Current type is ${typeof newData}`);
             }
 
             mutation.mutate({menu_item_id: id, item_name: newData});
@@ -98,7 +95,7 @@ export default function ManageMenuItems() {
                 setEditErrorString("ERROR: new price cannot be empty.");
                 return;
             }
-            if (typeof newData !== "number") {
+            if ( isNaN(Number(newData)) ) {
                 throw new Error("newData must have type 'numer' to update price.");
             }
             if (newData < 0) {
@@ -106,7 +103,7 @@ export default function ManageMenuItems() {
                 return;
             }
 
-            mutation.mutate({menu_item_id: id, price: newData});
+            mutation.mutate({menu_item_id: id, price: Number(newData)});
             setCurrentEditID(null);
             setCurrentEditType(null);
             setEditErrorString(null);
@@ -137,7 +134,10 @@ export default function ManageMenuItems() {
 
     return (
         <>
-            <EditCellPopup prompt={"Edit this shit twin"} currentVal={999} onCommit={() => {}} onCancel={() => {}}/>
+            { (currentEditID !== null)
+                ? <EditCellPopup prompt={`Edit menu item ${currentEditType}`} onCommit={(newData) => handleEditCommit(currentEditID, currentEditType, newData)} onCancel={handleEditCancel} errorString={editErrorString} />
+                : <></> }
+            
             <div className={styles.manageMenuItems}>
                 <div className={styles.tableContainer}>
                     <table className={styles.menuItemsTable}>
@@ -150,7 +150,7 @@ export default function ManageMenuItems() {
                             </tr>
                         </thead>
                         <tbody>
-                            { menuItemsData.map(item => <MenuItemRow  menuItemId={item.menu_item_id} itemName={item.item_name} price={item.price} forSale={item.for_sale} />) }
+                            { menuItemsData.map(item => <MenuItemRow  menuItemId={item.menu_item_id} itemName={item.item_name} price={item.price} forSale={item.for_sale} onCellEdit={handleEditStart}/>) }
                         </tbody>
                     </table>
                 </div>
