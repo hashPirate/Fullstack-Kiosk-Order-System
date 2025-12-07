@@ -7,6 +7,7 @@ import EditCellPopup from "./EditCellPopup";
 import styles from './ManageMenuItems.module.css';
 import axios from 'axios';
 import editType from "./editType.js";
+import useEditHandlers from "./useEditHandlers.js";
 
 async function fetchMenuItems() {
     console.log("[Menu Items]: refreshing menu items...");
@@ -19,6 +20,7 @@ export default function ManageMenuItems() {
     const [currentEditID, setCurrentEditID] = useState(null);     // Stores the ID of the menu item to edit.
     const [currentEditType, setCurrentEditType] = useState(null);     // Stores the type of edit currently being performed (if any).
     const [editErrorString, setEditErrorString] = useState(null);     // Stores an error message that may be displayed in the edit popup.
+
     const queryClient = useQueryClient();
 
     // Refresh data every 15 seconds just in case something changed somehow.
@@ -67,68 +69,14 @@ export default function ManageMenuItems() {
         }
     });
 
-    // Begin editing an item by showing the popup
-    function handleEditStart(id, type) {
-        setCurrentEditID(id);
-        setCurrentEditType(type);
+    // Custom hook that abstracts edit handling logic into another file.
+    const { handleEditStart, handleEditCommit, handleEditCancel } = useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, mutation);
+
+    function handleAddStart() {
+
     }
 
-    // Finish editing an item by updating it in db.
-    function handleEditCommit(id, type, newData) {
-        if (type === editType.NAME) {
-            // Check valid name and data type.
-            if (newData === "") {
-                setEditErrorString("ERROR: new name cannot be empty.");
-                return;
-            }
-            if (typeof newData !== "string") {
-                throw new Error(`newData must have type 'string' to update name. Current type is ${typeof newData}`);
-            }
-
-            mutation.mutate({menu_item_id: id, item_name: newData});
-            setCurrentEditID(null);
-            setCurrentEditType(null);
-            setEditErrorString(null);
-        } else if (type === editType.PRICE) {
-            // Check valid price and data type.
-            if (newData === "") {
-                setEditErrorString("ERROR: new price cannot be empty.");
-                return;
-            }
-            if ( isNaN(Number(newData)) ) {
-                throw new Error("newData must have type 'numer' to update price.");
-            }
-            if (newData < 0) {
-                setEditErrorString("ERROR: new price cannot be less than 0.");
-                return;
-            }
-
-            mutation.mutate({menu_item_id: id, price: Number(newData)});
-            setCurrentEditID(null);
-            setCurrentEditType(null);
-            setEditErrorString(null);
-        } else if (type === editType.FOR_SALE) {
-            // Check data type
-            if (typeof newData !== 'boolean') {
-                throw new Error("Invalid data type for for_sale.");
-            }
-
-            mutation.mutate({menu_item_id: id, for_sale: newData});
-            setCurrentEditID(null);
-            setCurrentEditType(null);
-            setEditErrorString(null);
-        } else {
-            throw new Error("Invalid edit type.");
-        }
-    }
-
-    function handleEditCancel() {
-        setCurrentEditID(null);
-        setCurrentEditType(null);
-        setEditErrorString(null);
-    }
-
-    function handleAddMenuItem() {
+    function handleAddCommit() {
         // TODO
     }
 

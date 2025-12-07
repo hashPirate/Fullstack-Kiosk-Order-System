@@ -18,7 +18,7 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
                 <input value={inputVal} onChange={handleInputChange} className={styles.input} />
 
                 <div className={styles.buttons}>
-                    <button className={styles.confirmButton} onClick={() => onCommit(inputVal)}>Ok</button>
+                    <button className={styles.confirmButton} onClick={() => onCommit(inputVal)}>Done</button>
                     <button className={styles.cancelButton} onClick={onCancel}>Cancel</button>
                 </div>
             </div>
