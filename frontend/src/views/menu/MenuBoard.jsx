@@ -11,7 +11,7 @@ const menuSideImg = Object.fromEntries(sidesSection.items.map((s) => [s.name, { 
 const menuBaseImg = Object.fromEntries(baseSection.items.map((b) => [b.name,{ imgLink: b.imgLink, imageAlt: b.imageAlt },]));
 const menuMealImg = Object.fromEntries(mealsSection.options.map((m) =>[m.name,{ icon: m.icon, iconAlt: m.iconAlt },]));
 export default function MenuBoardView() {
-  const [sides, setSides] = useStae([]);
+  const [sides, setSides] = useState([]);
   const [base, setBase] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [meals, setMeals] = useState([]);
