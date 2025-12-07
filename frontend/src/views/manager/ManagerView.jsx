@@ -66,22 +66,22 @@ export default function ManagerView() {
             </nav>
             <div className={styles.managerTabs}>
                 <NavLink to="/manager/servers" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    servers
+                    Servers
                 </NavLink>
                 <NavLink to="/manager/inventory" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    inventory
+                    Inventory
                 </NavLink>
                 <NavLink to="/manager/reports" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    reports
+                    Reports
                 </NavLink>
                 <NavLink to="/manager/menu-parts" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    menu-parts
+                    Menu Parts
                 </NavLink>
                 <NavLink to="/manager/menu-items" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    menu-items
+                    Menu Items
                 </NavLink>
                 <NavLink to="/manager/sales-report" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    sales-report
+                    Sales Report
                 </NavLink>
             </div>
             <Outlet context={{lang, setLang}} />
