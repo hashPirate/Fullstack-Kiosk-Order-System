@@ -54,7 +54,7 @@ async function refreshCookedOrders(pageNum) {
     console.log("Refreshing kitchen orders...");
 
     const countResponse = await axios.get("/api/orders/cooked/count");
-    const numOrders = countResponse.data.count
+    const numOrders = countResponse.data.count;
 
     const orders = await fetchCookedOrders(pageNum);
 
@@ -68,7 +68,7 @@ export default function KitchenCompleted() {
     const { data, isLoading, error } = useQuery({
         queryKey: ["completedOrders", pageNum],
         queryFn: () => refreshCookedOrders(pageNum),
-        refetchInterval: 5000,
+        refetchInterval: 4000,
     });
 
     const mutation = useMutation({

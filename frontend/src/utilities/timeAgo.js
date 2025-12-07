@@ -4,7 +4,6 @@ export default function timeAgo(timestamp) {
     if (timestamp) {
         // The timestamps in our database have a 'Z' at the end, which
         // will tell JS to read them as UTC time stamps.
-        console.log(timestamp);
         const date = new Date(timestamp);
         const now = new Date(); 
         const diffInSeconds = Math.floor((now - date) / 1000);

@@ -51,7 +51,7 @@ export default function KitchenPending() {
     const { data: ordersData, isLoading, error } = useQuery({
         queryKey: ["pendingOrders"],
         queryFn: () => refreshPendingOrders(),
-        refetchInterval: 5000,
+        refetchInterval: 4000,
     });
 
     const mutation = useMutation({
