@@ -16,7 +16,7 @@
 }
 .selectorButton {
     padding: 0.35rem 0.8rem;
-    font-family: "Newton", "Times New Roman", serif;
+    font-family: 'Futura', Arial, sans-serif;
     border-radius: 990px;
     border: 1px solid #dbdada;
     background-color: white;
@@ -24,9 +24,9 @@
     cursor: pointer;
 }
 .selectedType {
-    background-color: red; 
+    background-color: crimson; 
     color: white;
-    border-color: red;
+    border-color: crimson;
 }
 .reportSelector {
     justify-content: center;
@@ -41,6 +41,7 @@
     font-size: 0.91rem;
 }
 .checkboxLabel {
+    font-family: 'Futura', Arial, sans-serif;
     display: flex;
     align-items: center;
     gap: 0.35rem;
@@ -54,6 +55,8 @@
     color: black;
 }
 .summary {
+    margin: 0 auto 3rem auto;
+    font-family: 'Futura', Arial, sans-serif;
     font-size: 0.96rem;
     color: #3d3d3d;
 }
@@ -73,6 +76,10 @@
     margin-top: 0.25rem;
     font-size: 0.9rem;
 }
+/* Set font for table rows -- Donnell*/
+.table * {
+    font-family: 'Futura', Arial, sans-serif;
+}
 .table td {
     border: 1px solid #e6e5e5;
     padding: 0.45rem 0.6rem;
@@ -85,6 +92,8 @@
     gap: 0.75rem;
 }
 .title {
+    margin-top: 0;
+    font-family: 'Futura', Arial, sans-serif;
     font-size: 1.7rem;
     text-align: center;
     font-weight: 6000;
@@ -97,4 +106,3 @@
     padding: 0.45rem 0.6rem;
     text-align: left;
 }
-  
