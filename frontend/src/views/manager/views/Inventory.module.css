@@ -93,4 +93,9 @@
     text-align: center;
     font-size: 1.2rem;
 }
-
+.itemRow {  
+    transition: background-color 0.01s;
+}
+.highlightedRow {
+    background-color: #fd9d99;   
+}
