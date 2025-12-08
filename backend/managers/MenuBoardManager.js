@@ -1,10 +1,23 @@
+/**
+ * @module manager
+ */
 const DbModelManager = require('./DbModelManager');
 const MenuBoardItem = require('../model/MenuBoardItem');
 
+/**
+ * Manages menu board items in the database.
+ * @class MenuBoardManager
+ * @extends DbModelManager
+ * @param {object} db - The database connection object.
+ */
 class MenuBoardManager extends DbModelManager {
     constructor(db) {
         super(db);
     }
+    /**
+     * Retrieves all menu board items.
+     * @returns {Promise<MenuBoardItem[]>} A list of all menu board items.
+     */
     async getAllMenuBoardItems() {
         const query = `
             SELECT menu_board_item_id, section, item_name, calories, calorie_range, price, description
@@ -13,6 +26,11 @@ class MenuBoardManager extends DbModelManager {
         const result = await this.db.query(query);
         return result.rows.map(row => new MenuBoardItem(this.db, row));
     }
+    /**
+     * Creates a new menu board item.
+     * @param {object} itemData - The data for the new item.
+     * @returns {Promise<MenuBoardItem>} The newly created menu board item.
+     */
     async createMenuBoardItem({ section, item_name, calories, calorie_range, price, description }) {
         const query = `
             INSERT INTO "menu_board_items" (section, item_name, calories, calorie_range, price, description) VALUES ($1, $2, $3, $4, $5, $6)
@@ -24,6 +42,12 @@ class MenuBoardManager extends DbModelManager {
         return new MenuBoardItem(this.db, result.rows[0]);
     }
 
+    /**
+     * Updates a menu board item.
+     * @param {number} id - The ID of the item to update.
+     * @param {object} itemData - The new data for the item.
+     * @returns {Promise<MenuBoardItem|null>} The updated menu board item, or null if not found.
+     */
     async updateMenuBoardItem(id, { item_name, calories, calorie_range, price, description}) {
         const query = `
             UPDATE "menu_board_items"
@@ -38,6 +62,11 @@ class MenuBoardManager extends DbModelManager {
         }
         return new MenuBoardItem(this.db, result.rows[0]);
     }
+    /**
+     * Deletes a menu board item.
+     * @param {number} id - The ID of the item to delete.
+     * @returns {Promise<boolean>} True if the item was deleted, false otherwise.
+     */
     async deleteMenuBoardItem(id) {
         const query = `
             DELETE FROM "menu_board_items"

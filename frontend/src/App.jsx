@@ -3,6 +3,13 @@ import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import "./__global_styles__.css";
 
+/**
+ * The main application component that serves as the entry point and router.
+ * It fetches the current user's session and displays navigation links
+ * based on their authentication status and roles (scopes).
+ *
+ * @returns {React.ReactElement} The rendered App component.
+ */
 function App() {
   const [user, setUser] = useState(null);
 
@@ -44,6 +51,8 @@ const hasAnyScope=userScopes.length>0;
         {hasManagerScope && (
           <li><NavLink to="/manager">Manager View</NavLink></li>
         )}
+        {/* Using "a" since the static docs content is not from this React project */}
+        <li><a href="/docs">Code documentation</a></li>
       </ul>
       
     </>

@@ -1,7 +1,17 @@
+/**
+ * @module controllers/images
+ */
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
 
+/**
+ * Route to upload or replace an image.
+ * @name post/:imageName/upload
+ * @function
+ * @param {string} imageName - The name of the image to upload.
+ * @param {Buffer} - The raw image data in the request body.
+ */
 router.post('/:imageName/upload', async (req, res) => {
     try {
         const { imageName } = req.params;
@@ -13,6 +23,12 @@ router.post('/:imageName/upload', async (req, res) => {
     }
 });
 
+/**
+ * Route to retrieve an image by its name.
+ * @name get/:imageName
+ * @function
+ * @param {string} imageName - The name of the image to retrieve.
+ */
 router.get('/:imageName', async (req, res) => {
     try {
         const { imageName } = req.params;

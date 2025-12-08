@@ -19,7 +19,8 @@
     "dev": "nodemon backend/server.js",
     "build-front": "vite build ./frontend",
     "build-front-dev": "vite build --mode development ./frontend",
-    "heroku-prebuild": "npm install && cd frontend && npm install && npm run build"
+    "heroku-prebuild": "npm install && npm run docs && cd frontend && npm install && npm run build",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
@@ -29,7 +30,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.8.0",
-    "react-spinners": "^0.17.0"
+    "react-spinners": "^0.17.0",
+    "jsdoc": "^4.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",

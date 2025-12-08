@@ -1,7 +1,15 @@
+/**
+ * @module controllers/menu
+ */
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
 
+/**
+ * Route to get all menu items.
+ * @name get/items
+ * @function
+ */
 router.get('/items', async (req, res) => {
     try {
         const items = await db.menuManager.getAllMenuItems();
@@ -11,6 +19,11 @@ router.get('/items', async (req, res) => {
     }
 });
 
+/**
+ * Route to get the full menu with items and their associated parts, including dietary restrictions.
+ * @name get/full-menu
+ * @function
+ */
 router.get('/full-menu', async (req, res) => {
     try {
         const menuItems = await db.menuManager.getAllMenuItems();
@@ -31,6 +44,12 @@ router.get('/full-menu', async (req, res) => {
     }
 });
 
+/**
+ * Route to get a specific menu item by its ID.
+ * @name get/items/:id
+ * @function
+ * @param {string} id - The ID of the menu item.
+ */
 router.get('/items/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -41,6 +60,12 @@ router.get('/items/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all parts for a specific menu item, including dietary restrictions.
+ * @name get/items/:id/parts
+ * @function
+ * @param {string} id - The ID of the menu item.
+ */
 router.get('/items/:id/parts', async (req, res) => {
     try {
         const { id } = req.params;
@@ -57,6 +82,14 @@ router.get('/items/:id/parts', async (req, res) => {
     }
 });
 
+/**
+ * Route to create a new menu item.
+ * @name post/items
+ * @function
+ * @param {string} item_name - The name of the new menu item.
+ * @param {number} price - The price of the new menu item.
+ * @param {boolean} for_sale - Whether the item is for sale.
+ */
 router.post('/items', async (req, res) => {
     try {
         const { item_name, price, for_sale } = req.body;
@@ -67,6 +100,15 @@ router.post('/items', async (req, res) => {
     }
 });
 
+/**
+ * Route to update an existing menu item.
+ * @name put/items/:id
+ * @function
+ * @param {string} id - The ID of the menu item to update.
+ * @param {string} item_name - The new name of the menu item.
+ * @param {number} price - The new price of the menu item.
+ * @param {boolean} for_sale - The new for_sale status.
+ */
 router.put('/items/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -79,6 +121,11 @@ router.put('/items/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all menu parts.
+ * @name get/parts
+ * @function
+ */
 router.get('/parts', async (req, res) => {
     try {
         const parts = await db.menuManager.getAllMenuParts();
@@ -88,6 +135,14 @@ router.get('/parts', async (req, res) => {
     }
 });
 
+/**
+ * Route to create a new menu part.
+ * @name post/parts
+ * @function
+ * @param {string} part_name - The name of the new menu part.
+ * @param {number} price - The price of the new menu part.
+ * @param {boolean} for_sale - Whether the part is for sale.
+ */
 router.post('/parts', async (req, res) => {
     try {
         const { part_name, price, for_sale } = req.body;
@@ -98,6 +153,15 @@ router.post('/parts', async (req, res) => {
     }
 });
 
+/**
+ * Route to update an existing menu part.
+ * @name put/parts/:id
+ * @function
+ * @param {string} id - The ID of the menu part to update.
+ * @param {string} part_name - The new name of the menu part.
+ * @param {number} price - The new price of the menu part.
+ * @param {boolean} for_sale - The new for_sale status.
+ */
 router.put('/parts/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -110,6 +174,12 @@ router.put('/parts/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all ingredients for a specific menu part.
+ * @name get/parts/:id/ingredients
+ * @function
+ * @param {string} id - The ID of the menu part.
+ */
 router.get('/parts/:id/ingredients', async (req, res) => {
     try {
         const { id } = req.params;
@@ -121,6 +191,13 @@ router.get('/parts/:id/ingredients', async (req, res) => {
     }
 });
 
+/**
+ * Route to update the ingredients for a menu part.
+ * @name put/parts/:id/ingredients
+ * @function
+ * @param {string} id - The ID of the menu part to update.
+ * @param {Object<string, number>} ingredients - A map of ingredient IDs to their quantities.
+ */
 router.put('/parts/:id/ingredients', async (req, res) => {
     try {
         const { id } = req.params;
