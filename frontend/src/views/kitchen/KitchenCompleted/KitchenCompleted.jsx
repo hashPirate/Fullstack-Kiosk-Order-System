@@ -1,3 +1,6 @@
+/**
+ * @module views/kitchen/completed
+ */
 import { useState } from 'react';
 import axios from "axios";
 import { HashLoader } from "react-spinners";
@@ -60,7 +63,13 @@ async function refreshCookedOrders(pageNum) {
 
     return { orders, numOrders };
 };
-
+/**
+ * Main component for rendering completed kitchen orders with automatic
+ * refresh, pagination, and revive functionality.
+ *
+ * @function KitchenCompleted
+ * @returns {React.ReactElement} The rendered completed orders view.
+ */
 export default function KitchenCompleted() {
     const [pageNum, setPageNum] = useState(1);
     const queryClient = useQueryClient();
