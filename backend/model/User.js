@@ -9,6 +9,12 @@ class User {
         this.scopes = data.scopes || [];
         this.on_staff = data.on_staff;
         this.gaia_id = data.gaia_id;
+        this.email = data.email;
+        this.user_language = data.user_language;
+    }
+
+    getPrimaryKeyValue() {
+        return this.user_id;
     }
 
     getUserId() {
@@ -39,6 +45,14 @@ class User {
         return hash.digest('hex');
     }
 
+    async setEmail(email) {
+        await this.db.userManager.setEmail(this, email);
+        this.email = email;
+    }
+
+    async getDietaryRestrictions() {
+        return this.db.userManager.getDietaryRestrictions(this);
+    }
 
     toString() {
         return `User ID: ${this.user_id}, Username: ${this.username}, Password Hash: ${this.password_hash}, Scopes: ${this.scopes}, On Staff: ${this.on_staff}, Gaia ID: ${this.gaia_id}`;
@@ -52,6 +66,8 @@ class User {
             scopes: this.scopes,
             on_staff: this.on_staff,
             gaia_id: this.gaia_id,
+            email: this.email,
+            user_language: this.user_language,
         };
     }
 }

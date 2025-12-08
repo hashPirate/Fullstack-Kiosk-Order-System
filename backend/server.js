@@ -17,6 +17,7 @@ const usersController = require('./controllers/users');
 const imagesController = require('./controllers/images');
 const kioskLoginController = require('./controllers/kioskLogin');
 const menuBoardController = require("./controllers/menuBoard");
+const dietaryRestrictionsController = require('./controllers/dietaryRestrictions');
 
 // Middleware
 app.use(express.json());
@@ -38,6 +39,7 @@ app.use("/api/users", usersController);
 app.use("/api/images", imagesController);
 app.use("/api/kiosk-login", kioskLoginController);
 app.use('/api/menu-board', menuBoardController);
+app.use("/api/dietary-restrictions", dietaryRestrictionsController);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, '../frontend/dist')));

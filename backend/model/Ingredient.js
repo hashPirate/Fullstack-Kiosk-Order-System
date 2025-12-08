@@ -41,6 +41,10 @@ class Ingredient extends DatabaseEntry {
         return this.current_quantity <= this.alert_threshold;
     }
 
+    async getDietaryRestrictions() {
+        return this.db.ingredientManager.getDietaryRestrictions(this);
+    }
+
     toString() {
         return `Ingredient ID: ${this.ingredient_id}, Name: ${this.name}, Quantity: ${this.current_quantity} ${this.quantity_unit}`;
     }

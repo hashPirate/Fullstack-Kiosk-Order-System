@@ -1,72 +1,54 @@
-// import {useOutletContext} from 'react-router';
+import { useOutletContext } from 'react-router';
 import styles from './SetLanguage.module.css';
-import { languages } from './languages.js';
+import { languages, initGoogleTranslate, getCurrentLanguage, changeLanguage } from './languages.js';
 import { useEffect, useState } from 'react';
 import clsx from "clsx";
-import { useOutletContext } from 'react-router';
+import axios from 'axios';
 
 export default function SetLanguage() {
-    const { selectedLang, setSelectedLang } = useOutletContext();
-
+    const { user } = useOutletContext();
     useEffect(()=>{
-        // Put the existing Google translate element back into container if translate already initialized
         if (window.googleTranslateElement) {
-            const container = document.getElementById('google_translate_element');
-
-            if (container) {
-                container.appendChild(window.googleTranslateElement.Z);
-            }
-
+            // Already initialized
             return;
         }
 
-        const script = document.createElement('script');
-        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-        document.body.appendChild(script);
-        window.googleTranslateElementInit = () =>{
-            const languageCodes = languages.map(lang => lang.code).join(',');
-            
-            // ↓↓↓ this comment will disable a warning for the global `google` object
-            // eslint-disable-next-line no-undef
-            window.googleTranslateElement = new google.translate.TranslateElement({pageLanguage: 'en',
-                includedLanguages: languageCodes,
-                layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL
-            }, 'google_translate_element');
+        // Clear Google translate cookie, that so the default is english for those not signed in.
+        document.cookie = "googtrans=/en/en; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-            setTimeout(() => {
-                const select = document.querySelector('.goog-te-combo');
-                if (!select || select.dataset.listenerAttached) {
-                    return;
-                }
-                const hasEnglish = Array.from(select.options).some(
-                    (opt) => opt.value === 'en'
-                );
-                if (!hasEnglish) {
-                    const englishOption = document.createElement('option');
-                    englishOption.value = 'en';
-                    englishOption.textContent = 'English';
-                    select.insertBefore(englishOption, select.firstChild);
-                }
-            }, 500);
-        };
-
-
+        initGoogleTranslate('google_translate_element');
     }, []);
+
+    const [selectedLang, setSelectedLang] = useState(getCurrentLanguage());
+
+    useEffect(() => {
+        // Keep the selected language in sync with the cookie
+        setSelectedLang(getCurrentLanguage());
+    });
 
     return (
         <div id="setLanguage">
             <h2 className={styles.langTitle}>Choose your preferred language</h2>
 
-            {/* This div is still required for the Google Translate widget to function, but we hide it. */}
+            {/* This div is still required for the Google Translate widget to initialize, but we hide it. */}
             <div id='google_translate_element' style={{display: 'none'}}></div>
 
             <div className={styles.langButtonsGrid}>
                 {languages.map((lang) => (
-                    <button key={lang.code} className={clsx(styles.langButton, "skiptranslate", (selectedLang === lang.code) && styles.langSelected)} aria-label={`Change language to ${lang.name}`} onClick={() => {
-                        const select = document.querySelector('.goog-te-combo');
-                        if (select) select.value = lang.code;
-                        select?.dispatchEvent(new Event('change'));
-                        setSelectedLang(lang.code);
+                    <button key={lang.code} className={clsx(styles.langButton, "skiptranslate", (selectedLang === lang.code) && styles.langSelected)} aria-label={`Change language to ${lang.name}`} onClick={async () => {
+                        try {
+                            await changeLanguage(lang.code);
+                            setSelectedLang(lang.code);
+                        } catch (error) {
+                            console.error(error.message);
+                        }
+                        if (user) {
+                            try {
+                                await axios.put('/api/users/language', { language: lang.code });
+                            } catch (error) {
+                                console.error("Failed to save language preference:", error);
+                            }
+                        }
                     }}>
                         <span className={styles.langName}>{lang.name}</span>
                         <span className={styles.langEmoji}>{lang.emoji}</span>

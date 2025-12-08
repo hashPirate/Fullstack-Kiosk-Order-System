@@ -37,6 +37,10 @@ class MenuPart extends DatabaseEntry {
         return this.for_sale;
     }
 
+    async getDietaryRestrictions() {
+        return this.db.menuManager.getDietaryRestrictionsForMenuPart(this);
+    }
+
     toString() {
         return `Menu Part ID: ${this.menu_part_id}, Part Name: ${this.part_name}, Image Name: ${this.image_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}`;
     }

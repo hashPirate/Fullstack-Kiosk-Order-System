@@ -37,6 +37,7 @@ const MenuManager = require('./managers/MenuManager');
 const IngredientManager = require('./managers/IngredientManager');
 const ImageManager = require('./managers/ImageManager');
 const MenuBoardManager = require('./managers/MenuBoardManager');
+const DietaryRestrictionManager = require('./managers/DietaryRestrictionManager');
 
 db.orderManager = new OrderManager(db);
 db.userManager = new UserManager(db);
@@ -44,5 +45,6 @@ db.menuManager = new MenuManager(db);
 db.ingredientManager = new IngredientManager(db);
 db.imageManager = new ImageManager(db);
 db.menuBoardManager = new MenuBoardManager(db);
+db.dietaryRestrictionManager = new DietaryRestrictionManager(db);
 
 module.exports = db;

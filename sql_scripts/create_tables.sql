@@ -1,10 +1,17 @@
+CREATE TABLE "dietary_restrictions" (
+    dietary_restriction_id SERIAL PRIMARY KEY,
+    dietary_restriction_name VARCHAR(255) UNIQUE NOT NULL
+);
+
 CREATE TABLE "users" (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255),
     scopes TEXT[] NOT NULL DEFAULT '{}',
     on_staff BOOLEAN NOT NULL DEFAULT FALSE,
-    gaia_id VARCHAR(255) UNIQUE
+    gaia_id VARCHAR(255) UNIQUE,
+    email VARCHAR(255) UNIQUE,
+    user_language VARCHAR(255) DEFAULT 'en'
 );
 
 CREATE TABLE "menu_items" (
@@ -67,6 +74,18 @@ CREATE TABLE "menu_parts_to_menu_items" (
     menu_parts_to_menu_items_id SERIAL PRIMARY KEY,
     menu_item_id INTEGER REFERENCES "menu_items" (menu_item_id),
     menu_part_id INTEGER REFERENCES "menu_parts" (menu_part_id)
+);
+
+CREATE TABLE "user_dietary_restrictions" (
+    user_dietary_restrictions_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES "users" (user_id),
+    dietary_restriction_id INTEGER REFERENCES "dietary_restrictions" (dietary_restriction_id)
+);
+
+CREATE TABLE "ingredient_dietary_restrictions" (
+    ingredient_dietary_restrictions_id SERIAL PRIMARY KEY,
+    ingredient_id INTEGER REFERENCES "ingredients" (ingredient_id),
+    dietary_restriction_id INTEGER REFERENCES "dietary_restrictions" (dietary_restriction_id)
 );
 
 CREATE TABLE "images" (

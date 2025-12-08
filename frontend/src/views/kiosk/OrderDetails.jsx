@@ -33,6 +33,7 @@ export default function OrderDetails({sidePrompts, itemId, itemName}) {
                     partId={mpart.menu_part_id}
                     name={mpart.part_name}
                     price={mpart.price}
+                    dietary_restrictions={mpart.dietary_restrictions}
                     onClick={() => setSidePromptSelection(sidePromptIndex, mpart.menu_part_id)}
                     selected={mpart.menu_part_id === selectedPartIds[sidePromptIndex]}
                     />;

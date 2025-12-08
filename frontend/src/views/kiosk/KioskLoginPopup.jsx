@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { HashLoader } from "react-spinners";
 import axios from "axios";
+import { initGoogleTranslate, changeLanguage } from './languages.js';
 
 import styles from "./KioskLoginPopup.module.css";
 
@@ -31,11 +32,20 @@ export default function KioskLoginPopup({ setShowLoginPopup, setUser }) {
             try {
                 const response = await axios.get(`/api/kiosk-login/status/${sessionId}`);
                 if (response.data.status === 'completed') {
+                    const user = response.data.user;
                     setIsLoggedIn(true);
-                    setUser(response.data.user);
-                    console.log("Successfully signed in as:", response.data.user);
+                    setUser(user);
+                    console.log("Successfully signed in as:", user);
+
+                    if (user.user_language && user.user_language !== 'en') {
+                        if (!window.googleTranslateElement) {
+                            initGoogleTranslate('google_translate_element');
+                        }
+                        await changeLanguage(user.user_language);
+                    }
+
                     clearInterval(interval); // Stop polling
-                    setTimeout(() => setShowLoginPopup(false), 2000);
+                    setTimeout(() => setShowLoginPopup(false), 2000); // Close the popup after 2 seconds
                 }
             } catch (error) {
                 console.error("Error checking login status:", error);
@@ -59,7 +69,7 @@ export default function KioskLoginPopup({ setShowLoginPopup, setUser }) {
                 ) : (
                     sessionId ? (
                         <>
-                            <p>Scan this QR code with your phone to sign in.<br></br>Easily see your order history!</p>
+                            <p>Scan this QR code with your phone to sign in.<br></br>Easily see your order history, save your dietary restrictions, preferred language, and more!</p>
                             <div className={styles.qrCodeContainer}>
                                 <QRCodeSVG value={loginUrl} size={256} />
                             </div>

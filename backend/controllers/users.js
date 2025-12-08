@@ -102,4 +102,18 @@ router.put('/:username/on-staff', async (req, res) => {
     }
 });
 
+router.put('/language', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    try {
+        const { language } = req.body;
+        await db.userManager.setLanguage(req.user.getUserId(), language);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;

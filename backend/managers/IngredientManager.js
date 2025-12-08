@@ -1,5 +1,6 @@
 const DbModelManager = require('./DbModelManager');
 const Ingredient = require('../model/Ingredient');
+const DietaryRestriction = require('../model/DietaryRestriction');
 
 const DEFAULT_ALERT_THRESH = 700;
 
@@ -89,6 +90,27 @@ class IngredientManager extends DbModelManager {
     async getIngredientsNeedingRestock() {
         const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity <= alert_threshold ORDER BY name');
         return result.rows.map(row => new Ingredient(this.db, row));
+    }
+
+    async getDietaryRestrictions(ingredient) {
+        const query = `
+            SELECT dr.* FROM dietary_restrictions dr
+            JOIN ingredient_dietary_restrictions idr ON dr.dietary_restriction_id = idr.dietary_restriction_id
+            WHERE idr.ingredient_id = $1
+            ORDER BY dr.dietary_restriction_name;
+        `;
+        const result = await this.db.query(query, [ingredient.getIngredientId()]);
+        return result.rows.map(row => new DietaryRestriction(this.db, row));
+    }
+
+    async addDietaryRestriction(ingredient, restriction) {
+        const query = 'INSERT INTO ingredient_dietary_restrictions (ingredient_id, dietary_restriction_id) VALUES ($1, $2) ON CONFLICT DO NOTHING';
+        await this.db.query(query, [ingredient.getIngredientId(), restriction.getRestrictionId()]);
+    }
+
+    async removeDietaryRestriction(ingredient, restriction) {
+        const query = 'DELETE FROM ingredient_dietary_restrictions WHERE ingredient_id = $1 AND dietary_restriction_id = $2';
+        await this.db.query(query, [ingredient.getIngredientId(), restriction.getRestrictionId()]);
     }
 }
 

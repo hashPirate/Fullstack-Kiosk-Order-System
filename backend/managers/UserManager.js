@@ -1,5 +1,6 @@
 const DbModelManager = require('./DbModelManager');
 const User = require('../model/User');
+const DietaryRestriction = require('../model/DietaryRestriction');
 
 class UserManager extends DbModelManager {
     constructor(db) {
@@ -45,13 +46,18 @@ class UserManager extends DbModelManager {
         return new User(this.db, result.rows[0]);
     }
 
-    async findOrCreateFromGoogleProfile(profile) {
+    async findOrCreateFromGoogleProfile(profile, email) {
         const existingUser = await this.getUserByGaiaId(profile.id);
         if (existingUser) {
+            if (email && existingUser.email !== email) {
+                await this.setEmail(existingUser, email);
+                // Re-fetch user to get the updated email
+                return this.getUserById(existingUser.getUserId());
+            }
             return existingUser;
         }
 
-        const result = await this.db.query('INSERT INTO users (username, scopes, on_staff, gaia_id) VALUES ($1, $2, $3, $4) RETURNING *', [profile.displayName, [], true, profile.id]);
+        const result = await this.db.query('INSERT INTO users (username, scopes, on_staff, gaia_id, email) VALUES ($1, $2, $3, $4, $5) RETURNING *', [profile.displayName, [], true, profile.id, email]);
         return new User(this.db, result.rows[0]);
     }
 
@@ -86,6 +92,35 @@ class UserManager extends DbModelManager {
 
     async setOnStaff(user, onStaff) {
         await this.db.query('UPDATE users SET on_staff = $1 WHERE user_id = $2', [onStaff, user.getUserId()]);
+    }
+    
+    async setLanguage(userId, language) {
+        await this.db.query('UPDATE users SET user_language = $1 WHERE user_id = $2', [language, userId]);
+    }
+
+    async setEmail(user, email) {
+        await this.db.query('UPDATE users SET email = $1 WHERE user_id = $2', [email, user.getUserId()]);
+    }
+
+    async getDietaryRestrictions(user) {
+        const query = `
+            SELECT dr.* FROM dietary_restrictions dr
+            JOIN user_dietary_restrictions udr ON dr.dietary_restriction_id = udr.dietary_restriction_id
+            WHERE udr.user_id = $1
+            ORDER BY dr.dietary_restriction_name;
+        `;
+        const result = await this.db.query(query, [user.getUserId()]);
+        return result.rows.map(row => new DietaryRestriction(this.db, row));
+    }
+
+    async addDietaryRestriction(user, restrictionId) {
+        const query = 'INSERT INTO user_dietary_restrictions (user_id, dietary_restriction_id) VALUES ($1, $2) ON CONFLICT DO NOTHING';
+        await this.db.query(query, [user.getUserId(), restrictionId]);
+    }
+
+    async removeDietaryRestriction(user, restrictionId) {
+        const query = 'DELETE FROM user_dietary_restrictions WHERE user_id = $1 AND dietary_restriction_id = $2';
+        await this.db.query(query, [user.getUserId(), restrictionId]);
     }
 }
 

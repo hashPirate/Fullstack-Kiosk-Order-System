@@ -93,6 +93,134 @@
     text-align: center;
     font-size: 1.2rem;
 }
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.popupContent {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.popupContent h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.formField {
+    margin-bottom: 1rem;
+}
+.formField label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.formField input[type="text"],
+.formField input[type="password"],
+.formField input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.restrictionItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+.restrictionItem:last-child {
+    border-bottom: none;
+}
+.deleteButton {
+    background: none;
+    border: none;
+    color: crimson;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.25rem;
+}
+.deleteButton:hover {
+    text-decoration: underline;
+}
+.popupActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.popupActions button {
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.popupActions button:last-child {
+    background-color: crimson;
+    color: white;
+    border-color: crimson;
+}
+.addNewRestriction {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.addNewRestriction input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+.addNewRestriction button {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+.addNewRestriction button:hover {
+    background-color: #eee;
+}
+.editButton {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.editButton:hover {
+    background-color: #f0f0f0;
+}
 .itemRow {  
     transition: background-color 0.01s;
 }
