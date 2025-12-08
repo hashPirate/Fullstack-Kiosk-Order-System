@@ -8,6 +8,11 @@ import styles from './OrderDetails.module.css';
 import CartContext from './CartContext.js';
 
 // sidePrompts: list of JS objects that each contain a prompts and an array of possible side choices.
+/**
+ * Displays the collapsible per-part selection UI for building a kiosk entree.
+ * @param {{sidePrompts: Array<Object>, itemId: number, itemName: string}} props Options describing the entree being configured.
+ * @returns {JSX.Element} Builder interface for choosing sides and submitting the order.
+ */
 export default function OrderDetails({sidePrompts, itemId, itemName}) {
     // selectedParts is an array that functions like a dictionary. It maps the side prompt (the collapsible)
     // to the id of the currently selected part in that collapsible.
@@ -70,6 +75,5 @@ export default function OrderDetails({sidePrompts, itemId, itemName}) {
         </div>
     );
 }
-
 
 

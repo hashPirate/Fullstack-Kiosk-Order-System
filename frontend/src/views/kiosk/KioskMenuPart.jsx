@@ -8,6 +8,11 @@ import clsx from 'clsx';
     // name -- string
     // price -- number
     // dietary_restrictions -- array of strings
+/**
+ * Selectable tile for a menu part option displayed within the build flow.
+ * @param {{selected: boolean, img: string, name: string, price: number, partId: number, onClick: Function, dietary_restrictions: Array<string>}} props Menu part data and handlers.
+ * @returns {JSX.Element} Button-like UI showing the part image, price, and dietary chips.
+ */
 export default function KioskMenuPart({selected, img, name, price, partId, onClick, dietary_restrictions}) {
     return (
         <div className={clsx(styles.kioskMenuPart, selected && styles.partSelected)} onClick={onClick}>

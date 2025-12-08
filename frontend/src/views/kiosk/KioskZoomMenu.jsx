@@ -4,6 +4,11 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 
 import styles from "./KioskZoomMenu.module.css";
 
+/**
+ * Overlay that lets kiosk users adjust browser zoom from the touch UI.
+ * @param {{setShowZoomMenu: Function, zoomLevel: number, setZoomLevel: Function}} props Zoom state handlers from the parent layout.
+ * @returns {JSX.Element} Modal overlay for zooming controls.
+ */
 export default function KioskZoomMenu({ setShowZoomMenu, zoomLevel, setZoomLevel }) {
 
     return (

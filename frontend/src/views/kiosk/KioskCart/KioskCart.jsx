@@ -8,6 +8,10 @@ import CartMenuPart from "./CartMenuPart";
 import styles from "./KioskCart.module.css";
 import CartContext from "../CartContext.js";
 
+/**
+ * Renders the kiosk cart view, translating stored IDs into display data and submitting orders.
+ * @returns {JSX.Element} Cart interface including item list and checkout button.
+ */
 export default function KioskCart() {
     // Since CartContext only stores IDs, we will need to fetch a list of
     // Menu Items and Menu Parts again so that we can translate item / part
@@ -203,5 +207,4 @@ export default function KioskCart() {
         //     },
         //     ...
         // ]
-
 

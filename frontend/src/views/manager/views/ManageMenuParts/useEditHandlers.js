@@ -1,7 +1,23 @@
 import editType from "./editType";
 
+/**
+ * Provides edit popup lifecycle hooks for menu part rows.
+ * @param {Function} setCurrentEditID Setter that tracks which part is being edited.
+ * @param {Function} setCurrentEditType Setter tracking which field is under edit.
+ * @param {Function} setEditErrorString Setter used to display validation messages.
+ * @param {Function} setCurrentEditName Setter storing the current part name for ingredient modal.
+ * @param {import('@tanstack/react-query').UseMutationResult} editMutation React Query mutation that persists part updates.
+ * @returns {{handleEditStart: Function, handleEditCommit: Function, handleEditCancel: Function}} Helper callbacks exposed to the UI.
+ */
 export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, setCurrentEditName, editMutation) {
     // Begin editing an item by showing the popup
+    /**
+     * Opens the edit popup for the specified part and captures its metadata.
+     * @param {number} id Menu part identifier selected for editing.
+     * @param {string} name Current part name, used when editing ingredients.
+     * @param {string} type Field identifier describing which attribute to edit.
+     * @returns {void}
+     */
     function handleEditStart(id, name, type) {
         setCurrentEditID(id);
         setCurrentEditName(name);
@@ -9,6 +25,13 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
     }
 
     // Finish editing an item by updating it in db.
+    /**
+     * Validates edit input and triggers the appropriate mutation.
+     * @param {number} id Menu part identifier being updated.
+     * @param {string} type Field identifier describing the edit type.
+     * @param {string|number|boolean|Array<Object>} newData Value supplied by the user, format depends on type.
+     * @returns {void}
+     */
     function handleEditCommit(id, type, newData) {
         if (type === editType.NAME) {
             // Check valid name and data type.
@@ -74,6 +97,10 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
         }
     }
 
+    /**
+     * Resets edit state and closes any open edit popup.
+     * @returns {void}
+     */
     function handleEditCancel() {
         setCurrentEditID(null);
         setCurrentEditType(null);

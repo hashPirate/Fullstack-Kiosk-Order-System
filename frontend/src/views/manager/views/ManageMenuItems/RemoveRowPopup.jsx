@@ -1,9 +1,19 @@
 import { useState } from "react";
 import styles from "./AddRowPopup.module.css";
 
+/**
+ * Popup that asks the manager for the ID of the menu item to remove.
+ * @param {{prompt: string, onCommit: Function, onCancel: Function, errorString: string|null}} props Popup props configured by the parent view.
+ * @returns {JSX.Element} Modal that confirms removal input.
+ */
 export default function RemoveRowPopup({ prompt, onCommit, onCancel, errorString}) {
     const [removalID, setRemovalID] = useState("");
 
+    /**
+     * Updates the target removal ID as the user enters a value.
+     * @param {import('react').ChangeEvent<HTMLInputElement>} e Change event from the numeric field.
+     * @returns {void}
+     */
     function handleIdChange(e) {
         setRemovalID(e.target.value);
     }
@@ -27,5 +37,4 @@ export default function RemoveRowPopup({ prompt, onCommit, onCancel, errorString
         </div>
     );
 }
-
 

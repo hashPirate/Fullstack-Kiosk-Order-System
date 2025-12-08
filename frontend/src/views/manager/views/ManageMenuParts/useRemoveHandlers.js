@@ -1,8 +1,25 @@
+/**
+ * Supplies helper callbacks for removing menu parts.
+ * @param {Function} setIsRemoving Setter controlling whether the remove popup is visible.
+ * @param {Function} setRemoveErrorString Setter used to display validation errors.
+ * @param {import('@tanstack/react-query').UseMutationResult} removeMutation React Query mutation responsible for deletions.
+ * @param {Array<Object>} menuPartsData Cached menu parts used for validating IDs.
+ * @returns {{handleRemoveStart: Function, handleRemoveCommit: Function, handleRemoveCancel: Function}} Remove handlers consumed by the UI.
+ */
 export default function useRemoveHandlers(setIsRemoving, setRemoveErrorString, removeMutation, menuPartsData) {
+    /**
+     * Opens the remove popup when the user initiates deletion.
+     * @returns {void}
+     */
     function handleRemoveStart() {
         setIsRemoving(true);
     }
 
+    /**
+     * Validates the ID entered by the user and runs the delete mutation if valid.
+     * @param {string|number} id Identifier entered by the manager.
+     * @returns {void}
+     */
     function handleRemoveCommit(id) {
         // Check that id is numeric
         if ( isNaN( Number(id) ) ) {
@@ -28,6 +45,10 @@ export default function useRemoveHandlers(setIsRemoving, setRemoveErrorString, r
         setRemoveErrorString(null);
     }
 
+    /**
+     * Closes the remove popup and clears any errors.
+     * @returns {void}
+     */
     function handleRemoveCancel() {
         setIsRemoving(false);
         setRemoveErrorString(null);

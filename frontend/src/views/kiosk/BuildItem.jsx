@@ -6,6 +6,10 @@ import axios from 'axios';
 
 import styles from './BuildItem.module.css';
 
+/**
+ * Kiosk flow for building a menu item by selecting side parts with dietary filtering.
+ * @returns {JSX.Element} Page that handles restriction filters and renders `OrderDetails` for the chosen item.
+ */
 export default function BuildItem() {
     const [searchParams, setSearchParams] = useSearchParams();
     const itemId = Number(searchParams.get("itemId"));
