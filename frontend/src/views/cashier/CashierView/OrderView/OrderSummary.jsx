@@ -7,11 +7,13 @@ import styles from "./OrderView.module.css";
 import OrderContext from "../../OrderContext";
 
 /**
+ * @module views/cashier/CashierView/OrderView/OrderSummary
+ */
+/**
  * Displays the total cost of the current order and includes a button for
  * submitting (confirming) the order to the backend.
  *
- * @component
- *
+ * @function OrderSummary
  * @description
  * - Computes an order total by summing item prices and part prices.
  * - Confirms the order by:
@@ -21,7 +23,7 @@ import OrderContext from "../../OrderContext";
  *   4. Finalizing the order.
  *
  * Handles loading state with a disabled "Confirm" button while the order
- * is being processed. Redirects away from `menu_parts` if confirmation
+ * is being processed. Redirects away from `menu_parts` if confirmation is triggered from the wrong screen.
  * is triggered from the wrong screen.
  *
  * @returns {JSX.Element} Summary box containing total price and confirmation button.
