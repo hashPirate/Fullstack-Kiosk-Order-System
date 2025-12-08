@@ -8,6 +8,24 @@ import gridStyles from "../MenuGridStyles.module.css";
 import MenuPart from "./MenuPart.jsx";
 import pastelColors from "../pastelColors.js";
 
+/**
+ * Component responsible for displaying all available menu parts
+ * associated with a selected menu item.
+ *
+ * @component
+ *
+ * @description
+ * - Fetches menu parts using the `menuItemID` query parameter.
+ * - Displays a loading spinner until data is retrieved.
+ * - Renders each part using the <MenuPart /> component.
+ * - Applies looping pastel background colors to each part.
+ *
+ * Fetches from:
+ *   GET /api/menu/items/{menuItemID}/parts
+ *
+ * @returns {JSX.Element} A container that displays menu parts or a loader.
+ */
+
 export default function CashierMenuParts() {
     const [parts, setParts] = useState([]);
     const [partsLoaded, setPartsLoaded] = useState(false);
@@ -24,7 +42,12 @@ export default function CashierMenuParts() {
             console.log("ERROR while fetching menu parts:", error);
         });
     }, []);
-
+    /**
+     * Renders the list of menu parts once they have been loaded.
+     * If parts are not yet loaded, a HashLoader spinner is displayed.
+     *
+     * @returns {JSX.Element|JSX.Element[]} List of <MenuPart /> components or a loader.
+     */
     function renderParts() {
         if (partsLoaded) {
             // Render list of items with looping pastel colors
@@ -34,6 +57,7 @@ export default function CashierMenuParts() {
         }
     };
 
+    
     function setPartSelected(id) {}
 
     return (

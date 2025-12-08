@@ -9,7 +9,24 @@ import ProgressBar from './OrderProgression.jsx';
 import OrderProgression from './OrderProgression.jsx';
 import OrderContext from '../OrderContext.jsx';
 import { useState } from 'react';
-
+/**
+ * Main container for the cashier workflow. Manages global order state and
+ * provides it to all descendants through React context.
+ *
+ * @component
+ *
+ * @description
+ * This component:
+ * - Stores the current order (items + parts)
+ * - Provides functions for adding/removing items and parts
+ * - Tracks whether the system is currently processing an order
+ * - Renders the order pane (left) and menu-selection pane (right)
+ * - Wraps everything with an OrderContext.Provider
+ *
+ * Child components access order state and actions via `OrderContext`.
+ *
+ * @returns {JSX.Element} Split-view cashier interface with order and menu panes.
+ */
 export default function CashierView() {
     // Order content is a list of menu item objects
     // Menu item object will look as follows:
@@ -29,15 +46,33 @@ export default function CashierView() {
         // }
     const [orderContent, setOrderContent] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
-    
+    /**
+     * Adds a new menu item to the order.
+     *
+     * @param {number} menuItemId - ID of the selected menu item.
+     * @param {string} menuItemName - Human-readable item name.
+     * @param {number} menuItemPrice - Base price of the menu item.
+     */
+
     function addMenuItem(menuItemId, menuItemName, menuItemPrice) {
         setOrderContent([ ...orderContent, {itemId: menuItemId, itemName: menuItemName, itemPrice: menuItemPrice, parts: []} ]);
     }
-
+    /**
+     * Removes a menu item from the order.
+     *
+     * @param {number} removeItemIndex - Array index of the item to remove.
+     */
     function removeMenuItem(removeItemIndex) {
         setOrderContent(orderContent.slice(0, removeItemIndex).concat(orderContent.slice(removeItemIndex + 1, orderContent.length)));
     }
-
+    /**
+     * Adds a menu part (modifier/add-on) to a specific menu item.
+     *
+     * @param {number} itemIndex - Index of the parent item.
+     * @param {number} menuPartId - ID of the selected part.
+     * @param {string} menuPartName - Display name of the part.
+     * @param {number} menuPartPrice - Price impact of the part.
+     */
     function addMenuPart(itemIndex, menuPartId, menuPartName, menuPartPrice) {
         const newOrderContent = orderContent.map((item, i) => {
             if (i === itemIndex) {
@@ -50,7 +85,12 @@ export default function CashierView() {
         })
         setOrderContent(newOrderContent);
     }
-
+    /**
+     * Removes a menu part from a specific menu item.
+     *
+     * @param {number} itemIndex - Index of the parent item.
+     * @param {number} removePartIndex - Index of the part to remove.
+     */
     function removeMenuPart(itemIndex, removePartIndex) {
         const newOrderContent = orderContent.map((item, i) => {
             if (i === itemIndex) {
