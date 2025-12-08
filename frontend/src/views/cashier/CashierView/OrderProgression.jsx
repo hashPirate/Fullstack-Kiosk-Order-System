@@ -2,12 +2,30 @@ import clsx from "clsx";
 import { useLocation, useNavigate } from "react-router";
 
 import styles from "./CashierView.module.css";
-
+/**
+ * Component representing the order progression bar displayed in the menu pane.
+ *
+ * @component
+ *
+ * @description
+ * Highlights the current step of the order:
+ * - "Menu Items"
+ * - "Menu Parts"
+ *
+ * Also includes a "Done ✓" button, which becomes active only when on the
+ * "menu_parts" route, and navigates back to the Menu Items screen.
+ *
+ * @returns {JSX.Element} A dynamic progress bar with conditional styling.
+ */
 export default function OrderProgression() {
     const navigate = useNavigate();
     const location = useLocation();
     const outletPath = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
-
+    /**
+     * Navigates the user back to the menu items screen.
+     *
+     * @returns {void}
+     */
     function onDoneClick() {
         navigate("/cashier/menu_items");
     }

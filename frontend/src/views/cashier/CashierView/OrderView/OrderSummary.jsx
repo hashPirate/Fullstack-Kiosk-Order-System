@@ -6,12 +6,38 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./OrderView.module.css";
 import OrderContext from "../../OrderContext";
 
+/**
+ * Displays the total cost of the current order and includes a button for
+ * submitting (confirming) the order to the backend.
+ *
+ * @component
+ *
+ * @description
+ * - Computes an order total by summing item prices and part prices.
+ * - Confirms the order by:
+ *   1. Creating an empty order in the backend.
+ *   2. Adding each item.
+ *   3. Adding associated parts for each item.
+ *   4. Finalizing the order.
+ *
+ * Handles loading state with a disabled "Confirm" button while the order
+ * is being processed. Redirects away from `menu_parts` if confirmation
+ * is triggered from the wrong screen.
+ *
+ * @returns {JSX.Element} Summary box containing total price and confirmation button.
+ */
+
 export default function OrderSummary() {
     const orderState = useContext(OrderContext);
     const [confirmDisabled, setConfirmDisabled] = useState(false);
     const location = useLocation();
     const locationHead = location.pathname.slice(location.pathname.lastIndexOf("/") + 1);
     const navigate = useNavigate();
+    /**
+     * Calculates the total cost of all menu items and their parts.
+     *
+     * @returns {string} The total formatted as a fixed two-decimal string.
+     */
 
     function getOrderTotal() {
         let total = 0;
@@ -29,6 +55,17 @@ export default function OrderSummary() {
     // empty order in the database, then add an item to that order, then add
     // parts to that item, and then add another item, and so on.
     // TODO: add flag for errors and use it to retry the confirmation if errors occurred.
+
+    /**
+     * Sends the order to the backend API. Performs multiple sequential operations:
+     * - Creates new order
+     * - Sends each item (with quantity)
+     * - Sends each part for that item
+     * - Finalizes the order
+     *
+     * @async
+     * @returns {Promise<void>}
+     */
     async function confirmOrder() {
         setConfirmDisabled(true);
         orderState.setIsProcessing(true);
