@@ -1,6 +1,21 @@
 import styles from './CashierView.module.css';
 import { Link } from 'react-router-dom';
 import { IoArrowBack } from "react-icons/io5";
+/**
+ * Header component for the Cashier view.
+ *
+ * @component
+ * @description
+ * Displays:
+ * - A back button (link to "/")
+ * - The title "ExSELLence Cashier"
+ * - A spacer to keep the title perfectly centered
+ *
+ * The layout is controlled entirely through CSS, with the spacer
+ * mirroring the width of the icon to balance the header visually.
+ *
+ * @returns {JSX.Element} The formatted cashier header.
+ */
 
 export default function CashierHeader() {
     return (
