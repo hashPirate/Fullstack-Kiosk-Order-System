@@ -1,4 +1,11 @@
 //Since the menu board is dynamic now, these hardcoded vals will just used to initialized the menu board
+/**
+ * Hardcoded initial menu board configuration for seeding or fallback UI usage.
+ * Provides section titles, images, calorie values, and pricing information
+ * used by the Menu Board view on the client side.
+ * @module MenuData
+ */
+
 export const sidesSection = {
     title: "SIDES",
     subtitle: "+$2.10 for each extra side",
