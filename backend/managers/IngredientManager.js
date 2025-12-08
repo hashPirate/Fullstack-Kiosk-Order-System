@@ -112,6 +112,10 @@ class IngredientManager extends DbModelManager {
         const query = 'DELETE FROM ingredient_dietary_restrictions WHERE ingredient_id = $1 AND dietary_restriction_id = $2';
         await this.db.query(query, [ingredient.getIngredientId(), restriction.getRestrictionId()]);
     }
+
+    async deleteIngredient(ingredient_id) {
+        await this.db.runUpdate('DELETE FROM ingredients WHERE ingredient_id = $1',[ingredient_id]);
+    }
 }
 
 module.exports = IngredientManager;

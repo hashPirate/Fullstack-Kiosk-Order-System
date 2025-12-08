@@ -137,4 +137,16 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const ingredient = await db.ingredientManager.getIngredientById(id);
+        await db.ingredientManager.deleteIngredient(id);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
 module.exports = router;
