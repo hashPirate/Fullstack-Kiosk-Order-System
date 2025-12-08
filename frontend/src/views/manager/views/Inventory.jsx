@@ -10,6 +10,8 @@ export default function Inventory() {
     const [error,setError]=useState(null);
     const [editingIngredient, setEditingIngredient] = useState(null);
 
+    const [targetIngredientId, setTargetIngredientId] = useState(null);
+    
     useEffect(() => {
         const fetchIngredients = async () => {
             setLoading(true);
@@ -34,7 +36,6 @@ export default function Inventory() {
         };
         fetchIngredients();
     }, [filter]);
-
     const handleAddIngredient=async () => {
         try {
             const response = await axios.post('/api/ingredients', {
@@ -49,6 +50,20 @@ export default function Inventory() {
         } catch (err) {
             console.error('INGADDERROR:',err);
             alert('Failed to add the ingredient. Please retry!');
+        }
+    };
+    const handleRemoveIngredient = async () => {
+        try {
+            if(targetIngredientId === null){
+                alert('Please select an item to be deleted');
+                return;
+            }
+            setIngredients(oldSelection =>oldSelection.filter(item => item.ingredient_id !== targetIngredientId));
+            setTargetIngredientId(null);
+        } 
+        catch(err){
+            console.error('ERRORR:', err);
+            alert('Failed to remove the ingredient! Please retry!');
         }
     };
     const handleUpdateIngredient=async (ingredient, field, value)=>{
@@ -168,7 +183,10 @@ export default function Inventory() {
                                 </tr>
                             ) : (
                                 ingredients.map(ingredient => (
-                                    <tr key={ingredient.ingredient_id}>
+                                    <tr
+                                        key={ingredient.ingredient_id}
+                                        onClick={() =>{setTargetIngredientId(ingredient.ingredient_id)}}
+                                        className={`${styles.ItemRow} ${targetIngredientId === ingredient.ingredient_id? styles.highlightedRow :''}`}>
                                         <td>{ingredient.ingredient_id}</td>
                                         <td
                                             className={styles.editableCell}

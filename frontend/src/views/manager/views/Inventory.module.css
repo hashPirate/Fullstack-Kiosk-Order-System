@@ -221,3 +221,9 @@
 .editButton:hover {
     background-color: #f0f0f0;
 }
+.itemRow {  
+    transition: background-color 0.01s;
+}
+.highlightedRow {
+    background-color: #fd9d99;   
+}
