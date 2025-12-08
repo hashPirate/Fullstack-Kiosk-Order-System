@@ -1,11 +1,20 @@
+/**
+ * @module views/manager/views
+ */
+
 import styles from "./MenuBoardManager.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 const menuItemFields = {item_name: "",calories: "",calorie_range: "",price: "",description: "",};
 const menuBoardSections = [{id: "sides", label: "Sides" },{ id: "base", label: "Base" },{ id: "drinks", label: "Drinks" },{ id: "meals", label: "Meals" },];
-// function filterItems(item, section){
-//     return item.section=== selectedSection;
-// }
+
+/**
+ * Component for managing menu board items.
+ * Allows creating, editing, and deleting menu items organized by sections (sides, base, drinks, meals).
+ * @function MenuBoardManager
+ * @returns {React.ReactElement} The rendered menu board manager interface.
+ */
 export default function MenuBoardManager(){
   const [menuBoardIts, setMenuBoardIts] = useState([]);
   const [fields, setFields] = useState(menuItemFields);
