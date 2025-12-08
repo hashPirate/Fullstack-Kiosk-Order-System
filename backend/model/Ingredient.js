@@ -30,6 +30,7 @@ class Ingredient extends DatabaseEntry {
         this.current_quantity = result.current_quantity;
         this.quantity_unit = result.quantity_unit;
         this.alert_threshold = result.alert_threshold;
+        this.is_archived = result.is_archived;
     }
 
     /**
@@ -101,7 +102,7 @@ class Ingredient extends DatabaseEntry {
      * @returns {string}
      */
     toString() {
-        return `Ingredient ID: ${this.ingredient_id}, Name: ${this.name}, Quantity: ${this.current_quantity} ${this.quantity_unit}`;
+        return `Ingredient ID: ${this.ingredient_id}, Name: ${this.name}, Quantity: ${this.current_quantity} ${this.quantity_unit}, Is Archived: ${this.is_archived}`;
     }
 
     /**
@@ -115,6 +116,7 @@ class Ingredient extends DatabaseEntry {
             current_quantity: this.current_quantity,
             quantity_unit: this.quantity_unit,
             alert_threshold: this.alert_threshold,
+            is_archived: this.is_archived
         };
     }
 }

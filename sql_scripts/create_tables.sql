@@ -20,7 +20,8 @@ CREATE TABLE "menu_items" (
     image_name VARCHAR(255),
     price REAL,
     part_count INTEGER DEFAULT 0,
-    for_sale BOOLEAN
+    for_sale BOOLEAN,
+    is_archived BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE "menu_parts" (
@@ -28,7 +29,8 @@ CREATE TABLE "menu_parts" (
     part_name VARCHAR,
     image_name VARCHAR(255),
     price REAL,
-    for_sale BOOLEAN
+    for_sale BOOLEAN,
+    is_archived BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE "ingredients" (
@@ -36,7 +38,8 @@ CREATE TABLE "ingredients" (
     name VARCHAR,
     current_quantity INTEGER,
     quantity_unit VARCHAR,
-    alert_threshold   INTEGER
+    alert_threshold   INTEGER,
+    is_archived BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE "orders" (

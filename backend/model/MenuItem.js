@@ -32,6 +32,7 @@ class MenuItem extends DatabaseEntry {
         this.price = result.price;
         this.for_sale = result.for_sale;
         this.part_count = result.part_count;
+        this.is_archived = result.is_archived;
     }
 
     /**
@@ -95,7 +96,7 @@ class MenuItem extends DatabaseEntry {
      * @returns {string}
      */
     toString() {
-        return `Menu Item ID: ${this.menu_item_id}, Item Name: ${this.item_name}, Image Name: ${this.image_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}, Part Count: ${this.part_count}`;
+        return `Menu Item ID: ${this.menu_item_id}, Item Name: ${this.item_name}, Image Name: ${this.image_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}, Part Count: ${this.part_count}, Is Archived: ${this.is_archived}`;
     }
 
     /**
@@ -110,6 +111,7 @@ class MenuItem extends DatabaseEntry {
             price: this.price,
             for_sale: this.for_sale,
             part_count: this.part_count,
+            is_archived: this.is_archived
         };
     }
 }
