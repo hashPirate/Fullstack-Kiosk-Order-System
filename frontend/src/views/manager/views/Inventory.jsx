@@ -53,15 +53,30 @@ export default function Inventory() {
         }
     };
     const handleRemoveIngredient = async () => {
+        if (targetIngredientId === null) {
+            alert('Please select an item to be deleted');
+            return;
+        }
         try {
-            if(targetIngredientId === null){
-                alert('Please select an item to be deleted');
-                return;
+            await axios.delete("/api/ingredients/" + targetIngredientId);
+            let endpoint = '/api/ingredients/all';
+            if(filter ==='in-stock'){
+                endpoint = '/api/ingredients/in-stock';
+            } 
+            else if (filter ==='low-stock'){
+                endpoint = '/api/ingredients/low-stock';
+            } 
+            else if (filter === 'out-of-stock') {
+                endpoint = '/api/ingredients/out-of-stock';
             }
-            setIngredients(oldSelection =>oldSelection.filter(item => item.ingredient_id !== targetIngredientId));
+            else{
+
+            }
+            const response = await axios.get(endpoint);
+            setIngredients(response.data);
             setTargetIngredientId(null);
-        } 
-        catch(err){
+        }
+        catch (err) {
             console.error('ERRORR:', err);
             alert('Failed to remove the ingredient! Please retry!');
         }
