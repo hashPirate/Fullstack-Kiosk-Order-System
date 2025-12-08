@@ -12,9 +12,17 @@ import clsx from 'clsx';
     // price -- number
     // dietary_restrictions -- array of strings
 /**
- * Selectable tile for a menu part option displayed within the build flow.
- * @param {{selected: boolean, img: string, name: string, price: number, partId: number, onClick: Function, dietary_restrictions: Array<string>}} props Menu part data and handlers.
- * @returns {React.ReactElement} Button-like UI showing the part image, price, and dietary chips.
+ * @function KioskMenuPart
+ * @description A selectable tile for a menu part option displayed within the item build flow.
+ * @param {object} props - The component's props.
+ * @param {boolean} props.selected - Whether this part is currently selected.
+ * @param {string} props.img - The URL for the part's image.
+ * @param {string} props.name - The name of the menu part.
+ * @param {number} props.price - The price of the menu part.
+ * @param {number} props.partId - The database ID of the menu part.
+ * @param {Function} props.onClick - The callback function to execute when the part is clicked.
+ * @param {Array<string>} props.dietary_restrictions - A list of dietary restrictions for this part.
+ * @returns {React.ReactElement} A button-like UI showing the part image, price, and dietary chips.
  */
 export default function KioskMenuPart({selected, img, name, price, partId, onClick, dietary_restrictions}) {
     return (

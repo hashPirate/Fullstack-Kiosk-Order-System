@@ -13,9 +13,11 @@ import KioskMenuItem from "./KioskMenuItem.jsx";
 import CartContext from "./CartContext.js";
 
 /**
- * Displays a carousel of a signed-in user's previous orders with quick re-order buttons.
- * @param {{user: Object|null}} props Context containing the authenticated kiosk user.
- * @returns {React.ReactElement|null} Carousel UI when past orders exist, otherwise null.
+ * @function PastOrdersCarousel
+ * @description Displays a carousel of a signed-in user's previous orders with quick re-order buttons.
+ * @param {object} props - The component's props.
+ * @param {object|null} props.user - The authenticated kiosk user object.
+ * @returns {React.ReactElement|null} Carousel UI if past orders exist, otherwise null.
  */
 function PastOrdersCarousel({ user }) {
     const { addCompletedItem } = useContext(CartContext);
@@ -72,8 +74,9 @@ function PastOrdersCarousel({ user }) {
 }
 
 /**
- * Landing view for kiosk ordering that lists available menu items and past orders.
- * @returns {React.ReactElement} Kiosk home page content for selecting an entree.
+ * @function KioskHome
+ * @description Landing view for kiosk ordering that lists available menu items and past orders.
+ * @returns {React.ReactElement} Kiosk home page content for selecting an item.
  */
 export default function KioskHome() {
     const [loading, setLoading] = useState(true);

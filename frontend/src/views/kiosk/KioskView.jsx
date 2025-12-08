@@ -18,7 +18,9 @@ import KioskZoomMenu from "./KioskZoomMenu.jsx";
 import KioskLoginPopup from "./KioskLoginPopup.jsx";
 
 /**
- * Root kiosk layout that wraps content with navigation, cart context, and utilities.
+ * @module Kiosk/KioskView
+ * @function KioskView
+ * @description Root kiosk layout that wraps content with navigation, cart context, and utilities.
  * @returns {React.ReactElement} Layout containing the kiosk nav, modals, and routed child views.
  */
 export default function KioskView() {

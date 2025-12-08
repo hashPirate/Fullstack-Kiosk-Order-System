@@ -12,9 +12,13 @@ import CartContext from './CartContext.js';
 
 // sidePrompts: list of JS objects that each contain a prompts and an array of possible side choices.
 /**
- * Displays the collapsible per-part selection UI for building a kiosk entree.
- * @param {{sidePrompts: Array<Object>, itemId: number, itemName: string}} props Options describing the entree being configured.
- * @returns {React.ReactElement} Builder interface for choosing sides and submitting the order.
+ * @function OrderDetails
+ * @description Displays the collapsible per-part selection UI for building a kiosk entree.
+ * @param {object} props - The component's props.
+ * @param {Array<object>} props.sidePrompts - An array of objects describing the choices for each part.
+ * @param {number} props.itemId - The database ID of the parent menu item.
+ * @param {string} props.itemName - The name of the parent menu item.
+ * @returns {React.ReactElement} A builder interface for choosing sides and adding the item to the cart.
  */
 export default function OrderDetails({sidePrompts, itemId, itemName}) {
     // selectedParts is an array that functions like a dictionary. It maps the side prompt (the collapsible)

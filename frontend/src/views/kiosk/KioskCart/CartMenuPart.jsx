@@ -8,9 +8,12 @@ import styles from "./KioskCart.module.css";
 import CartContext from "../CartContext.js";
 
 /**
- * Shows a selected menu part underneath a cart item.
- * @param {{name: string, price: number}} props Data describing the part.
- * @returns {React.ReactElement} Row showing the part name and its price delta.
+ * @function CartMenuPart
+ * @description Shows a selected menu part underneath a cart item.
+ * @param {object} props - The component's props.
+ * @param {string} props.name - The name of the menu part.
+ * @param {number} props.price - The price of the menu part.
+ * @returns {React.ReactElement} A row showing the part name and its price.
  */
 export default function CartMenuPart({name, price}) {
     const orderState = useContext(CartContext);

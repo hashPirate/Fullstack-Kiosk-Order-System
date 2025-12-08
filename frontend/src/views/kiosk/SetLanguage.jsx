@@ -9,8 +9,9 @@ import clsx from "clsx";
 import axios from 'axios';
 
 /**
- * Screen allowing kiosk users to pick their preferred language and sync with Google Translate.
- * @returns {React.ReactElement} Language selection grid with Google Translate integration.
+ * @function SetLanguage
+ * @description Screen allowing kiosk users to pick their preferred language and sync with Google Translate.
+ * @returns {React.ReactElement} A language selection grid with Google Translate integration.
  */
 export default function SetLanguage() {
     const { user } = useOutletContext();
