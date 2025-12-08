@@ -60,6 +60,16 @@ router.get('/items/:id', async (req, res) => {
     }
 });
 
+router.delete('/items/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await db.menuManager.archiveMenuItemById(id);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 /**
  * Route to get all parts for a specific menu item, including dietary restrictions.
  * @name get/items/:id/parts
@@ -168,6 +178,17 @@ router.put('/parts/:id', async (req, res) => {
         const { part_name, price, for_sale } = req.body;
         const menuPart = await db.menuManager.getMenuPartById(id);
         await db.menuManager.updateMenuPart(menuPart, part_name, price, for_sale);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// [Donnell]
+router.delete('/parts/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await db.menuManager.archiveMenuPartById(id);
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
