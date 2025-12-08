@@ -1,3 +1,6 @@
+/**
+ * @module views/kitchen/completed
+ */
 
 import CompletedOrderItem from "./CompletedOrderItem.jsx";
 import { LuUndo2 } from "react-icons/lu";
@@ -31,7 +34,17 @@ import timeAgo from "../../../utilities/timeAgo.js";
 //     ...
 // ]
 
-
+/**
+ * Displays a completed kitchen order, including menu items and the time
+ * since completion.
+ * @function CompletedOrder
+ * @param {Object} props
+ * @param {number} props.orderId - The ID of the completed order.
+ * @param {string|number|Date} props.completionTime - Timestamp when the order was completed.
+ * @param {Array<Object>} props.menuItems - List of menu items belonging to the order.
+ * @param {Function} props.handleReviveOrder - Callback to move order back to pending.
+ * @returns {React.ReactElement} The rendered completed order card.
+ */
 export default function PendingOrder({orderId, completionTime, menuItems, handleReviveOrder}) {
 
     return (
