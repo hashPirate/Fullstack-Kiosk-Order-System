@@ -1,3 +1,6 @@
+/**
+ * @module views/manager
+ */
 
 import { Link, NavLink, Outlet, useLocation } from "react-router";
 import { TiWeatherCloudy } from "react-icons/ti";
@@ -8,6 +11,12 @@ import { IoMdArrowBack } from "react-icons/io";
 
 import styles from "./ManagerView.module.css";
 
+/**
+ * Main manager view component that provides navigation and layout for manager functionality.
+ * Displays weather information and navigation tabs for various manager operations.
+ * @function ManagerView
+ * @returns {React.ReactElement} The rendered manager view with navigation and outlet for child routes.
+ */
 export default function ManagerView() {
     const [temp, setTemp] = useState("...");
     const [lang, setLang] = useState("English");

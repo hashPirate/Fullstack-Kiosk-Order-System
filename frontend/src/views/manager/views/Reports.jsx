@@ -1,7 +1,18 @@
+/**
+ * @module views/manager/views
+ */
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Reports.module.css';
 
+/**
+ * Component for viewing Z-reports and X-reports.
+ * Z-reports show daily sales summaries and can be created/closed.
+ * X-reports show hourly sales breakdowns for a selected date.
+ * @function Reports
+ * @returns {React.ReactElement} The rendered reports interface.
+ */
 export default function Reports() {
     const [view, setView] = useState('z'); //eitherz or x
     const [zDate, setZDate] = useState(new Date().toISOString().split('T')[0]);
@@ -41,6 +52,11 @@ export default function Reports() {
         };
         checkZReportExists();
     }, [zDate]);
+    /**
+     * Formats a timestamp into a readable date and time string.
+     * @param {string|number|Date} timestamp - The timestamp to format.
+     * @returns {string} The formatted date and time string, or 'N/A' if timestamp is invalid.
+     */
     const formatDateTime = (timestamp) => {
         if (!timestamp) return 'N/A';
         const date = new Date(timestamp);
@@ -53,6 +69,11 @@ export default function Reports() {
             hour12: true
         });
     };
+    /**
+     * Loads and displays the Z-report for the selected date.
+     * @async
+     * @function handleViewZ
+     */
     const handleViewZ=async () => {
         setLoading(true);
         setError(null);
@@ -67,6 +88,11 @@ export default function Reports() {
             setLoading(false);
         }
     };
+    /**
+     * Previews the Z-report for the selected date without closing it.
+     * @async
+     * @function handlePreviewZ
+     */
     const handlePreviewZ=async () => {
         setLoading(true);
         setError(null);
@@ -82,6 +108,11 @@ export default function Reports() {
         }
     };
 
+    /**
+     * Creates and closes a Z-report for the selected date.
+     * @async
+     * @function handleCreateZ
+     */
     const handleCreateZ=async () => {
         setLoading(true);
         setError(null);
@@ -98,6 +129,11 @@ export default function Reports() {
         }
     };
 
+    /**
+     * Loads and displays the X-report (hourly sales) for the selected date.
+     * @async
+     * @function handleRunX
+     */
     const handleRunX = async () => {
         setLoading(true);
         setError(null);
@@ -113,6 +149,11 @@ export default function Reports() {
         }
     };
 
+    /**
+     * Gets the status message for the Z-report based on whether it's open or closed.
+     * @function getStatusMessage
+     * @returns {string|null} The status message, or null if not applicable.
+     */
     const getStatusMessage = () => {
         if (view === 'z') {
             if (zReportExists && zReportClosedAt) {

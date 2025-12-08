@@ -1,7 +1,17 @@
+/**
+ * @module views/manager/views
+ */
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './ManageServers.module.css';
 
+/**
+ * Component for managing server users (employees).
+ * Allows viewing active/inactive users, toggling staff status, and creating/editing users.
+ * @function ManageServers
+ * @returns {React.ReactElement} The rendered server management interface.
+ */
 export default function ManageServers() {
     const [activeUsers, setActiveUsers] = useState([]);
     const [inactiveUsers, setInactiveUsers] = useState([]);
@@ -138,6 +148,14 @@ export default function ManageServers() {
         }
     };
 
+    /**
+     * Component that displays a list of users (active or inactive).
+     * @function UserList
+     * @param {Object} props - The component props.
+     * @param {Array<Object>} props.users - Array of user objects to display.
+     * @param {boolean} props.isActive - Whether the list shows active users (true) or inactive users (false).
+     * @returns {React.ReactElement} The rendered user list.
+     */
     const UserList = ({ users, isActive }) => ( 
         <div className={styles.userList}>
             <h3>{isActive ? 'Active' : 'Inactive'}</h3>
@@ -223,6 +241,19 @@ export default function ManageServers() {
         </div>
     );
 }
+/**
+ * Modal component for editing or creating a user.
+ * @function EditUserpopup
+ * @param {Object} props - The component props.
+ * @param {Object|null} props.user - The user object to edit, or null for creating a new user.
+ * @param {Function} props.onSave - Callback function called when the user is saved.
+ * @param {Object} props.onSave.userData - The user data to save.
+ * @param {string} props.onSave.userData.newUsername - The new username.
+ * @param {string} [props.onSave.userData.password] - The password (optional for editing).
+ * @param {boolean} props.onSave.userData.isManager - Whether the user is a manager.
+ * @param {Function} props.onClose - Callback function called when the modal is closed.
+ * @returns {React.ReactElement} The rendered edit user popup modal.
+ */
 function EditUserpopup({ user, onSave, onClose }) {
     const [username, setUsername] = useState(user?.username || '');
     const [password, setPassword] = useState('');
