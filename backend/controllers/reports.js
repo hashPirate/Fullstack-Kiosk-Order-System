@@ -4,77 +4,125 @@ const db = require('../database');
 
 class ZReportComp {
     constructor(totalOrders, totalItems, totalEarnings, firstTime, lastTime) {
-        this.totalOrders = totalOrders;
-        this.totalItems = totalItems;
-        this.totalEarnings = totalEarnings;
-        this.firstTime = firstTime;
-        this.lastTime = lastTime;
-    }
-
-    static replaceWithZero() {
-        return new ZReportComp(0, 0, 0.0, null, null);
+        this.totalOrders=totalOrders;
+        this.totalItems=totalItems;
+        this.totalEarnings=totalEarnings;
+        this.firstTime=firstTime;
+        this.lastTime=lastTime;
     }
 }
 
-router.get('/z-report/:day', async (req, res) => {
-    const { day } = req.params;
+async function getZReportStartTime(targetDate, endTime) {
+    const targetDateObj = new Date(targetDate+'T00:00:00.000Z'); // ceck date at midnight prv day
+    
+    const prevDateObj=new Date(targetDateObj);
+    prevDateObj.setUTCDate(prevDateObj.getUTCDate()-1); //use utc to get prev day
+    const prevDateStr = prevDateObj.toISOString().split('T')[0];
+    
+    const prevDayResult = await db.query(
+        'SELECT time_when_closed FROM z_report_history WHERE report_date = $1 AND time_when_closed IS NOT NULL',
+        [prevDateStr]
+    ); // verify if it is alr closed
+    
+    if (prevDayResult.rows.length>0 && prevDayResult.rows[0].time_when_closed) {
+        const prevCloseTime = new Date(prevDayResult.rows[0].time_when_closed);
+        if (!isNaN(prevCloseTime.getTime())) {
+            const startTime = new Date(targetDateObj);
+            startTime.setUTCHours(
+                prevCloseTime.getUTCHours(),
+                prevCloseTime.getUTCMinutes(),
+                prevCloseTime.getUTCSeconds(),
+                prevCloseTime.getUTCMilliseconds()
+            );
+            
+            if (endTime && startTime >= endTime) {
+                const defaultTime = new Date(prevDateObj);
+                defaultTime.setUTCHours(23, 0, 0, 0); // we use 11pm previous day if day is closed
+                return defaultTime;
+            }
+            
+            return startTime;
+        }
+    }
+    
+    const defaultTime=new Date(prevDateObj);
+    defaultTime.setUTCHours(23, 0, 0, 0);
+    return defaultTime;
+}
+
+async function generateZReportData(startTime, endTime) { //made a function to get the z report with starttime and endtime for simplicity
+    const start = startTime instanceof Date ? startTime : new Date(startTime);
+    const end = endTime instanceof Date ? endTime : new Date(endTime);
+    if (isNaN(start.getTime())||isNaN(end.getTime())) {
+        throw new Error('Invalid start or end time for Z report'); //check!! sometimes it breaks
+    }
+    const [startUTC, endUTC] = [start.toISOString(), end.toISOString()];
+    const timeFilter = `oi.created_at >= $1::timestamp WITH TIME ZONE AND oi.created_at <= $2::timestamp WITH TIME ZONE`;
+
+    const result = await db.query(`
+        SELECT 
+            COUNT(DISTINCT o.order_id) AS total_orders,
+            COALESCE(SUM(oi.quantity), 0) AS total_items,
+            COALESCE(SUM(oi.current_price), 0) AS total_earnings,
+            MIN(oi.created_at) AS first_time,
+            MAX(oi.created_at) AS last_time
+        FROM order_items oi
+        JOIN orders o ON o.order_id = oi.order_id
+        WHERE o.is_final = TRUE AND ${timeFilter}
+    `, [startUTC, endUTC]); //get z report data with this query. coalesce handles null
+
+    const row=result.rows[0] || {};
+    return new ZReportComp(
+        parseInt(row.total_orders||0),
+        parseInt(row.total_items || 0),
+        parseFloat(row.total_earnings || 0),
+        row.first_time || null,
+        row.last_time || null
+    );
+}
+
+async function checkZReportExists(day) { //does z report already exist for a day? this is for our viewbox
+    const result = await db.query(
+        'SELECT time_when_closed FROM z_report_history WHERE report_date = $1 AND time_when_closed IS NOT NULL',
+        [day]
+    );
+    return {
+        exists: result.rows.length > 0,
+        closedAt: result.rows[0]?.time_when_closed || null
+    };
+}
+
+router.get('/z-report/check/:day', async (req, res) => { //endpoint for the same
     try {
-        const totalOrdersSql = `
-            SELECT COUNT(DISTINCT currOrders.order_id)
-            FROM orders currOrders
-            JOIN order_items oi ON oi.order_id = currOrders.order_idconst { pool } = require('../database');const { pool } = require('../database');
-            WHERE currOrders.is_final = TRUE
-              AND oi.created_at::date = $1
-        `;
-        const totalItemsSql = `
-            SELECT COALESCE(SUM(oi.quantity), 0)
-            FROM order_items oi
-            JOIN orders o ON o.order_id = oi.order_id
-            WHERE o.is_final = TRUE
-              AND oi.created_at::date = $1
-        `;
-        const totalEarningsSql = `
-            SELECT COALESCE(SUM(oi.current_price), 0)
-            FROM order_items oi
-            JOIN orders o ON o.order_id = oi.order_id
-            WHERE o.is_final = TRUE
-              AND oi.created_at::date = $1
-        `;
-        const firstTimeSql = `
-            SELECT MIN(oi.created_at)
-            FROM order_items oi
-            JOIN orders o ON o.order_id = oi.order_id
-            WHERE o.is_final = TRUE
-              AND oi.created_at::date = $1
-        `;
-        const lastTimeSql = `
-            SELECT MAX(oi.created_at)
-            FROM order_items oi
-            JOIN orders o ON o.order_id = oi.order_id
-            WHERE o.is_final = TRUE
-              AND oi.created_at::date = $1
-        `;
+        const { exists, closedAt } = await checkZReportExists(req.params.day);
+        res.json({ exists, closedAt });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
-        const totalOrdersResult = await db.query(totalOrdersSql, [day]);
-        const totalItemsResult = await db.query(totalItemsSql, [day]);
-        const totalEarningsResult = await db.query(totalEarningsSql, [day]);
-        const firstTimeResult = await db.query(firstTimeSql, [day]);
-        const lastTimeResult = await db.query(lastTimeSql, [day]);
-
-        const totalOrders = totalOrdersResult.rows[0].count;
-        const totalItems = totalItemsResult.rows[0].coalesce;
-        const totalEarnings = totalEarningsResult.rows[0].coalesce;
-        const firstTime = firstTimeResult.rows[0].min;
-        const lastTime = lastTimeResult.rows[0].max;
-
-        res.json(new ZReportComp(totalOrders, totalItems, totalEarnings, firstTime, lastTime));
+router.get('/z-report/:day', async (req, res) => { //view a closed report
+    try {
+        const { exists, closedAt } = await checkZReportExists(req.params.day);
+        if (!exists||!closedAt) {
+            return res.status(404).json({ error: 'Z report not found for this date' }); // simple checks
+        }
+        
+        const closedTime=new Date(closedAt);
+        if (isNaN(closedTime.getTime())) {
+            return res.status(500).json({ error: 'Invalid timestamp in database' });
+        }
+        
+        const startTime = await getZReportStartTime(req.params.day, closedTime);
+        const zReport = await generateZReportData(startTime, closedTime);
+        res.json(zReport);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
 router.get('/hourly-sales', async (req, res) => {
-    const { from, to } = req.query;
+    const {from,to}=req.query;
     try {
         const sql = `
             SELECT date_trunc('hour', oi.created_at) AS hour,
@@ -92,6 +140,27 @@ router.get('/hourly-sales', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.get('/x-report/:day', async (req, res) => {
+    const {day}=req.params;
+    try {
+        const sql = `
+            SELECT date_trunc('hour', oi.created_at) AS hour,
+                   SUM(oi.current_price) AS total_sales
+            FROM order_items oi
+            JOIN orders o ON o.order_id = oi.order_id
+            WHERE o.is_final = TRUE
+              AND oi.created_at::date = $1
+            GROUP BY 1
+            ORDER BY 1
+        `;
+        const result = await db.query(sql, [day]);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 router.get('/menu-part-sales', async (req, res) => {
     const { from, to, onlyCurrentlySold } = req.query;
@@ -182,4 +251,71 @@ router.get('/item-sales-report', async (req, res) => {
     }
 });
 
-module.exports = router;
+router.get('/z-report/preview/:day', async (req, res) => { //just check z report dont change db
+    try {
+        const { exists } = await checkZReportExists(req.params.day);
+        if (exists) {
+            return res.status(400).json({ error: 'Z report already exists for this date' });
+        }
+        const latestResult = await db.query(`
+            SELECT MAX(oi.created_at) AS latest_time
+            FROM order_items oi
+            JOIN orders o ON o.order_id = oi.order_id
+            WHERE o.is_final = TRUE AND oi.created_at::date = $1
+        `, [req.params.day]);
+        
+        const endTime = latestResult.rows[0]?.latest_time 
+            ? new Date(latestResult.rows[0].latest_time)
+            : new Date(req.params.day + 'T23:59:59.999Z');
+        
+        const startTime = await getZReportStartTime(req.params.day, endTime);
+        const zReport = await generateZReportData(startTime, endTime);
+        
+        res.json({
+            zReport,
+            preview: true,
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/z-report/create/:day', async (req, res) => { //post to make the z report
+    try {
+        const {exists} = await checkZReportExists(req.params.day);
+        if (exists) {
+            return res.status(400).json({ error: 'Z report already exists for this date' });
+        }
+        
+        const now = new Date();
+        const startTime = await getZReportStartTime(req.params.day, now);
+        const zReport = await generateZReportData(startTime, now);
+        
+        //save z report entry
+        const existing = await db.query('SELECT id FROM z_report_history WHERE report_date = $1', [req.params.day]);
+        const result = existing.rows.length > 0
+            ? await db.query(`
+                UPDATE z_report_history 
+                SET time_when_closed = NOW(), closed_section = TRUE 
+                WHERE report_date = $1 RETURNING time_when_closed
+            `, [req.params.day])
+            : await db.query(`
+                INSERT INTO z_report_history (report_date, time_when_closed, closed_section)
+                VALUES ($1, NOW(), TRUE) RETURNING time_when_closed
+            `, [req.params.day]);
+        
+        const closedAt = new Date(result.rows[0].time_when_closed);
+        res.json({
+            zReport,
+            closedAt: closedAt.toISOString(),
+            startTime: startTime.toISOString(),
+            endTime: closedAt.toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+module.exports=router;
