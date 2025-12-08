@@ -44,6 +44,9 @@ app.use("/api/dietary-restrictions", dietaryRestrictionsController);
 // Serve React app
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
+// Server documentation
+app.use('/docs', express.static(path.join(__dirname, '../docs')));
+
 // Handle any other routes by serving the React app's index.html
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));

@@ -1,7 +1,18 @@
+/**
+ * @module controllers/reports
+ */
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
-
+/**
+ * @class ZReportComp
+ * @classdesc A container for Z-Report data.
+ * @property {number} totalOrders The total number of orders in the report.
+ * @property {number} totalItems The total number of items sold in the report.
+ * @property {number} totalEarnings The total earnings in the report.
+ * @property {Date|null} firstTime The timestamp of the first order in the report period.
+ * @property {Date|null} lastTime The timestamp of the last order in the report period.
+ */
 class ZReportComp {
     constructor(totalOrders, totalItems, totalEarnings, firstTime, lastTime) {
         this.totalOrders=totalOrders;
@@ -12,6 +23,12 @@ class ZReportComp {
     }
 }
 
+/**
+ * Calculates the start time for a Z-Report based on the previous day's closing time.
+ * @param {string} targetDate - The target date for the report in 'YYYY-MM-DD' format.
+ * @param {Date} endTime - The end time for the current report period.
+ * @returns {Promise<Date>} The calculated start time for the Z-Report.
+ */
 async function getZReportStartTime(targetDate, endTime) {
     const targetDateObj = new Date(targetDate+'T00:00:00.000Z'); // ceck date at midnight prv day
     
@@ -50,6 +67,12 @@ async function getZReportStartTime(targetDate, endTime) {
     return defaultTime;
 }
 
+/**
+ * Generates the data for a Z-Report within a given time frame.
+ * @param {Date|string} startTime - The start time for the report.
+ * @param {Date|string} endTime - The end time for the report.
+ * @returns {Promise<ZReportComp>} The Z-Report data.
+ */
 async function generateZReportData(startTime, endTime) { //made a function to get the z report with starttime and endtime for simplicity
     const start = startTime instanceof Date ? startTime : new Date(startTime);
     const end = endTime instanceof Date ? endTime : new Date(endTime);
@@ -81,6 +104,11 @@ async function generateZReportData(startTime, endTime) { //made a function to ge
     );
 }
 
+/**
+ * Checks if a Z-Report already exists for a given day.
+ * @param {string} day - The day to check in 'YYYY-MM-DD' format.
+ * @returns {Promise<{exists: boolean, closedAt: string|null}>} An object indicating if the report exists and when it was closed.
+ */
 async function checkZReportExists(day) { //does z report already exist for a day? this is for our viewbox
     const result = await db.query(
         'SELECT time_when_closed FROM z_report_history WHERE report_date = $1 AND time_when_closed IS NOT NULL',
@@ -92,6 +120,12 @@ async function checkZReportExists(day) { //does z report already exist for a day
     };
 }
 
+/**
+ * Route to check if a Z-Report exists for a given day.
+ * @name get/z-report/check/:day
+ * @function
+ * @param {string} day - The day to check in 'YYYY-MM-DD' format.
+ */
 router.get('/z-report/check/:day', async (req, res) => { //endpoint for the same
     try {
         const { exists, closedAt } = await checkZReportExists(req.params.day);
@@ -101,6 +135,12 @@ router.get('/z-report/check/:day', async (req, res) => { //endpoint for the same
     }
 });
 
+/**
+ * Route to get a previously generated Z-Report for a specific day.
+ * @name get/z-report/:day
+ * @function
+ * @param {string} day - The day of the report to retrieve in 'YYYY-MM-DD' format.
+ */
 router.get('/z-report/:day', async (req, res) => { //view a closed report
     try {
         const { exists, closedAt } = await checkZReportExists(req.params.day);
@@ -121,6 +161,13 @@ router.get('/z-report/:day', async (req, res) => { //view a closed report
     }
 });
 
+/**
+ * Route to get hourly sales data within a time range.
+ * @name get/hourly-sales
+ * @function
+ * @param {string} from - The start of the time range in ISO format.
+ * @param {string} to - The end of the time range in ISO format.
+ */
 router.get('/hourly-sales', async (req, res) => {
     const {from,to}=req.query;
     try {
@@ -141,6 +188,12 @@ router.get('/hourly-sales', async (req, res) => {
     }
 });
 
+/**
+ * Route to generate an X-Report (hourly sales) for a specific day.
+ * @name get/x-report/:day
+ * @function
+ * @param {string} day - The day for the report in 'YYYY-MM-DD' format.
+ */
 router.get('/x-report/:day', async (req, res) => {
     const {day}=req.params;
     try {
@@ -162,6 +215,14 @@ router.get('/x-report/:day', async (req, res) => {
 });
 
 
+/**
+ * Route to get sales data for menu parts within a time range.
+ * @name get/menu-part-sales
+ * @function
+ * @param {string} from - The start of the time range in ISO format.
+ * @param {string} to - The end of the time range in ISO format.
+ * @param {boolean} [onlyCurrentlySold] - Whether to include only parts that are currently for sale.
+ */
 router.get('/menu-part-sales', async (req, res) => {
     const { from, to, onlyCurrentlySold } = req.query;
     try {
@@ -194,6 +255,14 @@ router.get('/menu-part-sales', async (req, res) => {
     }
 });
 
+/**
+ * Route to get sales data for menu items within a time range.
+ * @name get/menu-item-sales
+ * @function
+ * @param {string} from - The start of the time range in ISO format.
+ * @param {string} to - The end of the time range in ISO format.
+ * @param {boolean} [onlyCurrentlySold] - Whether to include only items that are currently for sale.
+ */
 router.get('/menu-item-sales', async (req, res) => {
     const { from, to, onlyCurrentlySold } = req.query;
     try {
@@ -223,6 +292,14 @@ router.get('/menu-item-sales', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+/**
+ * Route to generate an item sales report within a time range.
+ * @name get/item-sales-report
+ * @function
+ * @param {string} from - The start of the time range in ISO format.
+ * @param {string} to - The end of the time range in ISO format.
+ * @param {boolean} [onlyCurrentlySold] - Whether to include only items that are currently for sale.
+ */
 router.get('/item-sales-report', async (req, res) => {
     const { from, to, onlyCurrentlySold } = req.query;
     try {
@@ -251,6 +328,12 @@ router.get('/item-sales-report', async (req, res) => {
     }
 });
 
+/**
+ * Route to preview the data for a Z-Report without finalizing it.
+ * @name get/z-report/preview/:day
+ * @function
+ * @param {string} day - The day for the report preview in 'YYYY-MM-DD' format.
+ */
 router.get('/z-report/preview/:day', async (req, res) => { //just check z report dont change db
     try {
         const { exists } = await checkZReportExists(req.params.day);
@@ -282,6 +365,12 @@ router.get('/z-report/preview/:day', async (req, res) => { //just check z report
     }
 });
 
+/**
+ * Route to create and finalize a Z-Report for a specific day.
+ * @name post/z-report/create/:day
+ * @function
+ * @param {string} day - The day to create the report for in 'YYYY-MM-DD' format.
+ */
 router.post('/z-report/create/:day', async (req, res) => { //post to make the z report
     try {
         const {exists} = await checkZReportExists(req.params.day);

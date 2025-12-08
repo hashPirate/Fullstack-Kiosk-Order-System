@@ -1,3 +1,6 @@
+/**
+ * @module controllers/session
+ */
 const session = require('express-session');
 const express = require('express');
 const router = express.Router();
@@ -45,6 +48,13 @@ passport.deserializeUser(async function(userPayload, cb) {
     }
 });
 
+/**
+ * Route for local user login.
+ * @name post/login
+ * @function
+ * @param {string} username - The user's username.
+ * @param {string} password - The user's password.
+ */
 router.post('/login', async (req, res, next) => {
     const { username, password } = req.body;
     const user = await db.userManager.getUser(username);
@@ -62,12 +72,23 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
+/**
+ * Route to initiate Google OAuth 2.0 authentication.
+ * @name get/auth/google
+ * @function
+ * @param {string} [redirect] - The path to redirect to after successful authentication.
+ */
 router.get('/auth/google', (req, res, next) => {
     const redirect = req.query.redirect || '/';
     const state = Buffer.from(JSON.stringify({ redirect })).toString('base64');
     passport.authenticate('google', { scope: ['profile', 'email'], state })(req, res, next);
   });
 
+/**
+ * The callback route for Google OAuth 2.0 authentication.
+ * @name get/auth/google/callback
+ * @function
+ */
 router.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login?error=oauth' }),
   function(req, res) {
@@ -76,11 +97,21 @@ router.get('/auth/google/callback',
     res.redirect(redirectPath);
   });
 
+/**
+ * Route to log out the current user.
+ * @name post/logout
+ * @function
+ */
 router.post('/logout', (req, res) => {
     req.session.destroy();
     res.json({ success: true });
 });
 
+/**
+ * Route to get the currently authenticated user's session data.
+ * @name get/current-user
+ * @function
+ */
 router.get('/current-user', (req, res) => {
     res.json(req.user || null);
 });
