@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/languages
+ */
 export const languages = [
     { name: 'English', code: 'en', emoji: '🇬🇧' },
     { name: 'Español', code: 'es', emoji: '🇪🇸' },

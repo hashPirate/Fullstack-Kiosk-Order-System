@@ -1,8 +1,12 @@
 /**
+ * @module ManageMenuItems/useAddHandlers
+ */
+
+/**
  * Provides helper callbacks for the Add Menu Item popup lifecycle.
  * @param {Function} setIsAdding Setter for tracking whether the popup is visible.
  * @param {Function} setAddErrorString Setter used to present validation errors.
- * @param {import('@tanstack/react-query').UseMutationResult} addMutation React Query mutation for adding items.
+ * @param {Object} addMutation React Query mutation for adding items.
  * @returns {{handleAddStart: Function, handleAddCommit: Function, handleAddCancel: Function}} Encapsulated handlers for popup flow.
  */
 export default function useAddHandlers(setIsAdding, setAddErrorString, addMutation) {

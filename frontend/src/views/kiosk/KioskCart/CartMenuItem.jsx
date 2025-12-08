@@ -1,3 +1,6 @@
+/**
+ * @module KioskCart/CartMenuItem
+ */
 import { GoXCircle } from "react-icons/go";
 import { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
@@ -8,7 +11,7 @@ import CartContext from "../CartContext.js";
 /**
  * Displays a cart line item with its selected parts and allows removal.
  * @param {{name: string, price: number, itemIndex: number, children: React.ReactNode, transCartContent: Array<Object>, setTransCartContent: Function}} props Render data and callbacks.
- * @returns {JSX.Element} Cart entry with name, price, and nested parts.
+ * @returns {React.ReactElement} Cart entry with name, price, and nested parts.
  */
 export default function CartMenuItem({name, price, itemIndex, children, transCartContent, setTransCartContent}) {
     const cartState = useContext(CartContext);

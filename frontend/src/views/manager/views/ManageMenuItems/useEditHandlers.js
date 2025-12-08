@@ -1,11 +1,15 @@
 import editType from "./editType";
 
 /**
+ * @module ManageMenuItems/useEditHandlers
+ */
+
+/**
  * Encapsulates edit popup lifecycle helpers for menu item rows.
  * @param {Function} setCurrentEditID Setter for tracking which item is being edited.
  * @param {Function} setCurrentEditType Setter for tracking which field is being edited.
  * @param {Function} setEditErrorString Setter for presenting validation errors inside the popup.
- * @param {import('@tanstack/react-query').UseMutationResult} editMutation React Query mutation used to persist edits.
+ * @param {Object} editMutation React Query mutation used to persist edits.
  * @returns {{handleEditStart: Function, handleEditCommit: Function, handleEditCancel: Function}} Collection of edit handlers.
  */
 export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation) {

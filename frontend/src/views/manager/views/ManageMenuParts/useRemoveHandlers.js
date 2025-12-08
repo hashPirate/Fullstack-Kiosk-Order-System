@@ -1,8 +1,12 @@
 /**
+ * @module ManageMenuParts/useRemoveHandlers
+ */
+
+/**
  * Supplies helper callbacks for removing menu parts.
  * @param {Function} setIsRemoving Setter controlling whether the remove popup is visible.
  * @param {Function} setRemoveErrorString Setter used to display validation errors.
- * @param {import('@tanstack/react-query').UseMutationResult} removeMutation React Query mutation responsible for deletions.
+ * @param {Object} removeMutation React Query mutation responsible for deletions.
  * @param {Array<Object>} menuPartsData Cached menu parts used for validating IDs.
  * @returns {{handleRemoveStart: Function, handleRemoveCommit: Function, handleRemoveCancel: Function}} Remove handlers consumed by the UI.
  */

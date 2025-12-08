@@ -1,17 +1,20 @@
+/**
+ * @module ManageMenuParts/RemoveRowPopup
+ */
 import { useState } from "react";
 import styles from "./AddRowPopup.module.css";
 
 /**
  * Popup asking for the ID of the menu part that should be deleted.
  * @param {{prompt: string, onCommit: Function, onCancel: Function, errorString: string|null}} props Popup configuration with callbacks.
- * @returns {JSX.Element} Modal that confirms which part to remove.
+ * @returns {React.ReactElement} Modal that confirms which part to remove.
  */
 export default function RemoveRowPopup({ prompt, onCommit, onCancel, errorString}) {
     const [removalID, setRemovalID] = useState("");
 
     /**
      * Synchronizes the removal target input with component state.
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e Change event from the ID input.
+     * @param {Object} e Change event from the ID input.
      * @returns {void}
      */
     function handleIdChange(e) {
@@ -37,4 +40,3 @@ export default function RemoveRowPopup({ prompt, onCommit, onCancel, errorString
         </div>
     );
 }
-

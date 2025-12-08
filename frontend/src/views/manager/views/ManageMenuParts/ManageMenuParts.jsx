@@ -1,3 +1,6 @@
+/**
+ * @module ManageMenuParts/ManageMenuParts
+ */
 import { useState } from 'react';
 import { HashLoader } from 'react-spinners';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,7 +31,7 @@ async function fetchMenuParts() {
 
 /**
  * Manager-facing page for editing, adding, and removing menu parts.
- * @returns {JSX.Element} Rendered menu part table with supporting modals.
+ * @returns {React.ReactElement} Rendered menu part table with supporting modals.
  */
 export default function ManageMenuParts() {
     const [currentEditID, setCurrentEditID] = useState(null);     // Stores the ID of the menu part to edit.

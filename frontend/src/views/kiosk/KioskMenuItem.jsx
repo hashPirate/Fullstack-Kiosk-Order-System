@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/KioskMenuItem
+ */
 import { Link } from "react-router";
 import styles from "./KioskHome.module.css";
 
@@ -8,7 +11,7 @@ import styles from "./KioskHome.module.css";
 /**
  * Card representing an entree option on the kiosk home screen.
  * @param {{img: string, name: string, price: number, itemId: number, partCount: number}} props Menu item metadata.
- * @returns {JSX.Element} Linkable tile that navigates to the build flow.
+ * @returns {React.ReactElement} Linkable tile that navigates to the build flow.
  */
 export default function KioskMenuItem({img, name, price, itemId, partCount}) {
     return (

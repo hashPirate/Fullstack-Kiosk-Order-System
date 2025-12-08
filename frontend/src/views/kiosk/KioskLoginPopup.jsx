@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/KioskLoginPopup
+ */
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { HashLoader } from "react-spinners";
@@ -9,7 +12,7 @@ import styles from "./KioskLoginPopup.module.css";
 /**
  * Modal that shows a QR code login flow for kiosk users and polls for completion.
  * @param {{setShowLoginPopup: Function, setUser: Function}} props State setters provided by `KioskView`.
- * @returns {JSX.Element} Popup UI with QR code instructions or success state.
+ * @returns {React.ReactElement} Popup UI with QR code instructions or success state.
  */
 export default function KioskLoginPopup({ setShowLoginPopup, setUser }) {
     const [sessionId, setSessionId] = useState(null);

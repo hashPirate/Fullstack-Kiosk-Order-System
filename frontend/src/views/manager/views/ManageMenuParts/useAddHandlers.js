@@ -1,8 +1,12 @@
 /**
+ * @module ManageMenuParts/useAddHandlers
+ */
+
+/**
  * Produces helper callbacks that manage the Add Menu Part popup lifecycle.
  * @param {Function} setIsAdding Setter controlling popup visibility state.
  * @param {Function} setAddErrorString Setter for displaying validation errors.
- * @param {import('@tanstack/react-query').UseMutationResult} addMutation React Query mutation used to create new parts.
+ * @param {Object} addMutation React Query mutation used to create new parts.
  * @returns {{handleAddStart: Function, handleAddCommit: Function, handleAddCancel: Function}} Helper callbacks for the popup.
  */
 export default function useAddHandlers(setIsAdding, setAddErrorString, addMutation) {

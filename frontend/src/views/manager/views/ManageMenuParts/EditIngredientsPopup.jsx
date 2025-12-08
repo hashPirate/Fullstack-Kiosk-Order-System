@@ -1,3 +1,6 @@
+/**
+ * @module ManageMenuParts/EditIngredientsPopup
+ */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { HashLoader } from "react-spinners";
@@ -7,7 +10,7 @@ import styles from "./EditCellPopup.module.css";
 /**
  * Popup modal that lets managers edit ingredient quantities for a menu part.
  * @param {{partName: string, menuPartId: number, onCommit: Function, onCancel: Function, errorString: string|null}} props Component props supplied by the parent.
- * @returns {JSX.Element} Modal UI for editing ingredient quantities.
+ * @returns {React.ReactElement} Modal UI for editing ingredient quantities.
  */
 export default function EditIngredientsPopup({ partName, menuPartId, onCommit, onCancel, errorString }) {
     const [ingredients, setIngredients] = useState([]);
@@ -52,7 +55,7 @@ export default function EditIngredientsPopup({ partName, menuPartId, onCommit, o
     // Reflect checkbox changes in state.
     /**
      * Updates tracked ingredient quantities when a user edits a numeric input.
-     * @param {import('react').ChangeEvent<HTMLInputElement>} event Number input change event.
+     * @param {Object} event Number input change event.
      * @param {number} id Ingredient identifier associated with the input.
      * @returns {void}
      */

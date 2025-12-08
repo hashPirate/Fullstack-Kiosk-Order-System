@@ -1,12 +1,16 @@
 import editType from "./editType";
 
 /**
+ * @module ManageMenuParts/useEditHandlers
+ */
+
+/**
  * Provides edit popup lifecycle hooks for menu part rows.
  * @param {Function} setCurrentEditID Setter that tracks which part is being edited.
  * @param {Function} setCurrentEditType Setter tracking which field is under edit.
  * @param {Function} setEditErrorString Setter used to display validation messages.
  * @param {Function} setCurrentEditName Setter storing the current part name for ingredient modal.
- * @param {import('@tanstack/react-query').UseMutationResult} editMutation React Query mutation that persists part updates.
+ * @param {Object} editMutation React Query mutation that persists part updates.
  * @returns {{handleEditStart: Function, handleEditCommit: Function, handleEditCancel: Function}} Helper callbacks exposed to the UI.
  */
 export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, setCurrentEditName, editMutation) {

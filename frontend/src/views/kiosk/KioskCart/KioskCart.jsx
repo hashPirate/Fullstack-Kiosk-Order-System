@@ -1,3 +1,6 @@
+/**
+ * @module KioskCart/KioskCart
+ */
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import clsx from "clsx";
@@ -10,7 +13,7 @@ import CartContext from "../CartContext.js";
 
 /**
  * Renders the kiosk cart view, translating stored IDs into display data and submitting orders.
- * @returns {JSX.Element} Cart interface including item list and checkout button.
+ * @returns {React.ReactElement} Cart interface including item list and checkout button.
  */
 export default function KioskCart() {
     // Since CartContext only stores IDs, we will need to fetch a list of
@@ -207,4 +210,3 @@ export default function KioskCart() {
         //     },
         //     ...
         // ]
-

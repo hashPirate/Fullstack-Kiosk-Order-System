@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/OrderDetails
+ */
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Collapsible from '../../utilities/Collapsible.jsx';
@@ -11,7 +14,7 @@ import CartContext from './CartContext.js';
 /**
  * Displays the collapsible per-part selection UI for building a kiosk entree.
  * @param {{sidePrompts: Array<Object>, itemId: number, itemName: string}} props Options describing the entree being configured.
- * @returns {JSX.Element} Builder interface for choosing sides and submitting the order.
+ * @returns {React.ReactElement} Builder interface for choosing sides and submitting the order.
  */
 export default function OrderDetails({sidePrompts, itemId, itemName}) {
     // selectedParts is an array that functions like a dictionary. It maps the side prompt (the collapsible)
@@ -75,5 +78,3 @@ export default function OrderDetails({sidePrompts, itemId, itemName}) {
         </div>
     );
 }
-
-

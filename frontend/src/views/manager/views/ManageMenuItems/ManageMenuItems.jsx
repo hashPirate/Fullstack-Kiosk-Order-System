@@ -1,3 +1,6 @@
+/**
+ * @module ManageMenuItems/ManageMenuItems
+ */
 import { useState } from 'react';
 import { HashLoader } from 'react-spinners';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -26,7 +29,7 @@ async function fetchMenuItems() {
 
 /**
  * Manager interface for viewing, editing, adding, and removing menu items.
- * @returns {JSX.Element} Application section that renders the menu table and supporting popups.
+ * @returns {React.ReactElement} Application section that renders the menu table and supporting popups.
  */
 export default function ManageMenuItems() {
     const [currentEditID, setCurrentEditID] = useState(null);     // Stores the ID of the menu item to edit.

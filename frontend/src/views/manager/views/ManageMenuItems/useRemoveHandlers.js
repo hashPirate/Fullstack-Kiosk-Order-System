@@ -1,8 +1,12 @@
 /**
+ * @module ManageMenuItems/useRemoveHandlers
+ */
+
+/**
  * Supplies remove popup lifecycle handlers for the manager menu items view.
  * @param {Function} setIsRemoving Setter controlling the popup visibility.
  * @param {Function} setRemoveErrorString Setter for showing validation errors.
- * @param {import('@tanstack/react-query').UseMutationResult} removeMutation React Query mutation used to delete menu items.
+ * @param {Object} removeMutation React Query mutation used to delete menu items.
  * @param {Array<Object>} menuItemsData Cached menu item data used for validation.
  * @returns {{handleRemoveStart: Function, handleRemoveCommit: Function, handleRemoveCancel: Function}} Removal handler helpers.
  */

@@ -1,10 +1,13 @@
+/**
+ * @module ManageMenuItems/AddRowPopup
+ */
 import { useState } from "react";
 import styles from "./AddRowPopup.module.css";
 
 /**
  * Modal that collects the details for a new menu item prior to submission.
  * @param {{prompt: string, onCommit: Function, onCancel: Function, errorString: string|null}} props Popup props supplied by the parent component.
- * @returns {JSX.Element} Form that allows the manager to add a new row.
+ * @returns {React.ReactElement} Form that allows the manager to add a new row.
  */
 export default function EditCellPopup({ prompt, onCommit, onCancel, errorString }) {
     const [name, setName] = useState("");
@@ -14,7 +17,7 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
     // Calm luh managed components
     /**
      * Updates the local name state when the user edits the input.
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e Change event from the text field.
+     * @param {Object} e Change event from the text field.
      * @returns {void}
      */
     function handleNameChange(e) {
@@ -22,7 +25,7 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
     }
     /**
      * Keeps the price field in sync with the component state.
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e Change event from the price field.
+     * @param {Object} e Change event from the price field.
      * @returns {void}
      */
     function handlePriceChange(e) {
@@ -30,7 +33,7 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
     }
     /**
      * Toggles whether the new item should be marked as available for sale.
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e Change event from the checkbox.
+     * @param {Object} e Change event from the checkbox.
      * @returns {void}
      */
     function handleForSaleChange(e) {
@@ -65,4 +68,3 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
         </div>
     );
 }
-

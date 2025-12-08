@@ -1,4 +1,7 @@
 
+/**
+ * @module Kiosk/KioskMenuPart
+ */
 import { Link } from "react-router";
 import styles from './KioskMenuPart.module.css';
 import clsx from 'clsx';
@@ -11,7 +14,7 @@ import clsx from 'clsx';
 /**
  * Selectable tile for a menu part option displayed within the build flow.
  * @param {{selected: boolean, img: string, name: string, price: number, partId: number, onClick: Function, dietary_restrictions: Array<string>}} props Menu part data and handlers.
- * @returns {JSX.Element} Button-like UI showing the part image, price, and dietary chips.
+ * @returns {React.ReactElement} Button-like UI showing the part image, price, and dietary chips.
  */
 export default function KioskMenuPart({selected, img, name, price, partId, onClick, dietary_restrictions}) {
     return (

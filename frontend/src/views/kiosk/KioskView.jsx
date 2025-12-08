@@ -1,4 +1,6 @@
-
+/**
+ * @module Kiosk/KioskView
+ */
 import { Link, Outlet, useLocation } from "react-router";
 import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
@@ -17,7 +19,7 @@ import KioskLoginPopup from "./KioskLoginPopup.jsx";
 
 /**
  * Root kiosk layout that wraps content with navigation, cart context, and utilities.
- * @returns {JSX.Element} Layout containing the kiosk nav, modals, and routed child views.
+ * @returns {React.ReactElement} Layout containing the kiosk nav, modals, and routed child views.
  */
 export default function KioskView() {
     const [temp, setTemp] = useState("...");

@@ -1,10 +1,13 @@
+/**
+ * @module ManageMenuParts/EditCellPopup
+ */
 import { useState } from "react";
 import styles from "./EditCellPopup.module.css";
 
 /**
  * Popup that accepts a single updated value for a menu part field.
  * @param {{prompt: string, onCommit: Function, onCancel: Function, errorString: string|null}} props Configuration and callbacks passed by parent.
- * @returns {JSX.Element} Modal allowing text edits for a field.
+ * @returns {React.ReactElement} Modal allowing text edits for a field.
  */
 export default function EditCellPopup({ prompt, onCommit, onCancel, errorString }) {
     const [inputVal, setInputVal] = useState("");
@@ -12,7 +15,7 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
     // Calm luh managed component
     /**
      * Keeps the controlled text input synchronized with state.
-     * @param {import('react').ChangeEvent<HTMLInputElement>} e Input change event.
+     * @param {Object} e Input change event.
      * @returns {void}
      */
     function handleInputChange(e) {
@@ -35,4 +38,3 @@ export default function EditCellPopup({ prompt, onCommit, onCancel, errorString 
         </div>
     );
 }
-
