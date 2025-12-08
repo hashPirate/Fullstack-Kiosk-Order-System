@@ -8,9 +8,11 @@ import AddRowPopup from "./AddRowPopup.jsx";
 import RemoveRowPopup from './RemoveRowPopup.jsx';
 import styles from './ManageMenuItems.module.css';
 import axios from 'axios';
-import editType from "./editType.js";
 import useEditHandlers from "./useEditHandlers.js";
 import useAddHandlers from './useAddHandlers.js';
+import useRemoveHandlers from './useRemoveHandlers.js';
+
+const refetchIntervalSecs = 15;
 
 async function fetchMenuItems() {
     console.log("[Menu Items]: refreshing menu items...");
@@ -31,11 +33,11 @@ export default function ManageMenuItems() {
 
     const queryClient = useQueryClient();
 
-    // Refresh data every 15 seconds just in case something changed somehow.
+    // Refresh data every `refetchIntervalSecs` seconds just in case something changed somehow.
     const { data: menuItemsData, isLoading, error } = useQuery({
         queryKey: ["managerMenuItems"],
         queryFn: fetchMenuItems,
-        refetchInterval: 15_000,
+        refetchInterval: refetchIntervalSecs * 1000,
     });
 
     const editMutation = useMutation({
@@ -122,53 +124,22 @@ export default function ManageMenuItems() {
     });
 
 
-    // Custom hook that abstracts edit handling logic into another file.
+    // Custom hook that abstracts Edit handling logic into another file.
     const { handleEditStart, handleEditCommit, handleEditCancel } = useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation);
 
-    // Custom hook that abstracts add handling logic into another file.
+    // Custom hook that abstracts Add handling logic into another file.
     const { handleAddStart, handleAddCommit, handleAddCancel } = useAddHandlers(setIsAdding, setAddErrorString, addMutation);
 
-    function handleRemoveStart() {
-        setIsRemoving(true);
-    }
-
-    function handleRemoveCommit(id) {
-        // Check that id is numeric
-        if ( isNaN( Number(id) ) ) {
-            setRemoveErrorString("ERROR: id must be a number.");
-            return;
-        }
-
-        // Check that menu item with `id` exists
-        let validID = false;
-        for (const item of menuItemsData) {
-            if (item.menu_item_id === Number(id)) {
-                validID = true;
-                break;
-            }
-        }
-        if (!validID) {
-            setRemoveErrorString("ERROR: please enter a valid ID.");
-            return;
-        }
-
-        removeMutation.mutate({ menu_item_id: Number(id) });
-        setIsRemoving(false);
-        setRemoveErrorString(null);
-    }
-
-    function handleRemoveCancel() {
-        setIsRemoving(false);
-        setRemoveErrorString(null);
-    }
+    // Custom hook that abstracts Remove handling logic into another file.
+    const { handleRemoveStart, handleRemoveCommit, handleRemoveCancel } = useRemoveHandlers(setIsRemoving, setRemoveErrorString, removeMutation, menuItemsData);
 
     if (isLoading || editMutation.isPending || addMutation.isPending) {
-        return <HashLoader color={"#DC143C"} cssOverride={{"display": "block", "margin": "4rem auto"}} aria-label="Loading kiosk items..." />;
+        return <HashLoader color={"#DC143C"} cssOverride={{"display": "block", "margin": "4rem auto"}} aria-label="Loading menu items..." />;
     }
 
     if (error) {
         return (
-            <p>Error while fetching menu items. Retrying soon...</p>
+            <p>Error while fetching menu items. Retrying in {refetchIntervalSecs} seconds...</p>
         );
     }
 

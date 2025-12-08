@@ -1,215 +1,217 @@
 import { useState } from 'react';
+import { HashLoader } from 'react-spinners';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+import MenuPartRow from "./MenuPartRow.jsx";
+import EditCellPopup from "./EditCellPopup.jsx";
+import AddRowPopup from "./AddRowPopup.jsx";
+import RemoveRowPopup from './RemoveRowPopup.jsx';
 import styles from './ManageMenuParts.module.css';
+import axios from 'axios';
+import useEditHandlers from "./useEditHandlers.js";
+import useAddHandlers from './useAddHandlers.js';
+import useRemoveHandlers from './useRemoveHandlers.js';
+import editType from './editType.js';
+import EditIngredientsPopup from './EditIngredientsPopup.jsx';
 
-const FAKE_MENU_PARTS = [
-    { menu_part_id: 1, part_name: 'Beijing Beef', price: 1.00, for_sale: true },
-    { menu_part_id: 2, part_name: 'Teriyaki Chicken', price: 1.00, for_sale: true },
-    { menu_part_id: 3, part_name: 'Mushroom Chicken', price: 1.00, for_sale: true },
-    { menu_part_id: 4, part_name: 'Orange Chicken', price: 1.00, for_sale: true },
-    { menu_part_id: 5, part_name: 'White Rice', price: 0.50, for_sale: true },
-    { menu_part_id: 6, part_name: 'Broccoli', price: 0.75, for_sale: true }
-];
+const refetchIntervalSecs = 15;
 
-export default function ManageMenuParts() {
-    const [menuParts] = useState(FAKE_MENU_PARTS);
-    const [selectedPart, setSelectedPart] = useState(null);
-    const [showEditIngredients, setShowEditIngredients] = useState(false);
-
-    const handleAddMenuPart = () => {
-        console.log('Add menu part(demo mode)');
-    };
-
-    const handleUpdateMenuPart = (part, field, value) => {
-        console.log('Update menu part(demo mode):', part.part_name, field, value);
-    };
-
-    const handleCellEdit = (part, field, currentValue) => {
-        if (field==='for_sale') {
-            handleUpdateMenuPart(part, field, !currentValue);
-            return;
-        }
-        
-        const newValue = prompt(`Enter new ${field}:`, currentValue);
-        if (newValue!==null && newValue!==currentValue.toString()) {
-            handleUpdateMenuPart(part, field, newValue);
-        }
-    };
-
-    const handleEditIngredients = (part) => {
-        setSelectedPart(part);
-        setShowEditIngredients(true);
-    };
-
-    return (
-        <div className={styles.manageMenuParts}>
-            <div className={styles.tableContainer}>
-                <table className={styles.menuPartsTable}>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Menu Part Name</th>
-                            <th>Price</th>
-                            <th>For Sale</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {menuParts.map(part => (
-                            <tr
-                                key={part.menu_part_id}
-                                className={selectedPart?.menu_part_id === part.menu_part_id ? styles.selectedRow : ''}
-                                onClick={() => setSelectedPart(part)}
-                            >
-                                <td>{part.menu_part_id}</td>
-                                <td
-                                    className={styles.editableCell}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleCellEdit(part, 'part_name', part.part_name);
-                                    }}
-                                    title="Click to edit"
-                                >
-                                    {part.part_name}
-                                </td>
-                                <td
-                                    className={styles.editableCell}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleCellEdit(part, 'price', part.price);
-                                    }}
-                                    title="Click to edit"
-                                >
-                                    ${parseFloat(part.price).toFixed(2)}
-                                </td>
-                                <td onClick={(e) => e.stopPropagation()}>
-                                    <input
-                                        type="checkbox"
-                                        checked={part.for_sale}
-                                        onChange={() => handleCellEdit(part, 'for_sale', part.for_sale)}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            <div className={styles.actionButtons}>
-                <button onClick={handleAddMenuPart}>
-                    Add
-                </button>
-                <button
-                    onClick={() => selectedPart && handleEditIngredients(selectedPart)}
-                    disabled={!selectedPart}
-                >
-                    Edit Ingredients
-                </button>
-            </div>
-
-            {showEditIngredients && selectedPart && (
-                <EditIngredientsModal
-                    menuPart={selectedPart}
-                    onClose={() => {
-                        setShowEditIngredients(false);
-                        setSelectedPart(null);
-                    }}
-                    onSave={() => {
-                        setShowEditIngredients(false);
-                        setSelectedPart(null);
-                    }}
-                />
-            )}
-        </div>
-    );
+async function fetchMenuParts() {
+    console.log("[Menu Parts]: refreshing menu parts...");
+    const menuParts = (await axios.get("/api/menu/parts")).data;
+    return menuParts;
 }
 
-const FAKE_ALL_INGREDIENTS = [
-    { ingredient_id: 1, name: 'Chicken Breast' },
-    { ingredient_id: 2, name: 'White Rice' },
-    { ingredient_id: 3, name: 'Broccoli' },
-    { ingredient_id: 4, name: 'Orange Sauce' },
-    { ingredient_id: 5, name: 'Teriyaki Sauce' },
-    { ingredient_id: 6, name: 'Mushrooms' },
-    { ingredient_id: 7, name: 'Zucchini' },
-    { ingredient_id: 8, name: 'Bell Peppers' },
-    { ingredient_id: 9, name: 'Onions' }, // i literally just put the randomest ingredients i could think of lMAOOO
-    { ingredient_id: 10, name: 'Sesame Seeds' }
-];
+export default function ManageMenuParts() {
+    const [currentEditID, setCurrentEditID] = useState(null);     // Stores the ID of the menu part to edit.
+    const [currentEditName, setCurrentEditName] = useState(null);     // Stores the name of the menu part to edit.
+    const [currentEditType, setCurrentEditType] = useState(null);     // Stores the type of edit currently being performed (if any).
+    const [editErrorString, setEditErrorString] = useState(null);     // Stores an error message that may be displayed in the Edit popup.
 
-function EditIngredientsModal({ menuPart, onClose, onSave }) {
-    const [allIngredients] = useState(FAKE_ALL_INGREDIENTS);
-    const [ingredientQuantities, setIngredientQuantities] = useState({
-        1: 1, // Chicken Breast
-        2: 1, // White Rice
-        3: 1  // Broccoli
+    const [isAdding, setIsAdding] = useState(false);    // Is a menu part being added right now?
+    const [addErrorString, setAddErrorString] = useState(null);    // Stores error message that may be displayed on the Add popup.
+
+    const [isRemoving, setIsRemoving] = useState(false);    // Is a menu part being added right now?
+    const [removeErrorString, setRemoveErrorString] = useState(null);
+
+    const queryClient = useQueryClient();
+
+    // Refresh data every `refetchIntervalSecs` seconds just in case something changed somehow.
+    const { data: menuPartsData, isLoading, error } = useQuery({
+        queryKey: ["managerMenuParts"],
+        queryFn: fetchMenuParts,
+        refetchInterval: refetchIntervalSecs * 1000,
     });
-    const handleToggleIngredient = (ingredientId) => {
-        setIngredientQuantities(prev => {
-            const newQuantities = { ...prev };
-            if (newQuantities[ingredientId] !== undefined) {
-                delete newQuantities[ingredientId];
-            } else {
-                newQuantities[ingredientId] = 1;
+
+    const editMutation = useMutation({
+        mutationKey: ['managerEditMenuPart'],
+        mutationFn: async (partUpdatePayload) => {
+            // Ensure ID exists.
+            if (!partUpdatePayload.menu_part_id) {
+                throw new Error("ID is required for part modification.");
             }
-            return newQuantities;
-        });
-    };
-    const handleQuantityChange = (ingredientId, quantity) => {
-        setIngredientQuantities(prev => ({
-            ...prev,
-            [ingredientId]: parseInt(quantity) || 1
-        }));
-    };
-    const handleSave = () => {
-        console.log('Save ingredients(demo mode):', ingredientQuantities);
-        onSave();
-    };
+
+            let newPartData;
+            try {
+                newPartData = (menuPartsData.filter(part => part.menu_part_id === partUpdatePayload.menu_part_id))[0];
+            } catch {
+                throw new Error("Invalid menu part id in mutation... probably.");
+            }
+            
+            // Copy over any changed properties from the payload into the new part object.
+            for (const [key, val] of Object.entries(partUpdatePayload)) {
+                newPartData[key] = val;
+            }
+
+            const updatePartResponse = await axios.put(`/api/menu/parts/${partUpdatePayload.menu_part_id}`, newPartData);
+            
+            if (updatePartResponse.data.success === false) {
+                throw new Error("Could not update part in db.");
+            }
+            return updatePartResponse.data;
+        },
+        onMutate: async () => {
+            await queryClient.cancelQueries({ queryKey: ['managerMenuParts'] });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['managerMenuParts'] });
+        },
+        onError: (err) => {
+            // Just in case there was an error while doing thinf
+            console.error("Failed to change menu part:", err);
+        }
+    });
+
+    const addMutation = useMutation({
+        mutationKey: ['managerAddMenuPart'],
+        mutationFn: async (newPartPayload) => {
+            const newPartResponse = await axios.post(`/api/menu/parts`, newPartPayload);
+            
+            if (newPartResponse.data.success === false) {
+                throw new Error("Could not add new part to db.");
+            }
+            return newPartResponse.data;
+        },
+        onMutate: async () => {
+            await queryClient.cancelQueries({ queryKey: ['managerMenuParts'] });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['managerMenuParts'] });
+        },
+        onError: (err) => {
+            // Just in case there was an error while doing thing
+            console.error("Failed to add new menu part:", err);
+        }
+    });
+
+    const removeMutation = useMutation({
+        mutationKey: ['managerRemoveMenuPart'],
+        mutationFn: async ({ menu_part_id }) => {
+            const removePartResponse = await axios.delete(`/api/menu/parts/${menu_part_id}`);
+            
+            if (removePartResponse.data.success === false) {
+                throw new Error("Could not remove part from db.");
+            }
+            return removePartResponse.data;
+        },
+        onMutate: async () => {
+            await queryClient.cancelQueries({ queryKey: ['managerMenuParts'] });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['managerMenuParts'] });
+        },
+        onError: (err) => {
+            // Just in case there was an error while doing tihng
+            console.error("Failed to remove menu part:", err);
+        }
+    });
+
+
+    // Custom hook that abstracts Edit handling logic into another file.
+    const { handleEditStart, handleEditCommit, handleEditCancel } = useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, setCurrentEditName, editMutation);
+
+    // Custom hook that abstracts Add handling logic into another file.
+    const { handleAddStart, handleAddCommit, handleAddCancel } = useAddHandlers(setIsAdding, setAddErrorString, addMutation);
+
+    // Custom hook that abstracts Remove handling logic into another file.
+    const { handleRemoveStart, handleRemoveCommit, handleRemoveCancel } = useRemoveHandlers(setIsRemoving, setRemoveErrorString, removeMutation, menuPartsData);
+
+    if (isLoading || editMutation.isPending || addMutation.isPending) {
+        return <HashLoader color={"#DC143C"} cssOverride={{"display": "block", "margin": "4rem auto"}} aria-label="Loading menu parts..." />;
+    }
+
+    if (error) {
+        return (
+            <p>Error while fetching menu parts. Retrying in {refetchIntervalSecs} seconds...</p>
+        );
+    }
 
     return (
-        <div className={styles.modalOverlay} onClick={onClose}>
-            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <h2>Edit Ingredients: {menuPart.part_name}</h2>
-                <table className={styles.ingredientsTable}>
-                    <thead>
-                        <tr>
-                            <th>Ingredient</th>
-                            <th>Included</th>
-                            <th>Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {allIngredients.map(ingredient => {
-                            const isIncluded = ingredientQuantities[ingredient.ingredient_id] !== undefined;
-                            const quantity = ingredientQuantities[ingredient.ingredient_id] || 1;
-                            
-                            return (
-                                <tr key={ingredient.ingredient_id}>
-                                    <td>{ingredient.name}</td>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={isIncluded}
-                                            onChange={() => handleToggleIngredient(ingredient.ingredient_id)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            value={quantity}
-                                            onChange={(e) => handleQuantityChange(ingredient.ingredient_id, e.target.value)}
-                                            disabled={!isIncluded}
-                                            min="1"
-                                        />
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-                <div className={styles.modalActions}>
-                    <button onClick={onClose}>Cancel</button>
-                    <button onClick={handleSave}>Save</button>
+        <>
+            { (currentEditID !== null)
+                ? ( (currentEditType !== editType.INGREDIENTS)
+                    ? <EditIngredientsPopup
+                        partName={currentEditName}
+                        menuPartId={currentEditID}
+                        onCommit={(newData) => handleEditCommit(currentEditID, currentEditType, newData)}
+                        onCancel={handleEditCancel}
+                        errorString={editErrorString}
+                      />
+                    : <EditCellPopup
+                        prompt={`Edit menu part ${currentEditType}`}
+                        onCommit={(newData) => handleEditCommit(currentEditID, currentEditType, newData)}
+                        onCancel={handleEditCancel}
+                        errorString={editErrorString}
+                      />
+                  )
+                : <></>
+            }
+            
+            { isAdding
+                ? <AddRowPopup prompt={"Add enter info for new menu part"} onCommit={handleAddCommit} onCancel={handleAddCancel} errorString={addErrorString}/>
+                : <></> }
+
+            { isRemoving
+                ? <RemoveRowPopup prompt={"Enter the ID of the part you want to remove"} onCommit={handleRemoveCommit} onCancel={handleRemoveCancel} errorString={removeErrorString}/>
+                : <></> }
+            
+            <div className={styles.manageMenuParts}>
+                <div className={styles.tableContainer}>
+                    <table className={styles.menuPartsTable}>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Menu Part Name</th>
+                                <th>Price</th>
+                                <th>For Sale</th>
+                                <th>Ingredients</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { menuPartsData.map((part, i) => <MenuPartRow
+                                        key={i}
+                                        menuPartId={part.menu_part_id}
+                                        partName={part.part_name}
+                                        price={part.price}
+                                        forSale={part.for_sale}
+                                        onEditStart={handleEditStart}
+                                        handleEditCommit={handleEditCommit}
+                                    />
+                                )
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className={styles.actionButtons}>
+                    <button onClick={handleAddStart}>
+                        Add
+                    </button>
+                    <button onClick={handleRemoveStart}>
+                        Remove
+                    </button>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
