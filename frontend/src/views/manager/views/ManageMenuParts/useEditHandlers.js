@@ -2,8 +2,9 @@ import editType from "./editType";
 
 export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, setCurrentEditName, editMutation) {
     // Begin editing an item by showing the popup
-    function handleEditStart(id, type) {
+    function handleEditStart(id, name, type) {
         setCurrentEditID(id);
+        setCurrentEditName(name);
         setCurrentEditType(type);
     }
 
@@ -22,8 +23,8 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
             editMutation.mutate({menu_part_id: id, part_name: newData});
             setCurrentEditID(null);
             setCurrentEditType(null);
-            setEditErrorString(null);
             setCurrentEditName(null);
+            setEditErrorString(null);
         } else if (type === editType.PRICE) {
             // Check valid price and data type.
             if (newData === "") {
@@ -41,8 +42,8 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
             editMutation.mutate({menu_part_id: id, price: Number(newData)});
             setCurrentEditID(null);
             setCurrentEditType(null);
-            setEditErrorString(null);
             setCurrentEditName(null);
+            setEditErrorString(null);
         } else if (type === editType.FOR_SALE) {
             // Check data type
             if (typeof newData !== 'boolean') {
@@ -52,15 +53,22 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
             editMutation.mutate({menu_part_id: id, for_sale: newData});
             setCurrentEditID(null);
             setCurrentEditType(null);
-            setEditErrorString(null);
             setCurrentEditName(null);
+            setEditErrorString(null);
         } else if (type === editType.INGREDIENTS) {
+            // This is what we will actually send to the server.
+            // No names, just ingredient_id -> quantity.
+            let ingredientsDeliverable = {};
+            for (const d of newData) {
+                ingredientsDeliverable[d.ingredient_id] = d.quantity;
+            }
+
             // No need to run checks for this one tbh.
-            editMutation.mutate( { menu_part_id: id, ingredients: newData } );
+            editMutation.mutate( { menu_part_id: id, ingredients: ingredientsDeliverable } );
             setCurrentEditID(null);
             setCurrentEditType(null);
-            setEditErrorString(null);
             setCurrentEditName(null);
+            setEditErrorString(null);
         } else {
             throw new Error("Invalid edit type.");
         }
@@ -69,6 +77,7 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
     function handleEditCancel() {
         setCurrentEditID(null);
         setCurrentEditType(null);
+        setCurrentEditName(null);
         setEditErrorString(null);
     }
 

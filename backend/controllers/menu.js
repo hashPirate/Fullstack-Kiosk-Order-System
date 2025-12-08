@@ -176,10 +176,25 @@ router.put('/parts/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { part_name, price, for_sale } = req.body;
+
+        if ("ingredients" in req.body) {
+            console.log(req.body.ingredients);
+            // expecting a map of ingredient_id to quantity
+            const { ingredients } = req.body;
+            const menuPart = await db.menuManager.getMenuPartById(id);
+            const ingredientQuantityMap = new Map();
+            for (const [ingredientId, quantity] of Object.entries(ingredients)) {
+                const ingredient = await db.ingredientManager.getIngredientById(Number(ingredientId));
+                ingredientQuantityMap.set(ingredient, quantity);
+            }
+            await db.menuManager.updateIngredientToMenuPartList(menuPart, ingredientQuantityMap);
+        }
+
         const menuPart = await db.menuManager.getMenuPartById(id);
         await db.menuManager.updateMenuPart(menuPart, part_name, price, for_sale);
         res.json({ success: true });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });

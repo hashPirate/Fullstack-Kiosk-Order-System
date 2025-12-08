@@ -11,14 +11,14 @@ export default function MenuPartRow({ menuPartId, partName, price, forSale, onEd
             <td>{menuPartId}</td>
             <td
                 className={styles.editableCell}
-                onClick={() => onEditStart(menuPartId, editType.NAME)}
+                onClick={() => onEditStart(menuPartId, partName, editType.NAME)}
                 title="Click to edit"
             >
                 {partName}
             </td>
             <td
                 className={styles.editableCell}
-                onClick={() => onEditStart(menuPartId, editType.PRICE)}
+                onClick={() => onEditStart(menuPartId, partName, editType.PRICE)}
                 title="Click to edit"
             >
                 ${parseFloat(price).toFixed(2)}
@@ -32,10 +32,10 @@ export default function MenuPartRow({ menuPartId, partName, price, forSale, onEd
             </td>
             <td
                 className={styles.editableCell}
-                onClick={() => onEditStart(menuPartId, editType.INGREDIENTS)}
+                onClick={() => onEditStart(menuPartId, partName, editType.INGREDIENTS)}
                 title="Click to view / edit"
             >
-                <FaListCheck />
+                <FaListCheck style={{"margin-left": "1rem"}}/>
             </td>
         </tr>
     );

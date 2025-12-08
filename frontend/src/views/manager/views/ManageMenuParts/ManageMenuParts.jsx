@@ -149,7 +149,7 @@ export default function ManageMenuParts() {
     return (
         <>
             { (currentEditID !== null)
-                ? ( (currentEditType !== editType.INGREDIENTS)
+                ? ( (currentEditType === editType.INGREDIENTS)
                     ? <EditIngredientsPopup
                         partName={currentEditName}
                         menuPartId={currentEditID}
