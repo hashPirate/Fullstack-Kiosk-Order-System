@@ -1,19 +1,12 @@
 
 import { Link, NavLink, Outlet, useLocation } from "react-router";
 import { TiWeatherCloudy } from "react-icons/ti";
-import { LuShoppingCart } from "react-icons/lu";
-import { CiGlobe } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import { fetchWeatherApi } from 'openmeteo';
 import clsx from 'clsx';
 import { IoMdArrowBack } from "react-icons/io";
 
 import styles from "./ManagerView.module.css";
-
-const langIcons = {
-    "English": "🇬🇧",
-    "Spanish": "🇪🇸",
-};
 
 export default function ManagerView() {
     const [temp, setTemp] = useState("...");
@@ -81,7 +74,7 @@ export default function ManagerView() {
                     Menu Items
                 </NavLink>
                 <NavLink to="/manager/sales-report" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    Sales Report
+                    Sales & Product Reports
                 </NavLink>
                 <NavLink to="/manager/menu-manager" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     Menu Manager

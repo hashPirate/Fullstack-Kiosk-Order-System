@@ -329,6 +329,36 @@ router.get('/item-sales-report', async (req, res) => {
 });
 
 /**
+ * Route to get sales data for ingredients within a time range.
+ * @name get/ingredient-sales
+ * @function
+ * @param {string} from - The start of the time range in ISO format.
+ * @param {string} to - The end of the time range in ISO format.
+ */
+router.get('/ingredient-sales', async (req, res) => {
+    const { from, to } = req.query;
+    try {
+        const sql = `
+            SELECT
+                i.name AS label,
+                SUM(itmp.quantity_cost * oi.quantity) AS number
+            FROM order_items oi
+            JOIN orders o ON oi.order_id = o.order_id
+            JOIN menu_parts_to_order_items mptoi ON oi.order_item_id = mptoi.order_item_id
+            JOIN ingredients_to_menu_parts itmp ON mptoi.menu_part_id = itmp.menu_part_id
+            JOIN ingredients i ON itmp.ingredient_id = i.ingredient_id
+            WHERE o.is_final = TRUE AND oi.created_at BETWEEN $1 AND $2
+            GROUP BY i.name
+            ORDER BY number DESC;
+        `;
+        const result = await db.query(sql, [from, to]);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
  * Route to preview the data for a Z-Report without finalizing it.
  * @name get/z-report/preview/:day
  * @function
