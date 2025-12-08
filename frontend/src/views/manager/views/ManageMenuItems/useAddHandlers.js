@@ -10,15 +10,19 @@ export default function useAddHandlers(setIsAdding, setAddErrorString, addMutati
         }
         if (name === "") {
             setAddErrorString("ERROR: please enter a name.");
+            return;
         }
         if (price === "") {
             setAddErrorString("ERROR: please enter a price.");
+            return;
         }
         if (isNaN(Number(price))) {
             setAddErrorString("ERROR: price must be a number.");
+            return;
         }
         if (Number(price) < 0) {
             setAddErrorString("ERROR: price must be positive.");
+            return;
         }
 
         addMutation.mutate({item_name: name, price: price, for_sale: forSale});

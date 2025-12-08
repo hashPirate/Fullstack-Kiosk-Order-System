@@ -20,8 +20,8 @@ export default function RemoveRowPopup({ prompt, onCommit, onCancel, errorString
                 </label>
 
                 <div className={styles.buttons}>
-                    <button className={styles.confirmButton} onClick={() => onCommit()}>Yes</button>
-                    <button className={styles.cancelButton} onClick={onCancel}>No</button>
+                    <button className={styles.confirmButton} onClick={() => onCommit(removalID)}>Remove</button>
+                    <button className={styles.cancelButton} onClick={onCancel}>Cancel</button>
                 </div>
             </div>
         </div>

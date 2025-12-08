@@ -72,7 +72,7 @@ export default function ManageMenuItems() {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuItems'] });
         },
         onError: (err) => {
-            // Just in case there was an error while changing menu item
+            // Just in case there was an error while doing thinf
             console.error("Failed to change menu item:", err);
         }
     });
@@ -94,20 +94,20 @@ export default function ManageMenuItems() {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuItems'] });
         },
         onError: (err) => {
-            // Just in case there was an error while changing menu item
-            console.error("Failed to change menu item:", err);
+            // Just in case there was an error while doing thing
+            console.error("Failed to add new menu item:", err);
         }
     });
 
     const removeMutation = useMutation({
         mutationKey: ['managerRemoveMenuItem'],
-        mutationFn: async (newItemPayload) => {
-            const newItemResponse = await axios.post(`/api/menu/items`, newItemPayload);
+        mutationFn: async ({ menu_item_id }) => {
+            const removeItemResponse = await axios.delete(`/api/menu/items/${menu_item_id}`);
             
-            if (newItemResponse.data.success === false) {
-                throw new Error("Could not add new item to db.");
+            if (removeItemResponse.data.success === false) {
+                throw new Error("Could not remove item item from db.");
             }
-            return newItemResponse.data;
+            return removeItemResponse.data;
         },
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ['managerMenuItems'] });
@@ -116,8 +116,8 @@ export default function ManageMenuItems() {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuItems'] });
         },
         onError: (err) => {
-            // Just in case there was an error while changing menu item
-            console.error("Failed to change menu item:", err);
+            // Just in case there was an error while doing tihng
+            console.error("Failed to remove menu item:", err);
         }
     });
 
@@ -133,19 +133,28 @@ export default function ManageMenuItems() {
     }
 
     function handleRemoveCommit(id) {
-        // Check ID real quick
+        // Check that id is numeric
+        if ( isNaN( Number(id) ) ) {
+            setRemoveErrorString("ERROR: id must be a number.");
+            return;
+        }
+
+        // Check that menu item with `id` exists
         let validID = false;
         for (const item of menuItemsData) {
-            if (item.menu_item_id === id) {
+            if (item.menu_item_id === Number(id)) {
                 validID = true;
                 break;
             }
         }
         if (!validID) {
             setRemoveErrorString("ERROR: please enter a valid ID.");
+            return;
         }
 
-
+        removeMutation.mutate({ menu_item_id: Number(id) });
+        setIsRemoving(false);
+        setRemoveErrorString(null);
     }
 
     function handleRemoveCancel() {
@@ -170,7 +179,7 @@ export default function ManageMenuItems() {
                 : <></> }
             
             { isAdding
-                ? <AddRowPopup prompt={"Add a new menu item"} onCommit={handleAddCommit} onCancel={handleAddCancel} errorString={addErrorString}/>
+                ? <AddRowPopup prompt={"Add enter info for new menu item"} onCommit={handleAddCommit} onCancel={handleAddCancel} errorString={addErrorString}/>
                 : <></> }
 
             { isRemoving
@@ -207,7 +216,7 @@ export default function ManageMenuItems() {
                     <button onClick={handleAddStart}>
                         Add
                     </button>
-                    <button disabled title="Remove functionality not implemented">
+                    <button onClick={handleRemoveStart}>
                         Remove
                     </button>
                 </div>
