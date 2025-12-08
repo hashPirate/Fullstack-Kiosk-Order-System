@@ -1,3 +1,7 @@
+/**
+ * @module views/manager/views
+ */
+
 import { useState } from 'react';
 import styles from './ManageMenuParts.module.css';
 
@@ -10,6 +14,12 @@ const FAKE_MENU_PARTS = [
     { menu_part_id: 6, part_name: 'Broccoli', price: 0.75, for_sale: true }
 ];
 
+/**
+ * Component for managing menu parts.
+ * Allows viewing, editing, and managing ingredients for menu parts.
+ * @function ManageMenuParts
+ * @returns {React.ReactElement} The rendered menu parts management interface.
+ */
 export default function ManageMenuParts() {
     const [menuParts] = useState(FAKE_MENU_PARTS);
     const [selectedPart, setSelectedPart] = useState(null);
@@ -135,6 +145,17 @@ const FAKE_ALL_INGREDIENTS = [
     { ingredient_id: 10, name: 'Sesame Seeds' }
 ];
 
+/**
+ * Modal component for editing ingredients for a menu part.
+ * @function EditIngredientsModal
+ * @param {Object} props - The component props.
+ * @param {Object} props.menuPart - The menu part object to edit ingredients for.
+ * @param {number} props.menuPart.menu_part_id - The menu part ID.
+ * @param {string} props.menuPart.part_name - The menu part name.
+ * @param {Function} props.onClose - Callback function called when the modal is closed.
+ * @param {Function} props.onSave - Callback function called when ingredients are saved.
+ * @returns {React.ReactElement} The rendered edit ingredients modal.
+ */
 function EditIngredientsModal({ menuPart, onClose, onSave }) {
     const [allIngredients] = useState(FAKE_ALL_INGREDIENTS);
     const [ingredientQuantities, setIngredientQuantities] = useState({

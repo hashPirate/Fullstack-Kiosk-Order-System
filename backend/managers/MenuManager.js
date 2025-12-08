@@ -1,24 +1,48 @@
+/**
+ * @module manager
+ */
 const DbModelManager = require('./DbModelManager');
 const MenuItem = require('../model/MenuItem');
 const MenuPart = require('../model/MenuPart');
 const MenuPartIngredient = require('../model/MenuPartIngredient');
 const DietaryRestriction = require('../model/DietaryRestriction');
 
+/**
+ * Manages menu items and parts in the database.
+ * @class MenuManager
+ * @extends DbModelManager
+ * @param {object} db - The database connection object.
+ */
 class MenuManager extends DbModelManager {
     constructor(db) {
         super(db);
     }
 
+    /**
+     * Retrieves all menu items.
+     * @returns {Promise<MenuItem[]>} A list of all menu items.
+     */
     async getAllMenuItems() {
         const result = await this.db.query('SELECT * FROM menu_items ORDER BY menu_item_id');
         return result.rows.map(row => new MenuItem(this.db, row));
     }
 
+    /**
+     * Retrieves all menu parts.
+     * @returns {Promise<MenuPart[]>} A list of all menu parts.
+     */
     async getAllMenuParts() {
         const result = await this.db.query('SELECT * FROM menu_parts ORDER BY menu_part_id');
         return result.rows.map(row => new MenuPart(this.db, row));
     }
 
+    /**
+     * Creates a new menu item.
+     * @param {string} item_name - The name of the menu item.
+     * @param {number} price - The price of the menu item.
+     * @param {boolean} for_sale - Whether the item is for sale.
+     * @returns {Promise<MenuItem|null>} The newly created menu item, or null on failure.
+     */
     async createMenuItem(item_name, price, for_sale) {
         const result = await this.db.query('INSERT INTO menu_items (item_name, price, for_sale) VALUES ($1, $2, $3) RETURNING *', [item_name, price, for_sale]);
         if (result.rows.length === 0) {
@@ -27,6 +51,13 @@ class MenuManager extends DbModelManager {
         return new MenuItem(this.db, result.rows[0]);
     }
 
+    /**
+     * Creates a new menu part.
+     * @param {string} part_name - The name of the menu part.
+     * @param {number} price - The price of the menu part.
+     * @param {boolean} for_sale - Whether the part is for sale.
+     * @returns {Promise<MenuPart|null>} The newly created menu part, or null on failure.
+     */
     async createMenuPart(part_name, price, for_sale) {
         const result = await this.db.query('INSERT INTO menu_parts (part_name, price, for_sale) VALUES ($1, $2, $3) RETURNING *', [part_name, price, for_sale]);
         if (result.rows.length === 0) {
@@ -35,14 +66,33 @@ class MenuManager extends DbModelManager {
         return new MenuPart(this.db, result.rows[0]);
     }
 
+    /**
+     * Updates a menu item.
+     * @param {MenuItem} menuItem - The menu item to update.
+     * @param {string} itemName - The new name.
+     * @param {number} price - The new price.
+     * @param {boolean} for_sale - The new for_sale status.
+     */
     async updateMenuItem(menuItem, itemName, price, for_sale) {
         await this.db.query('UPDATE menu_items SET item_name = $1, price = $2, for_sale = $3 WHERE menu_item_id = $4', [itemName, price, for_sale, menuItem.getMenuItemId()]);
     }
 
+    /**
+     * Updates a menu part.
+     * @param {MenuPart} menuPart - The menu part to update.
+     * @param {string} partName - The new name.
+     * @param {number} price - The new price.
+     * @param {boolean} for_sale - The new for_sale status.
+     */
     async updateMenuPart(menuPart, partName, price, for_sale) {
         await this.db.query('UPDATE menu_parts SET part_name = $1, price = $2, for_sale = $3 WHERE menu_part_id = $4', [partName, price, for_sale, menuPart.getMenuPartId()]);
     }
 
+    /**
+     * Retrieves a menu item by its ID.
+     * @param {number} menu_item_id - The ID of the menu item.
+     * @returns {Promise<MenuItem|null>} The menu item object, or null if not found.
+     */
     async getMenuItemById(menu_item_id) {
         const result = await this.db.query('SELECT * FROM menu_items WHERE menu_item_id = $1', [menu_item_id]);
         if (result.rows.length === 0) {
@@ -51,6 +101,11 @@ class MenuManager extends DbModelManager {
         return new MenuItem(this.db, result.rows[0]);
     }
 
+    /**
+     * Retrieves a menu part by its ID.
+     * @param {number} menu_part_id - The ID of the menu part.
+     * @returns {Promise<MenuPart|null>} The menu part object, or null if not found.
+     */
     async getMenuPartById(menu_part_id) {
         const result = await this.db.query('SELECT * FROM menu_parts WHERE menu_part_id = $1', [menu_part_id]);
         if (result.rows.length === 0) {
@@ -59,11 +114,21 @@ class MenuManager extends DbModelManager {
         return new MenuPart(this.db, result.rows[0]);
     }
 
+    /**
+     * Retrieves the menu parts for an order item.
+     * @param {OrderItem} orderItem - The order item.
+     * @returns {Promise<MenuPart[]>} A list of menu parts.
+     */
     async getMenuPartsForOrderEntry(orderItem) {
         const result = await this.db.query('SELECT * FROM menu_parts INNER JOIN menu_parts_to_order_items ON menu_parts.menu_part_id = menu_parts_to_order_items.menu_part_id WHERE menu_parts_to_order_items.order_item_id = $1', [orderItem.getOrderItemID()]);
         return result.rows.map(row => new MenuPart(this.db, row));
     }
 
+    /**
+     * Retrieves the menu parts for a menu item.
+     * @param {MenuItem} menuItem - The menu item.
+     * @returns {Promise<MenuPart[]>} A list of menu parts.
+     */
     async getMenuPartsForMenuItem(menuItem) {
         const result = await this.db.query(
             `SELECT mp.* FROM menu_parts mp 
@@ -73,11 +138,21 @@ class MenuManager extends DbModelManager {
         return result.rows.map(row => new MenuPart(this.db, row));
     }
 
+    /**
+     * Retrieves the ingredients for a menu part.
+     * @param {MenuPart} menuPart - The menu part.
+     * @returns {Promise<MenuPartIngredient[]>} A list of ingredients with their quantities.
+     */
     async getIngredientsFromMenuPart(menuPart) {
         const result = await this.db.query('SELECT *, itmp.quantity_cost FROM ingredients AS i JOIN ingredients_to_menu_parts AS itmp ON i.ingredient_id = itmp.ingredient_id WHERE itmp.menu_part_id = $1', [menuPart.getMenuPartId()]);
         return result.rows.map(row => new MenuPartIngredient(this.db, row));
     }
 
+    /**
+     * Retrieves the dietary restrictions for a menu part.
+     * @param {MenuPart} menuPart - The menu part.
+     * @returns {Promise<DietaryRestriction[]>} A list of dietary restrictions.
+     */
     async getDietaryRestrictionsForMenuPart(menuPart) {
         const query = `
             SELECT DISTINCT dr.*
@@ -91,6 +166,11 @@ class MenuManager extends DbModelManager {
         return result.rows.map(row => new DietaryRestriction(this.db, row));
     }
 
+    /**
+     * Updates the list of ingredients and their quantities for a menu part.
+     * @param {MenuPart} menuPart - The menu part to update.
+     * @param {Map<Ingredient, number>} ingredientQuantityMap - A map of Ingredient objects to their quantities.
+     */
     async updateIngredientToMenuPartList(menuPart, ingredientQuantityMap) {
         await this.db.runUpdate('DELETE FROM ingredients_to_menu_parts WHERE menu_part_id = $1', [menuPart.getMenuPartId()]);
 

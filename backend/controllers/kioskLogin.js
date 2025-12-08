@@ -1,9 +1,18 @@
+/**
+ * @module controllers/kioskLogin
+ */
 const express = require('express');
 const router = express.Router();
 
 // In-memory store for kiosk login sessions.
 const kioskSessions = {};
 
+/**
+ * Route for a kiosk to poll the status of a login session.
+ * @name get/status/:sessionId
+ * @function
+ * @param {string} sessionId - The unique ID of the kiosk login session.
+ */
 router.get('/status/:sessionId', (req, res) => {
     const { sessionId } = req.params;
 
@@ -36,6 +45,12 @@ router.get('/status/:sessionId', (req, res) => {
     }
 });
 
+/**
+ * Route for a mobile device to authenticate a kiosk login session.
+ * @name get/authenticate/:sessionId
+ * @function
+ * @param {string} sessionId - The unique ID of the kiosk login session.
+ */
 router.get('/authenticate/:sessionId', (req, res) => {
     const { sessionId } = req.params;
 

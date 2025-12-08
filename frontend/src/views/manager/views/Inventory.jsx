@@ -1,8 +1,18 @@
+/**
+ * @module views/manager/views
+ */
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import styles from './Inventory.module.css';
 
+/**
+ * Component for managing inventory ingredients.
+ * Allows viewing, filtering, editing, and managing dietary restrictions for ingredients.
+ * @function Inventory
+ * @returns {React.ReactElement} The rendered inventory management interface.
+ */
 export default function Inventory() {
     const [filter, setFilter] = useState('all');
     const [ingredients,setIngredients] = useState([]);
@@ -268,6 +278,16 @@ export default function Inventory() {
     );
 }
 
+/**
+ * Modal component for editing dietary restrictions for an ingredient.
+ * @function EditRestrictionsModal
+ * @param {Object} props - The component props.
+ * @param {Object} props.ingredient - The ingredient object to edit restrictions for.
+ * @param {number} props.ingredient.ingredient_id - The ingredient ID.
+ * @param {string} props.ingredient.name - The ingredient name.
+ * @param {Function} props.onClose - Callback function called when the modal is closed.
+ * @returns {React.ReactElement} The rendered edit restrictions modal.
+ */
 function EditRestrictionsModal({ ingredient, onClose }) {
     const [allRestrictions, setAllRestrictions] = useState([]);
     const [ingredientRestrictionIds, setIngredientRestrictionIds] = useState(new Set());

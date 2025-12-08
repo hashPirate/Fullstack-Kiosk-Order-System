@@ -1,7 +1,17 @@
+/**
+ * @module controllers/orders
+ */
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
 
+/**
+ * Route to get the latest orders.
+ * @name get/
+ * @function
+ * @param {number} [limit] - The maximum number of orders to return.
+ * @param {number} [offset] - The number of orders to skip.
+ */
 router.get('/', async (req, res) => {
     try {
         const { limit, offset } = req.query;
@@ -12,6 +22,13 @@ router.get('/', async (req, res) => {
     }
 });
 
+/**
+ * Route to get the latest finalized orders after a specific date.
+ * @name get/after-date
+ * @function
+ * @param {string} date - The start date in ISO format.
+ * @param {number} [limit] - The maximum number of orders to return.
+ */
 router.get('/after-date', async (req, res) => {
     try {
         const { limit, date } = req.query;
@@ -22,6 +39,13 @@ router.get('/after-date', async (req, res) => {
     }
 });
 
+/**
+ * Route to get active (not finalized) orders.
+ * @name get/active
+ * @function
+ * @param {number} [limit] - The maximum number of orders to return.
+ * @param {number} [offset] - The number of orders to skip.
+ */
 router.get('/active', async (req, res) => {
     try {
         const { limit, offset } = req.query;
@@ -32,6 +56,11 @@ router.get('/active', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all uncooked orders.
+ * @name get/uncooked
+ * @function
+ */
 router.get('/uncooked', async (req, res) => {
     try {
         const orders = await db.orderManager.getUncookedOrders();
@@ -41,6 +70,13 @@ router.get('/uncooked', async (req, res) => {
     }
 });
 
+/**
+ * Route to get the latest cooked orders.
+ * @name get/cooked
+ * @function
+ * @param {number} [limit] - The maximum number of orders to return.
+ * @param {number} [offset] - The number of orders to skip.
+ */
 router.get('/cooked', async (req, res) => {
     try {
         const limit = Number.parseInt(req.query.limit);
@@ -52,6 +88,11 @@ router.get('/cooked', async (req, res) => {
     }
 });
 
+/**
+ * Route to get the count of cooked orders.
+ * @name get/cooked/count
+ * @function
+ */
 router.get('/cooked/count', async (req, res) => {
     try {
         const cookedCount = await db.orderManager.getNumCookedOrders();
@@ -61,6 +102,13 @@ router.get('/cooked/count', async (req, res) => {
     }
 });
 
+/**
+ * Route to set the cooked status of an order.
+ * @name put/:id/set-cooked
+ * @function
+ * @param {string} id - The ID of the order.
+ * @param {boolean} is_cooked - The new cooked status.
+ */
 router.put('/:id/set-cooked', async (req, res) => {
     try {
         const { id } = req.params;
@@ -72,6 +120,13 @@ router.put('/:id/set-cooked', async (req, res) => {
     }
 });
 
+/**
+ * Route to get past orders.
+ * @name get/past
+ * @function
+ * @param {number} [limit] - The maximum number of orders to return.
+ * @param {number} [offset] - The number of orders to skip.
+ */
 router.get('/past', async (req, res) => {
     try {
         const { limit, offset } = req.query;
@@ -82,6 +137,13 @@ router.get('/past', async (req, res) => {
     }
 });
 
+/**
+ * Route to get the orders for the currently authenticated user.
+ * @name get/my-orders
+ * @function
+ * @param {number} [limit] - The maximum number of orders to return.
+ * @param {number} [offset] - The number of orders to skip.
+ */
 router.get('/my-orders', async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -117,6 +179,11 @@ router.get('/my-orders', async (req, res) => {
     }
 });
 
+/**
+ * Route to create a new order.
+ * @name post/
+ * @function
+ */
 router.post('/', async (req, res) => {
     try {
         const order = await db.orderManager.createOrder();
@@ -126,6 +193,12 @@ router.post('/', async (req, res) => {
     }
 });
 
+/**
+ * Route to get the items for a specific order.
+ * @name get/:id/items
+ * @function
+ * @param {string} id - The ID of the order.
+ */
 router.get('/:id/items', async (req, res) => {
     try {
         const { id } = req.params;
@@ -137,6 +210,14 @@ router.get('/:id/items', async (req, res) => {
     }
 });
 
+/**
+ * Route to add an item to an order.
+ * @name post/:id/items
+ * @function
+ * @param {string} id - The ID of the order.
+ * @param {string} menu_item_id - The ID of the menu item to add.
+ * @param {number} quantity - The quantity of the menu item.
+ */
 router.post('/:id/items', async (req, res) => {
     try {
         const { id } = req.params;
@@ -150,6 +231,14 @@ router.post('/:id/items', async (req, res) => {
     }
 });
 
+/**
+ * Route to update an order item.
+ * @name put/items/:id
+ * @function
+ * @param {string} id - The ID of the order item.
+ * @param {string} menu_item_id - The new menu item ID.
+ * @param {number} quantity - The new quantity.
+ */
 router.put('/items/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -163,6 +252,13 @@ router.put('/items/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to update the quantity of an order item.
+ * @name put/items/:id/quantity
+ * @function
+ * @param {string} id - The ID of the order item.
+ * @param {number} quantity - The new quantity.
+ */
 router.put('/items/:id/quantity', async (req, res) => {
     try {
         const { id } = req.params;
@@ -175,6 +271,13 @@ router.put('/items/:id/quantity', async (req, res) => {
     }
 });
 
+/**
+ * Route to add a menu part to an order item.
+ * @name post/items/:id/parts
+ * @function
+ * @param {string} id - The ID of the order item.
+ * @param {string} menu_part_id - The ID of the menu part to add.
+ */
 router.post('/items/:id/parts', async (req, res) => {
     try {
         const { id } = req.params;
@@ -189,6 +292,12 @@ router.post('/items/:id/parts', async (req, res) => {
 });
 
 // [Donnell]: made this to get menu parts for an order item.
+/**
+ * Route to get the menu parts for an order item.
+ * @name get/items/:id/parts
+ * @function
+ * @param {string} id - The ID of the order item.
+ */
 router.get('/items/:id/parts', async (req, res) => {
     try {
         const { id } = req.params;
@@ -199,6 +308,12 @@ router.get('/items/:id/parts', async (req, res) => {
     }
 });
 
+/**
+ * Route to clear all menu parts from an order item.
+ * @name delete/items/:id/parts
+ * @function
+ * @param {string} id - The ID of the order item.
+ */
 router.delete('/items/:id/parts', async (req, res) => {
     try {
         const { id } = req.params;
@@ -210,6 +325,12 @@ router.delete('/items/:id/parts', async (req, res) => {
     }
 });
 
+/**
+ * Route to delete an order item.
+ * @name delete/items/:id
+ * @function
+ * @param {string} id - The ID of the order item to delete.
+ */
 router.delete('/items/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -221,6 +342,12 @@ router.delete('/items/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to finalize an order.
+ * @name put/:id/finalize
+ * @function
+ * @param {string} id - The ID of the order to finalize.
+ */
 router.put('/:id/finalize', async (req, res) => {
     try {
         const { id } = req.params;
@@ -233,6 +360,13 @@ router.put('/:id/finalize', async (req, res) => {
     }
 });
 
+/**
+ * Route to get sales data by item within a time range.
+ * @name get/sales-by-item
+ * @function
+ * @param {string} startTime - The start of the time range in ISO format.
+ * @param {string} endTime - The end of the time range in ISO format.
+ */
 router.get('/sales-by-item', async (req, res) => {
     try {
         const { startTime, endTime } = req.query;
@@ -243,6 +377,12 @@ router.get('/sales-by-item', async (req, res) => {
     }
 });
 
+/**
+ * Route to get sales data per hour for a specific day.
+ * @name get/sales-per-hour
+ * @function
+ * @param {string} day - The day in 'YYYY-MM-DD' format.
+ */
 router.get('/sales-per-hour', async (req, res) => {
     try {
         const { day } = req.query;

@@ -1,3 +1,7 @@
+/**
+ * @module views/manager/views
+ */
+
 import { useState } from 'react';
 import styles from './ManageMenuItems.module.css';
 
@@ -9,6 +13,12 @@ const FAKE_MENU_ITEMS = [
     { menu_item_id: 4, item_name: 'Drink', price: 1.00, for_sale: true }
 ];
 
+/**
+ * Component for managing menu items.
+ * Allows viewing and editing menu items including name, price, and availability.
+ * @function ManageMenuItems
+ * @returns {React.ReactElement} The rendered menu items management interface.
+ */
 export default function ManageMenuItems() {
     const [menuItems] = useState(FAKE_MENU_ITEMS);
 

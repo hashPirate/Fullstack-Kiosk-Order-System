@@ -1,61 +1,62 @@
-import { useState } from 'react';
+/**
+ * @module views/manager/views
+ */
+
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from './Reports.module.css';
 
-//Fake report data for demoooo
-const FAKE_Z_REPORT = {
-    totalOrders: 127,
-    totalItems: 342,
-    totalEarnings: 1847.50
-};
-const FAKE_X_REPORT = [
-    { hour: new Date().setHours(8,0,0,0), total_sales: 145.25 },
-    { hour: new Date().setHours(9,0,0,0), total_sales: 198.50 },
-    { hour: new Date().setHours(10, 0, 0, 0), total_sales: 267.75 },
-    { hour: new Date().setHours(11, 0, 0, 0), total_sales: 312.00 },
-    { hour: new Date().setHours(12, 0, 0, 0), total_sales: 445.30 },
-    { hour: new Date().setHours(13, 0, 0, 0), total_sales: 389.20 },
-    { hour: new Date().setHours(14, 0, 0, 0), total_sales: 234.15 },
-    { hour: new Date().setHours(15, 0, 0, 0), total_sales: 198.75 },
-    { hour: new Date().setHours(16, 0, 0, 0), total_sales: 156.40 },
-    { hour: new Date().setHours(17, 0, 0, 0), total_sales: 101.20 }
-];
+/**
+ * Component for viewing Z-reports and X-reports.
+ * Z-reports show daily sales summaries and can be created/closed.
+ * X-reports show hourly sales breakdowns for a selected date.
+ * @function Reports
+ * @returns {React.ReactElement} The rendered reports interface.
+ */
 export default function Reports() {
     const [view, setView] = useState('z'); //eitherz or x
     const [zDate, setZDate] = useState(new Date().toISOString().split('T')[0]);
     const [xDate, setXDate] = useState(new Date().toISOString().split('T')[0]);
     const [zReport, setZReport] = useState(null);
     const [xReport, setXReport] = useState([]);
-    const [lastZReportTime, setLastZReportTime] = useState(null);
-    const isToday = (date) => {
-        const today = new Date().toISOString().split('T')[0];
-        return date === today;
-    };
-    const isAlreadyClosedToday = () => {//check for this cause last time we got a bit cooked
-        if (!lastZReportTime) return false;
-        const today = new Date();
-        const lastZ = new Date(lastZReportTime);
-        return today.toDateString()===lastZ.toDateString();
-    };
-
-    const handleRunZ = () => {
-        setZReport(FAKE_Z_REPORT);
-    };
-
-    const handleCreateZ = () => {
-        setZReport(FAKE_Z_REPORT);
-        const now=new Date();
-        setLastZReportTime(now);
-    };
-
-    const handleRunX = () => {
-        setXReport(FAKE_X_REPORT);
-    };
-
-    const formatTime = (timestamp) => {//unused atm
-        if (!timestamp) return 'N/A';
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString('en-US',{ hour:'numeric', minute:'2-digit', hour12:true });
-    };
+    const [zReportExists, setZReportExists] = useState(false);
+    const [zReportClosedAt, setZReportClosedAt] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null); 
+    // i just did a full rewrite from this point
+    
+    //check if Z report exists for the selected date
+    useEffect(() => {
+        const checkZReportExists = async () => {
+            try {
+                const response = await axios.get(`/api/reports/z-report/check/${zDate}`);
+                setZReportExists(response.data.exists);
+                if (response.data.closedAt) {
+                    const closedDate = new Date(response.data.closedAt);
+                    if (!isNaN(closedDate.getTime())) {
+                        setZReportClosedAt(closedDate);
+                    } else {
+                        setZReportClosedAt(null);
+                    }
+                } else {
+                    setZReportClosedAt(null);
+                }
+                //clear the report when date changes so it no confused
+                setZReport(null);
+            } catch (err) {
+                console.error('Error checking Z-report status:',err);
+                setZReportExists(false);
+                setZReportClosedAt(null);
+                setZReport(null);
+            }
+        };
+        checkZReportExists();
+    }, [zDate]);
+    /**
+     * Formats a timestamp into a readable date and time string.
+     * @param {string|number|Date} timestamp - The timestamp to format.
+     * @returns {string} The formatted date and time string, or 'N/A' if timestamp is invalid.
+     */
     const formatDateTime = (timestamp) => {
         if (!timestamp) return 'N/A';
         const date = new Date(timestamp);
@@ -68,21 +69,100 @@ export default function Reports() {
             hour12: true
         });
     };
+    /**
+     * Loads and displays the Z-report for the selected date.
+     * @async
+     * @function handleViewZ
+     */
+    const handleViewZ=async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axios.get(`/api/reports/z-report/${zDate}`);
+            setZReport(response.data);
+        } catch (err) {
+            console.error('Error loading Z-report:', err);
+            setError(err.response?.data?.error||'Failed to load Z-report. Please try again.');
+            setZReport(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+    /**
+     * Previews the Z-report for the selected date without closing it.
+     * @async
+     * @function handlePreviewZ
+     */
+    const handlePreviewZ=async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axios.get(`/api/reports/z-report/preview/${zDate}`);
+            setZReport(response.data.zReport);
+        } catch (err) {
+            console.error('Error previewing Z-report:',err);
+            setError(err.response?.data?.error||'Failed to preview Z-report. Please try again.');
+            setZReport(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Creates and closes a Z-report for the selected date.
+     * @async
+     * @function handleCreateZ
+     */
+    const handleCreateZ=async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axios.post(`/api/reports/z-report/create/${zDate}`);
+            setZReport(response.data.zReport);
+            setZReportExists(true);
+            setZReportClosedAt(new Date(response.data.closedAt));
+        } catch (err) {
+            console.error('Error creating Z-report:', err);
+            setError(err.response?.data?.error || 'Failed to create Z-report. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Loads and displays the X-report (hourly sales) for the selected date.
+     * @async
+     * @function handleRunX
+     */
+    const handleRunX = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axios.get(`/api/reports/x-report/${xDate}`);
+            setXReport(response.data);
+        } catch (err) {
+            console.error('Error loading X-report:', err);
+            setError('Failed to load X-report. Please try again.');
+            setXReport([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Gets the status message for the Z-report based on whether it's open or closed.
+     * @function getStatusMessage
+     * @returns {string|null} The status message, or null if not applicable.
+     */
     const getStatusMessage = () => {
         if (view === 'z') {
-            const viewingToday = isToday(zDate);
-            if (viewingToday && isAlreadyClosedToday()) {
-                return `Closed at: ${formatDateTime(lastZReportTime)}`;
-            } else if (viewingToday) {
-                return 'Z Report is open';
+            if (zReportExists && zReportClosedAt) {
+                return `Closed at: ${formatDateTime(zReportClosedAt)}`;
             } else {
-                return `Viewing Z-Report for ${zDate}`;
+                return 'Z Report is open';
             }
         }
         return null;
-    };
-    const canCreateZ = () => {
-        return isToday(zDate) && !isAlreadyClosedToday();
     };
 
     return (
@@ -102,6 +182,12 @@ export default function Reports() {
                 </button>
             </div>
 
+            {error && (
+                <div className={styles.error} style={{ color: 'red', padding: '10px', margin: '10px 0' }}>
+                    {error}
+                </div>
+            )}
+
             {view === 'z' && (
                 <div className={styles.zView}>
                     <div className={styles.zControls}>
@@ -111,16 +197,24 @@ export default function Reports() {
                             onChange={(e) => setZDate(e.target.value)}
                             className={styles.dateInput}
                         />
-                        <button onClick={handleRunZ}>
-                            View Z-Report
-                        </button>
-                        <button
-                            onClick={handleCreateZ}
-                            disabled={!canCreateZ()}
-                            className={styles.createButton}
-                        >
-                            Create Z-Report
-                        </button>
+                        {zReportExists ? (
+                            <button onClick={handleViewZ} disabled={loading} className={styles.viewButton}>
+                                {loading ? 'Loading...' : 'View Z-Report'}
+                            </button>
+                        ) : (
+                            <>
+                                <button onClick={handlePreviewZ} disabled={loading} className={styles.previewButton}>
+                                    {loading ? 'Loading...' : 'Preview Z-Report'}
+                                </button>
+                                <button
+                                    onClick={handleCreateZ}
+                                    disabled={loading}
+                                    className={styles.createButton}
+                                >
+                                    {loading ? 'Creating...' : 'Create Z-Report'}
+                                </button>
+                            </>
+                        )}
                         {getStatusMessage() && (
                             <span className={styles.statusLabel}>
                                 {getStatusMessage()}
@@ -146,7 +240,7 @@ export default function Reports() {
                                     <td>{zReport.totalItems || 0}</td>
                                 </tr>
                                 <tr>
-                                    <td>{isToday(zDate) && isAlreadyClosedToday() ? 'Gross Sales' : 'Total Sales'}</td>
+                                    <td>{zReportExists ? 'Gross Sales' : 'Total Sales'}</td>
                                     <td>${parseFloat(zReport.totalEarnings || 0).toFixed(2)}</td>
                                 </tr>
                                 <tr>
@@ -172,8 +266,8 @@ export default function Reports() {
                             onChange={(e) => setXDate(e.target.value)}
                             className={styles.dateInput}
                         />
-                        <button onClick={handleRunX}>
-                            Run X-Report
+                        <button onClick={handleRunX} disabled={loading}>
+                            {loading ? 'Loading...' : 'Run X-Report'}
                         </button>
                     </div>
 
@@ -201,6 +295,11 @@ export default function Reports() {
                                 })}
                             </tbody>
                         </table>
+                    )}
+                    {xReport.length === 0 && !loading && (
+                        <div style={{ padding: '20px', textAlign: 'center' }}>
+                            No sales data for this date. Click "Run X-Report" to load data.
+                        </div>
                     )}
                 </div>
             )}
