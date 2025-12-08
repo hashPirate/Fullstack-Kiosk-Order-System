@@ -23,7 +23,7 @@ export default function ManagerHome() {
                     Menu Items
                 </NavLink>
                 <NavLink to="/manager/sales-report" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
-                    Sales Report
+                    Sales & Product Reports
                 </NavLink>
                 <NavLink to="/manager/menu-manager" className={({isActive}) => clsx(styles.managerTab, isActive && styles.active)}>
                     Menu Manager
