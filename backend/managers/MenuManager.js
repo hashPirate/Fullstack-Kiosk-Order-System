@@ -186,7 +186,12 @@ ORDER BY mp.menu_part_id;`,
         await this.db.runUpdate('DELETE FROM ingredients_to_menu_parts WHERE menu_part_id = $1', [menuPart.getMenuPartId()]);
 
         for (const [ingredient, quantity] of ingredientQuantityMap.entries()) {
-            await this.db.runUpdate('INSERT INTO ingredients_to_menu_parts (ingredient_id, menu_part_id, quantity_cost) SELECT $1, $2, $3 WHERE NOT EXISTS (SELECT 1 FROM ingredients_to_menu_parts WHERE ingredient_id = $4 AND menu_part_id = $5)', [ingredient.getIngredientId(), menuPart.getMenuPartId(), quantity, ingredient.getIngredientId(), menuPart.getMenuPartId()]);
+            if (quantity > 0) {
+                await this.db.runUpdate('INSERT INTO ingredients_to_menu_parts (ingredient_id, menu_part_id, quantity_cost) SELECT $1, $2, $3 WHERE NOT EXISTS (SELECT 1 FROM ingredients_to_menu_parts WHERE ingredient_id = $4 AND menu_part_id = $5)', [ingredient.getIngredientId(), menuPart.getMenuPartId(), quantity, ingredient.getIngredientId(), menuPart.getMenuPartId()]);
+            }
+            else {
+                await this.db.runUpdate('DELETE FROM ingredients_to_menu_parts WHERE ingredient_id = $1 AND menu_part_id = $2', [ingredient.getIngredientId(), menuPart.getMenuPartId()]);
+            }
         }
     }
 }
