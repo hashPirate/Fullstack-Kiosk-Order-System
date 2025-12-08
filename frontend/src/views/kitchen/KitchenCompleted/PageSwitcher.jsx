@@ -4,7 +4,17 @@ import clsx from "clsx";
 import { useRef } from "react";
 
 import styles from "./KitchenCompleted.module.css";
-
+/**
+ * Allows switching pages in the completed orders view using arrows or
+ * direct numeric input.
+ *
+ * @function PageSwitcher
+ * @param {Object} props
+ * @param {number} props.pageNum - Current active page number.
+ * @param {number} props.totalPages - Total number of pages.
+ * @param {Function} props.setPageNum - Setter to update the page number.
+ * @returns {React.ReactElement} A pagination control component.
+ */
 export default function PageSwitcher({ pageNum, totalPages, setPageNum }) {
     const inputRef = useRef(undefined);
 

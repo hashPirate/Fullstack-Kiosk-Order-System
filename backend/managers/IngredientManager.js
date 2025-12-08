@@ -25,7 +25,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient[]>} A list of ingredients.
      */
     async getIngredients(limit, offset) {
-        const result = await this.db.query('SELECT * FROM ingredients ORDER BY name LIMIT $1 OFFSET $2', [limit, offset]);
+        const result = await this.db.query('SELECT * FROM ingredients WHERE is_archived = FALSE ORDER BY name LIMIT $1 OFFSET $2', [limit, offset]);
         return result.rows.map(row => new Ingredient(this.db, row));
     }
 
@@ -34,7 +34,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient[]>} A list of all ingredients.
      */
     async getAllIngredients() {
-        const result = await this.db.query('SELECT * FROM ingredients ORDER BY name');
+        const result = await this.db.query('SELECT * FROM ingredients WHERE is_archived = FALSE ORDER BY name');
         return result.rows.map(row => new Ingredient(this.db, row));
     }
 
@@ -43,7 +43,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient[]>} A list of in-stock ingredients.
      */
     async getInStockIngredients() {
-        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity > 0');
+        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity > 0 AND is_archived = FALSE');
         return result.rows.map(row => new Ingredient(this.db, row));
     }
 
@@ -52,7 +52,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient[]>} A list of low-stock ingredients.
      */
     async getLowStockIngredients() {
-        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity < alert_threshold');
+        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity < alert_threshold AND is_archived = FALSE');
         return result.rows.map(row => new Ingredient(this.db, row));
     }
 
@@ -61,7 +61,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient[]>} A list of out-of-stock ingredients.
      */
     async getOutOfStockIngredients() {
-        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity <= 0');
+        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity <= 0 AND is_archived = FALSE');
         return result.rows.map(row => new Ingredient(this.db, row));
     }
 
@@ -100,6 +100,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient|null>} The ingredient object, or null if not found.
      */
     async getIngredientByName(ingredient_name) {
+        console.log("Warning: getIngredientByName was called. This is unsafe because of is_archived.");
         const result = await this.db.query('SELECT * FROM ingredients WHERE LOWER(name) = LOWER($1)', [ingredient_name.trim()]);
         if (result.rows.length === 0) {
             return null;
@@ -115,6 +116,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient>} The updated or newly created ingredient.
      */
     async addQuantityByName(ingredient_name, delta, unitIfCreate) {
+        console.log("Warning: addQuantityByName was called. This is unsafe because of is_archived.");
         const inDatabase = await this.getIngredientByName(ingredient_name);
         if (inDatabase === null) {
             return this.createIngredient(ingredient_name, delta, unitIfCreate, DEFAULT_ALERT_THRESH);
@@ -176,7 +178,7 @@ class IngredientManager extends DbModelManager {
      * @returns {Promise<Ingredient[]>} A list of ingredients needing restock.
      */
     async getIngredientsNeedingRestock() {
-        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity <= alert_threshold ORDER BY name');
+        const result = await this.db.query('SELECT * FROM ingredients WHERE current_quantity <= alert_threshold AND is_archived = FALSE ORDER BY name');
         return result.rows.map(row => new Ingredient(this.db, row));
     }
 
@@ -216,8 +218,9 @@ class IngredientManager extends DbModelManager {
         await this.db.query(query, [ingredient.getIngredientId(), restriction.getRestrictionId()]);
     }
 
+    // [Donnell]: modified this to archive the ingredient instead of actually deleting it.
     async deleteIngredient(ingredient_id) {
-        await this.db.runUpdate('DELETE FROM ingredients WHERE ingredient_id = $1',[ingredient_id]);
+        await this.db.runUpdate('UPDATE ingredients SET is_archived = TRUE WHERE ingredient_id = $1', [ingredient_id]);
     }
 }
 

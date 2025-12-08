@@ -30,6 +30,7 @@ class MenuPart extends DatabaseEntry {
         this.image_name = result.image_name;
         this.price = result.price;
         this.for_sale = result.for_sale;
+        this.is_archived = result.is_archived;
     }
 
     /**
@@ -93,7 +94,7 @@ class MenuPart extends DatabaseEntry {
      * @returns {string}
      */
     toString() {
-        return `Menu Part ID: ${this.menu_part_id}, Part Name: ${this.part_name}, Image Name: ${this.image_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}`;
+        return `Menu Part ID: ${this.menu_part_id}, Part Name: ${this.part_name}, Image Name: ${this.image_name}, Price: $${this.price.toFixed(2)}, For Sale: ${this.for_sale}, Is Archived: ${this.is_archived}`;
     }
 
     /**
@@ -107,6 +108,7 @@ class MenuPart extends DatabaseEntry {
             image_name: this.image_name,
             price: this.price,
             for_sale: this.for_sale,
+            is_archived: this.is_archived
         };
     }
 }

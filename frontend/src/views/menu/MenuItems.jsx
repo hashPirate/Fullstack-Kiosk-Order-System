@@ -1,4 +1,15 @@
 import styles from "./MenuBoard.module.css";
+/**
+ * Card component for displaying a single menu item on the menu board
+ *
+ * @function MenuItems
+ * @param {Object} props
+ * @param {string} props.name The name of the menu item.
+ * @param {number} [props.calories] The calorie value for the item, if available.
+ * @param {string} props.imgLink Image source URL for the item.
+ * @param {string} props.imageAlt Alt text describing the item image.
+ * @returns {React.ReactElement} The rendered menu item card.
+ */
 export default function MenuItems({ name, calories, imgLink, imageAlt }) {
   return (
     <div className={styles.menuItemCard}>

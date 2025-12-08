@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/BuildItem
+ */
 import { useEffect, useState } from 'react';
 import OrderDetails from './OrderDetails.jsx';
 import { useOutletContext, useSearchParams } from 'react-router';
@@ -6,6 +9,11 @@ import axios from 'axios';
 
 import styles from './BuildItem.module.css';
 
+/**
+ * @function BuildItem
+ * @description Kiosk flow for building a menu item by selecting side parts with dietary filtering.
+ * @returns {React.ReactElement} A page that handles restriction filters and renders `OrderDetails` for the chosen item.
+ */
 export default function BuildItem() {
     const [searchParams, setSearchParams] = useSearchParams();
     const itemId = Number(searchParams.get("itemId"));

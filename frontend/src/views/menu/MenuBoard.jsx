@@ -1,3 +1,6 @@
+/**
+ * @module views/menu
+ */
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router";
 import styles from "./MenuBoard.module.css";
@@ -10,6 +13,14 @@ import {drinkImages,sidesSection,baseSection,mealsSection,} from "./MenuData.js"
 const menuSideImg = Object.fromEntries(sidesSection.items.map((s) => [s.name, { imgLink: s.imgLink, imageAlt: s.imageAlt },]));
 const menuBaseImg = Object.fromEntries(baseSection.items.map((b) => [b.name,{ imgLink: b.imgLink, imageAlt: b.imageAlt },]));
 const menuMealImg = Object.fromEntries(mealsSection.options.map((m) =>[m.name,{ icon: m.icon, iconAlt: m.iconAlt },]));
+/**
+ * Main Menu Board view component that displays all dynamic menu sections:
+ * sides, base, drinks, and meals. Fetches menu board items from the backend
+ * and groups them into categories to render the menu board layout.
+ *
+ * @function MenuBoardView
+ * @returns {React.ReactElement} The rendered menu board view.
+ */
 export default function MenuBoardView() {
   const [sides, setSides] = useState([]);
   const [base, setBase] = useState([]);

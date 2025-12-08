@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/SetLanguage
+ */
 import { useOutletContext } from 'react-router';
 import styles from './SetLanguage.module.css';
 import { languages, initGoogleTranslate, getCurrentLanguage, changeLanguage } from './languages.js';
@@ -5,6 +8,11 @@ import { useEffect, useState } from 'react';
 import clsx from "clsx";
 import axios from 'axios';
 
+/**
+ * @function SetLanguage
+ * @description Screen allowing kiosk users to pick their preferred language and sync with Google Translate.
+ * @returns {React.ReactElement} A language selection grid with Google Translate integration.
+ */
 export default function SetLanguage() {
     const { user } = useOutletContext();
     useEffect(()=>{

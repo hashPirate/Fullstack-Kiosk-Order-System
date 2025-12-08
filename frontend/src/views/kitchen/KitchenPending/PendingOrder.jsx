@@ -31,7 +31,18 @@ import timeAgo from "../../../utilities/timeAgo.js";
 //     ...
 // ]
 
-
+/**
+ * Shows a single pending order with its items and the time since creation.
+ * Includes a button to mark the order as completed.
+ *
+ * @function PendingOrder
+ * @param {Object} props
+ * @param {number} props.orderId - The order's ID.
+ * @param {string|number|Date} props.creationTime - Time the order was created.
+ * @param {Array<Object>} props.menuItems - Array of items in the order.
+ * @param {Function} props.handleCompleteOrder - Callback marking the order as cooked.
+ * @returns {React.ReactElement} The rendered pending order.
+ */
 export default function PendingOrder({orderId, creationTime, menuItems, handleCompleteOrder}) {
 
     return (

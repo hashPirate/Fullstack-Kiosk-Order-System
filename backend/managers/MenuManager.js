@@ -23,7 +23,7 @@ class MenuManager extends DbModelManager {
      * @returns {Promise<MenuItem[]>} A list of all menu items.
      */
     async getAllMenuItems() {
-        const result = await this.db.query('SELECT * FROM menu_items ORDER BY menu_item_id');
+        const result = await this.db.query('SELECT * FROM menu_items WHERE is_archived = FALSE ORDER BY menu_item_id');
         return result.rows.map(row => new MenuItem(this.db, row));
     }
 
@@ -32,7 +32,7 @@ class MenuManager extends DbModelManager {
      * @returns {Promise<MenuPart[]>} A list of all menu parts.
      */
     async getAllMenuParts() {
-        const result = await this.db.query('SELECT * FROM menu_parts ORDER BY menu_part_id');
+        const result = await this.db.query('SELECT * FROM menu_parts WHERE is_archived = FALSE ORDER BY menu_part_id');
         return result.rows.map(row => new MenuPart(this.db, row));
     }
 
@@ -114,6 +114,15 @@ class MenuManager extends DbModelManager {
         return new MenuPart(this.db, result.rows[0]);
     }
 
+    // [Donnell]
+    async archiveMenuPartById(menu_part_id) {
+        await this.db.runUpdate('UPDATE menu_parts SET is_archived = TRUE, for_sale = FALSE WHERE menu_part_id = $1', [menu_part_id]);
+    }
+
+    async archiveMenuItemById(menu_item_id) {
+        await this.db.runUpdate('UPDATE menu_items SET is_archived = TRUE, for_sale = FALSE WHERE menu_item_id = $1', [menu_item_id]);
+    }
+
     /**
      * Retrieves the menu parts for an order item.
      * @param {OrderItem} orderItem - The order item.
@@ -131,9 +140,11 @@ class MenuManager extends DbModelManager {
      */
     async getMenuPartsForMenuItem(menuItem) {
         const result = await this.db.query(
-            `SELECT mp.* FROM menu_parts mp 
-             JOIN menu_parts_to_menu_items mptmi ON mp.menu_part_id = mptmi.menu_part_id 
-             WHERE mptmi.menu_item_id = $1 ORDER BY mp.menu_part_id`,
+            `SELECT mp.* FROM menu_parts mp
+JOIN menu_parts_to_menu_items mptmi ON mp.menu_part_id = mptmi.menu_part_id 
+WHERE mp.is_archived = FALSE 
+  AND mptmi.menu_item_id = $1 
+ORDER BY mp.menu_part_id;`,
             [menuItem.getMenuItemId()]);
         return result.rows.map(row => new MenuPart(this.db, row));
     }

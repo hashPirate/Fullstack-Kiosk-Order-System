@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/languages
+ */
 export const languages = [
     { name: 'English', code: 'en', emoji: '🇬🇧' },
     { name: 'Español', code: 'es', emoji: '🇪🇸' },
@@ -31,6 +34,11 @@ export const languages = [
     { name: 'Basa Jawa', code: 'jw', emoji: '🇮🇩' },
 ];
 
+/**
+ * Injects the Google Translate widget script and initializes the element once loaded.
+ * @param {string} elementId DOM element id where Google Translate should render.
+ * @returns {void}
+ */
 export function initGoogleTranslate(elementId) {
     const script = document.createElement('script');
     script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
@@ -47,12 +55,21 @@ export function initGoogleTranslate(elementId) {
     };
 }
 
+/**
+ * Reads the current Google Translate language from its cookie.
+ * @returns {string} ISO language code currently applied.
+ */
 export function getCurrentLanguage() {
     const cookieMatch = document.cookie.match(/googtrans=([^;]+)/);
     if (!cookieMatch || cookieMatch[1] === 'null') return 'en';
     return cookieMatch[1].split('/')[2];
 }
 
+/**
+ * Resolves when the Google Translate widget is ready or rejects on timeout.
+ * @param {number} [timeout=2000] Maximum wait time in milliseconds.
+ * @returns {Promise<Element>} Promise resolving with the widget container element.
+ */
 async function awaitGoogleTranslate(timeout = 2000) {
     return new Promise((resolve, reject) => {
         const start = Date.now();
@@ -70,6 +87,11 @@ async function awaitGoogleTranslate(timeout = 2000) {
     });
 }
 
+/**
+ * Attempts to switch Google Translate to the desired language with retries.
+ * @param {string} langCode Target language code to apply.
+ * @returns {Promise<void>} Resolves once Google Translate reflects the requested language.
+ */
 export async function changeLanguage(langCode) {
     // Set the language, with retries.
     const changePromise = new Promise(async (resolve, reject) => {

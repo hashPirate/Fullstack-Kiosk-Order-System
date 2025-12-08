@@ -8,18 +8,20 @@ import OrderSummary from './OrderSummary';
 import OrderContext from '../../OrderContext';
 
 /**
+ * @module views/cashier/CashierView/OrderView/OrderView
+ */
+/**
  * Main component responsible for displaying all items in the current order,
  * including their parts, and the order summary/confirmation section.
  *
- * @component
- *
+ * @function OrderView
  * @description
- * Pulls `orderContent` from context and renders:
- * - A list of <OrderMenuItem> components.
- * - Each containing nested <OrderMenuPart> components.
- * - The <OrderSummary> component at the bottom.
+ * Pulls {@link module:views/cashier/OrderContext~OrderContextType.orderContent} from context and renders:
+ * - A list of {@link OrderMenuItem} components.
+ * - Each containing nested {@link OrderMenuPart} components.
+ * - The {@link OrderSummary} component at the bottom.
  *
- * @returns {JSX.Element} Full order view layout for the cashier UI.
+ * @returns {React.ReactElement} Full order view layout for the cashier UI.
  */
 
 export default function OrderView() {
@@ -27,8 +29,7 @@ export default function OrderView() {
     
     /**
      * Maps the current `orderContent` array into JSX elements for rendering.
-     *
-     * @returns {JSX.Element[]} List of <OrderMenuItem> components.
+     * @returns {React.ReactElement[]} List of {@link OrderMenuItem} components.
      */
 
     function renderOrderContent() {
@@ -51,4 +52,3 @@ export default function OrderView() {
         </div>
     );
 }
-

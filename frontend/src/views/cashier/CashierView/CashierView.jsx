@@ -10,11 +10,13 @@ import OrderProgression from './OrderProgression.jsx';
 import OrderContext from '../OrderContext.jsx';
 import { useState } from 'react';
 /**
+ * @module views/cashier/CashierView/CashierView
+ */
+/**
  * Main container for the cashier workflow. Manages global order state and
  * provides it to all descendants through React context.
  *
- * @component
- *
+ * @function CashierView
  * @description
  * This component:
  * - Stores the current order (items + parts)
@@ -23,9 +25,9 @@ import { useState } from 'react';
  * - Renders the order pane (left) and menu-selection pane (right)
  * - Wraps everything with an OrderContext.Provider
  *
- * Child components access order state and actions via `OrderContext`.
+ * Child components access order state and actions via {@link module:views/cashier/OrderContext~OrderContext}.
  *
- * @returns {JSX.Element} Split-view cashier interface with order and menu panes.
+ * @returns {React.ReactElement} Split-view cashier interface with order and menu panes.
  */
 export default function CashierView() {
     // Order content is a list of menu item objects
@@ -131,4 +133,3 @@ export default function CashierView() {
     </OrderContext.Provider>
     );
 }
-

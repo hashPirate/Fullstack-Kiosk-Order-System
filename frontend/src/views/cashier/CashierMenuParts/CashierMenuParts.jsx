@@ -7,13 +7,13 @@ import styles from "./CashierMenuParts.module.css";
 import gridStyles from "../MenuGridStyles.module.css";
 import MenuPart from "./MenuPart.jsx";
 import pastelColors from "../pastelColors.js";
-
+/**
+ * @module views/cashier/CashierMenuParts/CashierMenuParts
+ */
 /**
  * Component responsible for displaying all available menu parts
  * associated with a selected menu item.
- *
- * @component
- *
+ * @function CashierMenuParts
  * @description
  * - Fetches menu parts using the `menuItemID` query parameter.
  * - Displays a loading spinner until data is retrieved.
@@ -22,8 +22,7 @@ import pastelColors from "../pastelColors.js";
  *
  * Fetches from:
  *   GET /api/menu/items/{menuItemID}/parts
- *
- * @returns {JSX.Element} A container that displays menu parts or a loader.
+ * @returns {React.ReactElement} A container that displays menu parts or a loader.
  */
 
 export default function CashierMenuParts() {
@@ -45,8 +44,7 @@ export default function CashierMenuParts() {
     /**
      * Renders the list of menu parts once they have been loaded.
      * If parts are not yet loaded, a HashLoader spinner is displayed.
-     *
-     * @returns {JSX.Element|JSX.Element[]} List of <MenuPart /> components or a loader.
+     * @returns {React.ReactElement|React.ReactElement[]} List of {@link MenuPart} components or a loader.
      */
     function renderParts() {
         if (partsLoaded) {
