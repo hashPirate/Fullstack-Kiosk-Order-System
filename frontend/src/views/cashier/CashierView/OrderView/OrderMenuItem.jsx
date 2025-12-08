@@ -6,21 +6,22 @@ import styles from "./OrderView.module.css";
 import OrderContext from "../../OrderContext";
 
 /**
+ * @module views/cashier/CashierView/OrderView/OrderMenuItem
+ */
+/**
  * Component representing a menu item inside the current order view.
  * Displays the item name, price, a remove ("X") button, and any nested parts.
  *
- * @component
- * @param {Object} props
+ * @function OrderMenuItem
+ * @param {object} props - The component's props.
  * @param {string} props.name - Display name of the menu item.
  * @param {number|string} props.price - Price of the item (string-formatted or number).
- * @param {number} props.itemIndex - Index of this item inside `orderContent`.
+ * @param {number} props.itemIndex - Index of this item inside {@link module:views/cashier/CashierView/CashierView~orderContent}.
  * @param {React.ReactNode} props.children - Parts belonging to this menu item.
- *
  * @description
  * Removes the item when the X icon is clicked. If the order becomes empty
  * after removing the item, the user is redirected back to `/cashier/menu_items`.
- *
- * @returns {JSX.Element} A styled container showing the order item and its parts.
+ * @returns {React.ReactElement} A styled container showing the order item and its parts.
  */
 
 export default function OrderMenuItem({name, price, itemIndex, children}) {

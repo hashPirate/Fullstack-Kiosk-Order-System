@@ -1,10 +1,19 @@
+/**
+ * @module views/kitchen
+ */
 import { CiGlobe } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 
 import styles from "./KitchenView.module.css";
-
+/**
+ * Parent navigation wrapper for kitchen operations.
+ * Provides tabs for Pending and Completed views and includes routing.
+ *
+ * @function KitchenView
+ * @returns {React.ReactElement} The rendered kitchen navigation layout.
+ */
 export default function KitchenView() {
     const navigate = useNavigate();
     const location = useLocation();

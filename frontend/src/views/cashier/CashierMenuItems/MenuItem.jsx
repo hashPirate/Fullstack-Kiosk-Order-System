@@ -5,19 +5,19 @@ import { useContext } from 'react';
 import gridStyles from '../MenuGridStyles.module.css'; 
 import styles from './CashierMenuItems.module.css';
 import OrderContext from '../OrderContext';
-
+/**
+ * @module views/cashier/CashierMenuItems/MenuItem
+ */
 /**
  * Component representing a single selectable menu item in the cashier's
  * menu items grid.
  *
- * @component
- *
- * @param {Object} props
+ * @function MenuItem
+ * @param {object} props - The component's props.
  * @param {number|string} props.id - The database ID of the menu item.
  * @param {string} props.name - Human-readable name of the menu item.
  * @param {number} props.price - Base price of the menu item.
- * @param {Object} [props.style] - Optional inline styles applied to the card.
- *
+ * @param {object} [props.style] - Optional inline styles applied to the card.
  * @description
  * When clicked:
  * - Ensures no order is currently being processed
@@ -25,7 +25,7 @@ import OrderContext from '../OrderContext';
  * - Navigates the user to the menu parts selection screen:
  *     `/cashier/menu_parts?menuItemID={id}`
  *
- * @returns {JSX.Element} A styled tile representing a single menu item.
+ * @returns {React.ReactElement} A styled tile representing a single menu item.
  */
 
 export default function MenuItem({id, name, price, style}) {

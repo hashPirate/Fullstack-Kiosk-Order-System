@@ -1,3 +1,6 @@
+/**
+ * @module views/kitchen/pending
+ */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from "axios";
 import { HashLoader } from "react-spinners";
@@ -44,7 +47,13 @@ async function refreshPendingOrders() {
 
     return cookedOrders;
 }
-
+/**
+ * Displays all pending (uncooked) kitchen orders and allows marking them
+ * as completed. Auto-refreshes and validates menu item mapping.
+ *
+ * @function KitchenPending
+ * @returns {React.ReactElement} The rendered pending orders view.
+ */
 export default function KitchenPending() {
     const queryClient = useQueryClient();
 

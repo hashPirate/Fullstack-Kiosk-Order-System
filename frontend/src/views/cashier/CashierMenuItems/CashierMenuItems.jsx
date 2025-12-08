@@ -8,10 +8,11 @@ import gridStyles from "../MenuGridStyles.module.css";
 import MenuItem from "./MenuItem.jsx";
 import pastelColors from "../pastelColors.js";
 /**
+ * @module views/cashier/CashierMenuItems/CashierMenuItems
+ */
+/**
  * Component responsible for displaying all available menu items.
- *
- * @component
- *
+ * @function CashierMenuItems
  * @description
  * - Fetches menu items from `/api/menu/items`
  * - Displays a loading spinner until items finish loading
@@ -19,6 +20,7 @@ import pastelColors from "../pastelColors.js";
  * - Uses <MenuItem /> for individual item rendering
  *
  * @returns {JSX.Element} A dynamic grid containing menu items or a loading indicator.
+ * @returns {React.ReactElement} A dynamic grid containing menu items or a loading indicator.
  */
 export default function CashierMenuItems() {
     const [items, setItems] = useState([]);
@@ -37,8 +39,7 @@ export default function CashierMenuItems() {
     /**
      * Renders the list of menu items once they have been fetched.
      * Until items load, displays a HashLoader spinner.
-     *
-     * @returns {JSX.Element|JSX.Element[]} A list of <MenuItem /> components or a loader.
+     * @returns {React.ReactElement|React.ReactElement[]} A list of {@link MenuItem} components or a loader.
      */
     function renderItems() {
         if (itemsLoaded) {
