@@ -1,5 +1,3 @@
-import { FaListCheck } from "react-icons/fa6";
-
 import styles from "./ManageMenuParts.module.css";
 import editType from "./editType.js";
 
@@ -35,7 +33,7 @@ export default function MenuPartRow({ menuPartId, partName, price, forSale, onEd
                 onClick={() => onEditStart(menuPartId, partName, editType.INGREDIENTS)}
                 title="Click to view / edit"
             >
-                <FaListCheck style={{"margin-left": "1rem"}}/>
+                <button className={styles.editButton}>Edit</button>
             </td>
         </tr>
     );
