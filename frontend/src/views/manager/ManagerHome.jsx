@@ -1,8 +1,16 @@
+/**
+ * @module views/manager
+ */
 
 import { NavLink } from "react-router";
 import clsx from 'clsx';
 import styles from "./ManagerHome.module.css";
 
+/**
+ * Manager home component that displays navigation tabs for manager views.
+ * @function ManagerHome
+ * @returns {React.ReactElement} The rendered manager home navigation tabs.
+ */
 export default function ManagerHome() {
     return (
         <>

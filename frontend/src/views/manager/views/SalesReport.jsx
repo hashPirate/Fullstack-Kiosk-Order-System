@@ -1,6 +1,17 @@
+/**
+ * @module views/manager/views
+ */
+
 import { useEffect, useState } from 'react';
 import styles from './SalesReport.module.css';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
+
+/**
+ * Component for viewing sales and product reports.
+ * Displays sales data for menu items, menu parts, or ingredients with charts and tables.
+ * @function SalesReport
+ * @returns {React.ReactElement} The rendered sales report interface.
+ */
 export default function SalesReport() {
     const dateToday = new Date();
     const twoDaysBefToday = new Date(dateToday);
@@ -13,12 +24,22 @@ export default function SalesReport() {
     const [itemRows, setItemRows] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    /**
+     * Gets the frequency count from a report row.
+     * @param {Object} row - The report row object.
+     * @returns {number} The frequency count, or 0 if not available.
+     */
     function getFrequency(row) {
         if (row.number) {
             return Number(row.number);
         }
         return 0;
     }
+    /**
+     * Gets the quantity from a report row.
+     * @param {Object} row - The report row object.
+     * @returns {number} The quantity, or 0 if not available.
+     */
     function getQuantity(row) {
         if (row.totalquantity) {
             return Number(row.totalquantity);
@@ -28,6 +49,11 @@ export default function SalesReport() {
         }
         return 0;
     }
+    /**
+     * Gets the sales amount from a report row.
+     * @param {Object} row - The report row object.
+     * @returns {number} The sales amount, or 0 if not available.
+     */
     function getSales(row) {
         if (row.totalsales) {
             return Number(row.totalsales);
