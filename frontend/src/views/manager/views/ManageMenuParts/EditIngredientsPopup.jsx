@@ -1,16 +1,28 @@
+/**
+ * @module ManageMenuParts/EditIngredientsPopup
+ */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { HashLoader } from "react-spinners";
 
 import styles from "./EditCellPopup.module.css";
 
+/**
+ * Popup modal that lets managers edit ingredient quantities for a menu part.
+ * @param {{partName: string, menuPartId: number, onCommit: Function, onCancel: Function, errorString: string|null}} props Component props supplied by the parent.
+ * @returns {React.ReactElement} Modal UI for editing ingredient quantities.
+ */
 export default function EditIngredientsPopup({ partName, menuPartId, onCommit, onCancel, errorString }) {
     const [ingredients, setIngredients] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     // Load ingredients data on mount
     useEffect(() => {
-        (async function () {
+        /**
+         * Fetches ingredient usage data for this menu part and merges it with all available ingredients.
+         * @returns {Promise<void>} Resolves when component state has been updated.
+         */
+        async function loadIngredients() {
             // Simplify API results and use simplified results to set
             // `ingredients`, which will be used to render the inputs.
             try {
@@ -35,10 +47,18 @@ export default function EditIngredientsPopup({ partName, menuPartId, onCommit, o
             } finally {
                 setIsLoading(false);
             }
-        })();
+        }
+
+        loadIngredients();
     }, []);
 
     // Reflect checkbox changes in state.
+    /**
+     * Updates tracked ingredient quantities when a user edits a numeric input.
+     * @param {Object} event Number input change event.
+     * @param {number} id Ingredient identifier associated with the input.
+     * @returns {void}
+     */
     function onQuantityChanged(event, id) {
         const newIngredients = ingredients.map(ing => (ing.ingredient_id === id) ? {
             ...ing,

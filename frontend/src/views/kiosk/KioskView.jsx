@@ -1,4 +1,6 @@
-
+/**
+ * @module Kiosk/KioskView
+ */
 import { Link, Outlet, useLocation } from "react-router";
 import { TiWeatherCloudy } from "react-icons/ti";
 import { LuShoppingCart } from "react-icons/lu";
@@ -8,12 +10,19 @@ import { FiLogIn } from "react-icons/fi";
 import { HiMagnifyingGlassPlus } from "react-icons/hi2";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {fetchWeatherApi} from "openmeteo";
 
 import styles from "./KioskView.module.css";
 import CartContext from "./CartContext.js";
 import KioskZoomMenu from "./KioskZoomMenu.jsx";
 import KioskLoginPopup from "./KioskLoginPopup.jsx";
 
+/**
+ * @module Kiosk/KioskView
+ * @function KioskView
+ * @description Root kiosk layout that wraps content with navigation, cart context, and utilities.
+ * @returns {React.ReactElement} Layout containing the kiosk nav, modals, and routed child views.
+ */
 export default function KioskView() {
     const [temp, setTemp] = useState("...");
     const [showZoomMenu, setShowZoomMenu] = useState(false);
@@ -85,22 +94,22 @@ export default function KioskView() {
 
         (async () => {
             try {
-            const url = "https://api.open-meteo.com/v1/forecast";
-            const params = {
-            latitude: [30.601389],          // College Station, TX
-            longitude: [-96.314445],
-            current: "temperature_2m",      // only current temp
-            temperature_unit: "fahrenheit", // °F
-            timezone: "America/Chicago"
-            };
+                const url = "https://api.open-meteo.com/v1/forecast";
+                const params = {
+                    latitude: [30.601389],          // College Station, TX
+                    longitude: [-96.314445],
+                    current: "temperature_2m",      // only current temp
+                    temperature_unit: "fahrenheit", // °F
+                    timezone: "America/Chicago"
+                };
 
-            const responses = await fetchWeatherApi(url, params);
-            const res = responses[0];
-            const current = res.current();
-            const f = current.variables(0).value(); // temperature_2m in °F
+                const responses = await fetchWeatherApi(url, params);
+                const res = responses[0];
+                const current = res.current();
+                const f = current.variables(0).value(); // temperature_2m in °F
 
                 if (alive) {
-                setTemp(Math.round(f).toString() + "°");
+                    setTemp(Math.round(f).toString() + "°");
                 }
             } catch (e) {
                 if (alive) {

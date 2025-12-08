@@ -1,3 +1,6 @@
+/**
+ * @module ManageMenuParts/ManageMenuParts
+ */
 import { useState } from 'react';
 import { HashLoader } from 'react-spinners';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -16,12 +19,20 @@ import EditIngredientsPopup from './EditIngredientsPopup.jsx';
 
 const refetchIntervalSecs = 15;
 
+/**
+ * Fetches the latest menu part data from the backend API.
+ * @returns {Promise<Array<Object>>} Resolves with the current list of menu parts.
+ */
 async function fetchMenuParts() {
     console.log("[Menu Parts]: refreshing menu parts...");
     const menuParts = (await axios.get("/api/menu/parts")).data;
     return menuParts;
 }
 
+/**
+ * Manager-facing page for editing, adding, and removing menu parts.
+ * @returns {React.ReactElement} Rendered menu part table with supporting modals.
+ */
 export default function ManageMenuParts() {
     const [currentEditID, setCurrentEditID] = useState(null);     // Stores the ID of the menu part to edit.
     const [currentEditName, setCurrentEditName] = useState(null);     // Stores the name of the menu part to edit.
@@ -45,6 +56,11 @@ export default function ManageMenuParts() {
 
     const editMutation = useMutation({
         mutationKey: ['managerEditMenuPart'],
+        /**
+         * Applies partial updates to a menu part using the provided payload.
+         * @param {Object} partUpdatePayload Partial menu part fields including `menu_part_id`.
+         * @returns {Promise<Object>} Backend response for the update call.
+         */
         mutationFn: async (partUpdatePayload) => {
             // Ensure ID exists.
             if (!partUpdatePayload.menu_part_id) {
@@ -70,12 +86,25 @@ export default function ManageMenuParts() {
             }
             return updatePartResponse.data;
         },
+        /**
+         * Cancels background fetches to avoid conflicts while mutating.
+         * @returns {Promise<void>} Resolves after pending queries are canceled.
+         */
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ['managerMenuParts'] });
         },
+        /**
+         * Requests fresh menu part data upon successful mutation completion.
+         * @returns {Promise<void>} Resolves when the invalidate call is issued.
+         */
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuParts'] });
         },
+        /**
+         * Logs edit errors for easier troubleshooting of failed updates.
+         * @param {Error} err Error instance thrown during mutation.
+         * @returns {void}
+         */
         onError: (err) => {
             // Just in case there was an error while doing thinf
             console.error("Failed to change menu part:", err);
@@ -84,6 +113,11 @@ export default function ManageMenuParts() {
 
     const addMutation = useMutation({
         mutationKey: ['managerAddMenuPart'],
+        /**
+         * Submits a request to add a new menu part with the provided payload.
+         * @param {Object} newPartPayload Fields describing the part being created.
+         * @returns {Promise<Object>} Backend response for the create call.
+         */
         mutationFn: async (newPartPayload) => {
             const newPartResponse = await axios.post(`/api/menu/parts`, newPartPayload);
             
@@ -92,12 +126,25 @@ export default function ManageMenuParts() {
             }
             return newPartResponse.data;
         },
+        /**
+         * Temporarily halts automatic refetches while adding a new part.
+         * @returns {Promise<void>} Resolves when query cancellation completes.
+         */
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ['managerMenuParts'] });
         },
+        /**
+         * Ensures UI data stays fresh after a successful creation.
+         * @returns {Promise<void>} Resolves when invalidate is requested.
+         */
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuParts'] });
         },
+        /**
+         * Reports add failures for debugging and UI messaging.
+         * @param {Error} err Error thrown during the mutation lifecycle.
+         * @returns {void}
+         */
         onError: (err) => {
             // Just in case there was an error while doing thing
             console.error("Failed to add new menu part:", err);
@@ -106,6 +153,11 @@ export default function ManageMenuParts() {
 
     const removeMutation = useMutation({
         mutationKey: ['managerRemoveMenuPart'],
+        /**
+         * Removes a menu part using its identifier.
+         * @param {{menu_part_id: number}} param0 Destructured arguments containing the id to delete.
+         * @returns {Promise<Object>} Backend response for the delete call.
+         */
         mutationFn: async ({ menu_part_id }) => {
             const removePartResponse = await axios.delete(`/api/menu/parts/${menu_part_id}`);
             
@@ -114,12 +166,25 @@ export default function ManageMenuParts() {
             }
             return removePartResponse.data;
         },
+        /**
+         * Cancels active queries while a removal is in progress.
+         * @returns {Promise<void>} Resolves once the cancel request completes.
+         */
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ['managerMenuParts'] });
         },
+        /**
+         * Refetches menu part data after deleting an item.
+         * @returns {Promise<void>} Resolves when the invalidation call completes.
+         */
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuParts'] });
         },
+        /**
+         * Logs deletion errors to the console.
+         * @param {Error} err Error encountered while running the mutation.
+         * @returns {void}
+         */
         onError: (err) => {
             // Just in case there was an error while doing tihng
             console.error("Failed to remove menu part:", err);

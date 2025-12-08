@@ -1,7 +1,15 @@
+/**
+ * @module ManageMenuItems/MenuItemRow
+ */
 import styles from "./ManageMenuItems.module.css";
 import editType from "./editType.js";
 
 // Passing in the entire handleEditCommit function for for_sale
+/**
+ * Displays a single menu item entry with inline edit affordances.
+ * @param {{menuItemId: number, itemName: string, price: number|string, forSale: boolean, onEditStart: Function, handleEditCommit: Function}} props Row props provided by the parent list.
+ * @returns {React.ReactElement} Table row representing a single menu item.
+ */
 export default function MenuItemRow({ menuItemId, itemName, price, forSale, onEditStart, handleEditCommit}) {
 
     return (

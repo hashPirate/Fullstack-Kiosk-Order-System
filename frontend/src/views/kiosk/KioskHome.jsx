@@ -1,3 +1,6 @@
+/**
+ * @module Kiosk/KioskHome
+ */
 import { useOutletContext, useNavigate } from "react-router";
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
@@ -9,6 +12,13 @@ import "./KioskMenuItem.jsx";
 import KioskMenuItem from "./KioskMenuItem.jsx";
 import CartContext from "./CartContext.js";
 
+/**
+ * @function PastOrdersCarousel
+ * @description Displays a carousel of a signed-in user's previous orders with quick re-order buttons.
+ * @param {object} props - The component's props.
+ * @param {object|null} props.user - The authenticated kiosk user object.
+ * @returns {React.ReactElement|null} Carousel UI if past orders exist, otherwise null.
+ */
 function PastOrdersCarousel({ user }) {
     const { addCompletedItem } = useContext(CartContext);
     const [pastOrders, setPastOrders] = useState([]);
@@ -63,6 +73,11 @@ function PastOrdersCarousel({ user }) {
     );
 }
 
+/**
+ * @function KioskHome
+ * @description Landing view for kiosk ordering that lists available menu items and past orders.
+ * @returns {React.ReactElement} Kiosk home page content for selecting an item.
+ */
 export default function KioskHome() {
     const [loading, setLoading] = useState(true);
     const [menuItems, setMenuItems] = useState([]);

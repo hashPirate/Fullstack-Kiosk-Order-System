@@ -1,3 +1,6 @@
+/**
+ * @module ManageMenuItems/ManageMenuItems
+ */
 import { useState } from 'react';
 import { HashLoader } from 'react-spinners';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,12 +17,20 @@ import useRemoveHandlers from './useRemoveHandlers.js';
 
 const refetchIntervalSecs = 15;
 
+/**
+ * Fetches the current list of menu items from the API for the manager view.
+ * @returns {Promise<Array<Object>>} Resolves with the array of menu items returned by the backend.
+ */
 async function fetchMenuItems() {
     console.log("[Menu Items]: refreshing menu items...");
     const menuItems = (await axios.get("/api/menu/items")).data;
     return menuItems;
 }
 
+/**
+ * Manager interface for viewing, editing, adding, and removing menu items.
+ * @returns {React.ReactElement} Application section that renders the menu table and supporting popups.
+ */
 export default function ManageMenuItems() {
     const [currentEditID, setCurrentEditID] = useState(null);     // Stores the ID of the menu item to edit.
     const [currentEditType, setCurrentEditType] = useState(null);     // Stores the type of edit currently being performed (if any).
@@ -42,6 +53,11 @@ export default function ManageMenuItems() {
 
     const editMutation = useMutation({
         mutationKey: ['managerEditMenuItem'],
+        /**
+         * Applies pending changes to a menu item via the backend API.
+         * @param {Object} itemUpdatePayload Partial menu item data including `menu_item_id`.
+         * @returns {Promise<Object>} Backend response payload for the update request.
+         */
         mutationFn: async (itemUpdatePayload) => {
             // Ensure ID exists.
             if (!itemUpdatePayload.menu_item_id) {
@@ -67,12 +83,25 @@ export default function ManageMenuItems() {
             }
             return updateItemResponse.data;
         },
+        /**
+         * Prevents overlapping fetches by canceling active queries before mutating.
+         * @returns {Promise<void>} Resolves when the query cancellation is issued.
+         */
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ['managerMenuItems'] });
         },
+        /**
+         * Refreshes menu item data after a successful edit mutation completes.
+         * @returns {Promise<void>} Resolves when the invalidate request is scheduled.
+         */
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuItems'] });
         },
+        /**
+         * Logs edit failures to aid debugging of unsuccessful mutation attempts.
+         * @param {Error} err Error thrown by the mutation lifecycle.
+         * @returns {void}
+         */
         onError: (err) => {
             // Just in case there was an error while doing thinf
             console.error("Failed to change menu item:", err);
@@ -81,6 +110,11 @@ export default function ManageMenuItems() {
 
     const addMutation = useMutation({
         mutationKey: ['managerAddMenuItem'],
+        /**
+         * Sends a request to create a new menu item with the provided data payload.
+         * @param {Object} newItemPayload Fields that describe the menu item to add.
+         * @returns {Promise<Object>} Backend response payload for the create request.
+         */
         mutationFn: async (newItemPayload) => {
             const newItemResponse = await axios.post(`/api/menu/items`, newItemPayload);
             
@@ -89,12 +123,25 @@ export default function ManageMenuItems() {
             }
             return newItemResponse.data;
         },
+        /**
+         * Cancels any in-flight menu item queries before adding a new item.
+         * @returns {Promise<void>} Resolves once the cancellation call succeeds.
+         */
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ['managerMenuItems'] });
         },
+        /**
+         * Ensures menu data is refreshed once the create operation completes.
+         * @returns {Promise<void>} Resolves when the invalidate request is issued.
+         */
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuItems'] });
         },
+        /**
+         * Reports add failures so the UI can surface issues while mutating.
+         * @param {Error} err Error thrown when the mutation fails.
+         * @returns {void}
+         */
         onError: (err) => {
             // Just in case there was an error while doing thing
             console.error("Failed to add new menu item:", err);
@@ -103,6 +150,11 @@ export default function ManageMenuItems() {
 
     const removeMutation = useMutation({
         mutationKey: ['managerRemoveMenuItem'],
+        /**
+         * Deletes a menu item identified by the provided menu_item_id.
+         * @param {{menu_item_id: number}} param0 Destructured argument containing the id to remove.
+         * @returns {Promise<Object>} Backend response payload for the delete request.
+         */
         mutationFn: async ({ menu_item_id }) => {
             const removeItemResponse = await axios.delete(`/api/menu/items/${menu_item_id}`);
             
@@ -111,12 +163,25 @@ export default function ManageMenuItems() {
             }
             return removeItemResponse.data;
         },
+        /**
+         * Temporarily halts background refetching while a delete mutation is running.
+         * @returns {Promise<void>} Resolves when pending queries have been canceled.
+         */
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ['managerMenuItems'] });
         },
+        /**
+         * Requests a refetch after successfully deleting a menu item.
+         * @returns {Promise<void>} Resolves when the refetch is queued.
+         */
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['managerMenuItems'] });
         },
+        /**
+         * Surfaces any deletion issues that occur during mutation execution.
+         * @param {Error} err Error reported from the mutation lifecycle.
+         * @returns {void}
+         */
         onError: (err) => {
             // Just in case there was an error while doing tihng
             console.error("Failed to remove menu item:", err);

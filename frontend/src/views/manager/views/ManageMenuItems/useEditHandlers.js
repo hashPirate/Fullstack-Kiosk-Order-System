@@ -1,13 +1,38 @@
 import editType from "./editType";
 
+/**
+ * @module ManageMenuItems/useEditHandlers
+ */
+
+/**
+ * Encapsulates edit popup lifecycle helpers for menu item rows.
+ * @param {Function} setCurrentEditID Setter for tracking which item is being edited.
+ * @param {Function} setCurrentEditType Setter for tracking which field is being edited.
+ * @param {Function} setEditErrorString Setter for presenting validation errors inside the popup.
+ * @param {Object} editMutation React Query mutation used to persist edits.
+ * @returns {{handleEditStart: Function, handleEditCommit: Function, handleEditCancel: Function}} Collection of edit handlers.
+ */
 export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation) {
     // Begin editing an item by showing the popup
+    /**
+     * Opens the edit popup by recording the selected menu item and type.
+     * @param {number} id Menu item identifier selected for editing.
+     * @param {string} type Field identifier describing which value to edit.
+     * @returns {void}
+     */
     function handleEditStart(id, type) {
         setCurrentEditID(id);
         setCurrentEditType(type);
     }
 
     // Finish editing an item by updating it in db.
+    /**
+     * Validates the edited data and triggers the appropriate mutation update.
+     * @param {number} id Menu item identifier being modified.
+     * @param {string} type Field identifier describing which value to edit.
+     * @param {string|number|boolean} newData User-provided value for the field.
+     * @returns {void}
+     */
     function handleEditCommit(id, type, newData) {
         if (type === editType.NAME) {
             // Check valid name and data type.
@@ -56,6 +81,10 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
         }
     }
 
+    /**
+     * Closes the edit popup and clears any pending error messages.
+     * @returns {void}
+     */
     function handleEditCancel() {
         setCurrentEditID(null);
         setCurrentEditType(null);
