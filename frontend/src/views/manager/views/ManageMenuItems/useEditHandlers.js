@@ -1,4 +1,5 @@
 import editType from "./editType";
+import axios from "axios";
 
 /**
  * @module ManageMenuItems/useEditHandlers
@@ -24,6 +25,31 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
         setCurrentEditID(id);
         setCurrentEditType(type);
     }
+
+    /**
+     * Handles the upload of a new image for a menu item.
+     * @param {number} id - The ID of the menu item.
+     * @param {File} imageFile - The image file to upload.
+     */
+    async function handleImageUpload(id, imageFile) {
+        try {
+            const imageName = `menu_item_${id}_${Date.now()}.${imageFile.name.split('.').pop()}`;
+            await axios.post(`/api/images/${imageName}/upload`, imageFile, {
+                headers: {
+                    'Content-Type': imageFile.type
+                }
+            });
+    
+            editMutation.mutate({ menu_item_id: id, image_name: imageName });
+            setCurrentEditID(null);
+            setCurrentEditType(null);
+            setEditErrorString(null);
+        } catch (err) {
+            console.error("Failed to upload image:", err);
+            setEditErrorString("ERROR: Failed to upload image.");
+        }
+    }
+
 
     // Finish editing an item by updating it in db.
     /**
@@ -76,6 +102,8 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
             setCurrentEditID(null);
             setCurrentEditType(null);
             setEditErrorString(null);
+        } else if (type === editType.IMAGE) {
+            handleImageUpload(id, newData); // newData is the imageFile
         } else {
             throw new Error("Invalid edit type.");
         }

@@ -99,11 +99,12 @@ router.get('/items/:id/parts', async (req, res) => {
  * @param {string} item_name - The name of the new menu item.
  * @param {number} price - The price of the new menu item.
  * @param {boolean} for_sale - Whether the item is for sale.
+ * @param {string} image_name - The image name of the new menu item.
  */
 router.post('/items', async (req, res) => {
     try {
-        const { item_name, price, for_sale } = req.body;
-        const item = await db.menuManager.createMenuItem(item_name, price, for_sale);
+        const { item_name, price, for_sale, image_name } = req.body;
+        const item = await db.menuManager.createMenuItem(item_name, price, for_sale, image_name);
         res.json(item);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -118,13 +119,14 @@ router.post('/items', async (req, res) => {
  * @param {string} item_name - The new name of the menu item.
  * @param {number} price - The new price of the menu item.
  * @param {boolean} for_sale - The new for_sale status.
+ * @param {string} image_name - The new image name for the menu item.
  */
 router.put('/items/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { item_name, price, for_sale } = req.body;
+        const { item_name, price, for_sale, image_name } = req.body;
         const menuItem = await db.menuManager.getMenuItemById(id);
-        await db.menuManager.updateMenuItem(menuItem, item_name, price, for_sale);
+        await db.menuManager.updateMenuItem(menuItem, item_name, price, for_sale, image_name);
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -152,11 +154,12 @@ router.get('/parts', async (req, res) => {
  * @param {string} part_name - The name of the new menu part.
  * @param {number} price - The price of the new menu part.
  * @param {boolean} for_sale - Whether the part is for sale.
+ * @param {string} image_name - The image name of the new menu part.
  */
 router.post('/parts', async (req, res) => {
     try {
-        const { part_name, price, for_sale } = req.body;
-        const part = await db.menuManager.createMenuPart(part_name, price, for_sale);
+        const { part_name, price, for_sale, image_name } = req.body;
+        const part = await db.menuManager.createMenuPart(part_name, price, for_sale, image_name);
         res.json(part);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -171,11 +174,12 @@ router.post('/parts', async (req, res) => {
  * @param {string} part_name - The new name of the menu part.
  * @param {number} price - The new price of the menu part.
  * @param {boolean} for_sale - The new for_sale status.
+ * @param {string} image_name - The new image name for the menu part.
  */
 router.put('/parts/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { part_name, price, for_sale } = req.body;
+        const { part_name, price, for_sale, image_name } = req.body;
 
         if ("ingredients" in req.body) {
             console.log(req.body.ingredients);
@@ -191,7 +195,7 @@ router.put('/parts/:id', async (req, res) => {
         }
 
         const menuPart = await db.menuManager.getMenuPartById(id);
-        await db.menuManager.updateMenuPart(menuPart, part_name, price, for_sale);
+        await db.menuManager.updateMenuPart(menuPart, part_name, price, for_sale, image_name);
         res.json({ success: true });
     } catch (error) {
         console.log(error);

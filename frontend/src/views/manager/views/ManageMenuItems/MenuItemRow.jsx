@@ -7,10 +7,10 @@ import editType from "./editType.js";
 // Passing in the entire handleEditCommit function for for_sale
 /**
  * Displays a single menu item entry with inline edit affordances.
- * @param {{menuItemId: number, itemName: string, price: number|string, forSale: boolean, onEditStart: Function, handleEditCommit: Function}} props Row props provided by the parent list.
+ * @param {{menuItemId: number, itemName: string, price: number|string, imageName: string, forSale: boolean, onEditStart: Function, handleEditCommit: Function}} props Row props provided by the parent list.
  * @returns {React.ReactElement} Table row representing a single menu item.
  */
-export default function MenuItemRow({ menuItemId, itemName, price, forSale, onEditStart, handleEditCommit}) {
+export default function MenuItemRow({ menuItemId, itemName, price, imageName, forSale, onEditStart, handleEditCommit}) {
 
     return (
         <tr>
@@ -28,6 +28,15 @@ export default function MenuItemRow({ menuItemId, itemName, price, forSale, onEd
                 title="Click to edit"
             >
                 ${parseFloat(price).toFixed(2)}
+            </td>
+            <td
+                className={styles.editableCell}
+                onClick={() => onEditStart(menuItemId, editType.IMAGE)}
+                title="Click to edit"
+            >
+                {imageName 
+                    ? <img src={`/api/images/${imageName}`} alt={itemName} style={{width: '100px', height: 'auto'}} />
+                    : 'No Image'}
             </td>
             <td>
                 <input

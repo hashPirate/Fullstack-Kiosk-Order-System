@@ -4,13 +4,12 @@
 import styles from "./ManageMenuParts.module.css";
 import editType from "./editType.js";
 
-// Passing in the entire handleEditCommit function for for_sale
 /**
  * Renders a single menu part row with inline edit affordances, including ingredient editing.
- * @param {{menuPartId: number, partName: string, price: number|string, forSale: boolean, onEditStart: Function, handleEditCommit: Function}} props Props supplied by parent with handlers and field data.
+ * @param {{menuPartId: number, partName: string, price: number|string, imageName: string, forSale: boolean, onEditStart: Function, handleEditCommit: Function}} props Props supplied by parent with handlers and field data.
  * @returns {React.ReactElement} Table row for one menu part entry.
  */
-export default function MenuPartRow({ menuPartId, partName, price, forSale, onEditStart, handleEditCommit}) {
+export default function MenuPartRow({ menuPartId, partName, price, imageName, forSale, onEditStart, handleEditCommit}) {
 
     return (
         <tr>
@@ -28,6 +27,15 @@ export default function MenuPartRow({ menuPartId, partName, price, forSale, onEd
                 title="Click to edit"
             >
                 ${parseFloat(price).toFixed(2)}
+            </td>
+            <td
+                className={styles.editableCell}
+                onClick={() => onEditStart(menuPartId, partName, editType.IMAGE)}
+                title="Click to edit"
+            >
+                {imageName 
+                    ? <img src={`/api/images/${imageName}`} alt={partName} style={{width: '100px', height: 'auto'}} />
+                    : 'No Image'}
             </td>
             <td>
                 <input
