@@ -264,9 +264,7 @@ export default function Inventory() {
                 >
                     Add
                 </button>
-                <button disabled title="Remove functionality not implemented">
-                    Remove
-                </button>
+                <button onClick={handleRemoveIngredient}>Remove</button>
             </div>
             {editingIngredient && (
                 <EditRestrictionsModal
