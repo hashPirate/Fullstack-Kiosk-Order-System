@@ -41,10 +41,11 @@ class MenuManager extends DbModelManager {
      * @param {string} item_name - The name of the menu item.
      * @param {number} price - The price of the menu item.
      * @param {boolean} for_sale - Whether the item is for sale.
+     * @param {string} image_name - The image name for the menu item.
      * @returns {Promise<MenuItem|null>} The newly created menu item, or null on failure.
      */
-    async createMenuItem(item_name, price, for_sale) {
-        const result = await this.db.query('INSERT INTO menu_items (item_name, price, for_sale) VALUES ($1, $2, $3) RETURNING *', [item_name, price, for_sale]);
+    async createMenuItem(item_name, price, for_sale, image_name) {
+        const result = await this.db.query('INSERT INTO menu_items (item_name, price, for_sale, image_name) VALUES ($1, $2, $3, $4) RETURNING *', [item_name, price, for_sale, image_name]);
         if (result.rows.length === 0) {
             return null;
         }
@@ -56,10 +57,11 @@ class MenuManager extends DbModelManager {
      * @param {string} part_name - The name of the menu part.
      * @param {number} price - The price of the menu part.
      * @param {boolean} for_sale - Whether the part is for sale.
+     * @param {string} image_name - The image name for the menu part.
      * @returns {Promise<MenuPart|null>} The newly created menu part, or null on failure.
      */
-    async createMenuPart(part_name, price, for_sale) {
-        const result = await this.db.query('INSERT INTO menu_parts (part_name, price, for_sale) VALUES ($1, $2, $3) RETURNING *', [part_name, price, for_sale]);
+    async createMenuPart(part_name, price, for_sale, image_name) {
+        const result = await this.db.query('INSERT INTO menu_parts (part_name, price, for_sale, image_name) VALUES ($1, $2, $3, $4) RETURNING *', [part_name, price, for_sale, image_name]);
         if (result.rows.length === 0) {
             return null;
         }
@@ -72,9 +74,10 @@ class MenuManager extends DbModelManager {
      * @param {string} itemName - The new name.
      * @param {number} price - The new price.
      * @param {boolean} for_sale - The new for_sale status.
+     * @param {string} image_name - The new image name for the menu item.
      */
-    async updateMenuItem(menuItem, itemName, price, for_sale) {
-        await this.db.query('UPDATE menu_items SET item_name = $1, price = $2, for_sale = $3 WHERE menu_item_id = $4', [itemName, price, for_sale, menuItem.getMenuItemId()]);
+    async updateMenuItem(menuItem, itemName, price, for_sale, image_name) {
+        await this.db.query('UPDATE menu_items SET item_name = $1, price = $2, for_sale = $3, image_name = $4 WHERE menu_item_id = $5', [itemName, price, for_sale, image_name, menuItem.getMenuItemId()]);
     }
 
     /**
@@ -83,9 +86,10 @@ class MenuManager extends DbModelManager {
      * @param {string} partName - The new name.
      * @param {number} price - The new price.
      * @param {boolean} for_sale - The new for_sale status.
+     * @param {string} image_name - The new image name for the menu part.
      */
-    async updateMenuPart(menuPart, partName, price, for_sale) {
-        await this.db.query('UPDATE menu_parts SET part_name = $1, price = $2, for_sale = $3 WHERE menu_part_id = $4', [partName, price, for_sale, menuPart.getMenuPartId()]);
+    async updateMenuPart(menuPart, partName, price, for_sale, image_name) {
+        await this.db.query('UPDATE menu_parts SET part_name = $1, price = $2, for_sale = $3, image_name = $4 WHERE menu_part_id = $5', [partName, price, for_sale, image_name, menuPart.getMenuPartId()]);
     }
 
     /**

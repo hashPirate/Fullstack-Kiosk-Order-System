@@ -3,7 +3,8 @@
 const editType = {
     PRICE: "price",
     NAME: "name",
-    FOR_SALE: "for sale"
+    FOR_SALE: "for sale",
+    IMAGE: "image"
 }
 
 export default editType;

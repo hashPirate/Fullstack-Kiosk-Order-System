@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import MenuPartRow from "./MenuPartRow.jsx";
 import EditCellPopup from "./EditCellPopup.jsx";
 import AddRowPopup from "./AddRowPopup.jsx";
+import ImageUploadPopup from '../ImageUploadPopup.jsx';
 import RemoveRowPopup from './RemoveRowPopup.jsx';
 import styles from './ManageMenuParts.module.css';
 import axios from 'axios';
@@ -222,11 +223,18 @@ export default function ManageMenuParts() {
                         onCancel={handleEditCancel}
                         errorString={editErrorString}
                       />
+                    : (currentEditType === editType.IMAGE)
+                    ? <ImageUploadPopup 
+                        prompt={`Upload new image for menu part`} 
+                        onCommit={(imageFile) => handleEditCommit(currentEditID, currentEditType, imageFile)} 
+                        onCancel={handleEditCancel} 
+                        errorString={editErrorString} 
+                    />
                     : <EditCellPopup
-                        prompt={`Edit menu part ${currentEditType}`}
-                        onCommit={(newData) => handleEditCommit(currentEditID, currentEditType, newData)}
-                        onCancel={handleEditCancel}
-                        errorString={editErrorString}
+                    prompt={`Edit menu part ${currentEditType}`} 
+                    onCommit={(newData) => handleEditCommit(currentEditID, currentEditType, newData)} 
+                    onCancel={handleEditCancel} 
+                    errorString={editErrorString} 
                       />
                   )
                 : <></>
@@ -248,6 +256,7 @@ export default function ManageMenuParts() {
                                 <th>ID</th>
                                 <th>Menu Part Name</th>
                                 <th>Price</th>
+                                <th>Image</th>
                                 <th>For Sale</th>
                                 <th>Ingredients</th>
                             </tr>
@@ -258,6 +267,7 @@ export default function ManageMenuParts() {
                                         menuPartId={part.menu_part_id}
                                         partName={part.part_name}
                                         price={part.price}
+                                        imageName={part.image_name}
                                         forSale={part.for_sale}
                                         onEditStart={handleEditStart}
                                         handleEditCommit={handleEditCommit}

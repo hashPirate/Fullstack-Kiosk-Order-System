@@ -8,11 +8,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import MenuItemRow from "./MenuItemRow.jsx";
 import EditCellPopup from "./EditCellPopup";
 import AddRowPopup from "./AddRowPopup.jsx";
+import ImageUploadPopup from '../ImageUploadPopup.jsx';
 import RemoveRowPopup from './RemoveRowPopup.jsx';
 import styles from './ManageMenuItems.module.css';
 import axios from 'axios';
 import useEditHandlers from "./useEditHandlers.js";
 import useAddHandlers from './useAddHandlers.js';
+import editType from "./editType.js";
 import useRemoveHandlers from './useRemoveHandlers.js';
 
 const refetchIntervalSecs = 15;
@@ -210,8 +212,12 @@ export default function ManageMenuItems() {
 
     return (
         <>
-            { (currentEditID !== null)
+            { (currentEditType !== 'image' && currentEditID !== null)
                 ? <EditCellPopup prompt={`Edit menu item ${currentEditType}`} onCommit={(newData) => handleEditCommit(currentEditID, currentEditType, newData)} onCancel={handleEditCancel} errorString={editErrorString} />
+                : <></> }
+
+            { (currentEditType === 'image' && currentEditID !== null)
+                ? <ImageUploadPopup prompt={`Upload new image for menu item`} onCommit={(imageFile) => handleEditCommit(currentEditID, editType.IMAGE, imageFile)} onCancel={handleEditCancel} errorString={editErrorString} />
                 : <></> }
             
             { isAdding
@@ -230,6 +236,7 @@ export default function ManageMenuItems() {
                                 <th>ID</th>
                                 <th>Menu Item Name</th>
                                 <th>Price</th>
+                                <th>Image</th>
                                 <th>For Sale</th>
                             </tr>
                         </thead>
@@ -238,6 +245,7 @@ export default function ManageMenuItems() {
                                         menuItemId={item.menu_item_id}
                                         itemName={item.item_name}
                                         price={item.price}
+                                        imageName={item.image_name}
                                         forSale={item.for_sale}
                                         onEditStart={handleEditStart}
                                         handleEditCommit={handleEditCommit}
