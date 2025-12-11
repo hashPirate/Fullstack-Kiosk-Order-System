@@ -51,7 +51,7 @@ export default function MenuBoardView() {
             <MenuParts title="SIDES" subtitle="">
                 <div className={styles.sidesGrid}>
                   {sides.map((item) => {const img = menuSideImg[item.item_name]|| {imgLink: "/menu_images/beijing-beef.jpg",imageAlt: item.item_name,};
-                  return (<MenuItem key={item.menu_board_item_id} name={item.item_name} calories={item.calories} 
+                  return (<MenuItem key={item.menu_board_item_id} name={item.item_name} calories={item.calories} price={item.price}
                   imgLink={img.imgLink} imageAlt={img.imageAlt} />)})} 
                 </div>
               </MenuParts>
@@ -62,7 +62,7 @@ export default function MenuBoardView() {
               <MenuParts title="BASE">
                 <div className={styles.baseGrid}>
                   {base.map((item) => { const img = menuBaseImg[item.item_name] ||{imgLink: "/menu_images/beijing-beef.jpg",imageAlt: item.item_name,};
-                  return (<MenuItem key={item.menu_board_item_id} name={item.item_name} calories={item.calories} 
+                  return (<MenuItem key={item.menu_board_item_id} name={item.item_name} calories={item.calories} price={item.price}
                   imgLink={img.imgLink} imageAlt={img.imageAlt}/>)})}
                 </div>
               </MenuParts>
@@ -87,7 +87,7 @@ export default function MenuBoardView() {
                 {/* Meal types */}
                 <MenuParts title="Pick a Meal">
                   <div className={styles.mealsColumn}>
-                    {meals.map((opt) => {const img = menuMealImg[opt.item_name] || {imgLink: "/menu_images/beijing-beef.jpg",imageAlt: item.item_name,};
+                    {meals.map((opt) => {const img = menuMealImg[opt.item_name] || {imgLink: "/menu_images/beijing-beef.jpg",imageAlt: opt.item_name,};
                     return (<MenuMeals key={opt.menu_board_item_id} name={opt.item_name} calorieR={opt.calorie_range} 
                     description={opt.description} price={opt.price==null? 0: Number(opt.price)} icon={img.icon} iconAlt={img.iconAlt} />)})}
                   </div>

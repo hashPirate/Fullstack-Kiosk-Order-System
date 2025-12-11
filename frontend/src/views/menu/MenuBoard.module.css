@@ -259,3 +259,8 @@
   align-items: center;
   padding-right: 2.5rem;       
 }
+.itemPrice {
+  font-weight: 600;
+  font-family: 'Tilt Warp', sans-serif;
+  font-size: 1rem;
+}
