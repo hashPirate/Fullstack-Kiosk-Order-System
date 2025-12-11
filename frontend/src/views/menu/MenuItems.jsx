@@ -10,13 +10,15 @@ import styles from "./MenuBoard.module.css";
  * @param {string} props.imageAlt Alt text describing the item image.
  * @returns {React.ReactElement} The rendered menu item card.
  */
-export default function MenuItems({ name, calories, imgLink, imageAlt }) {
+export default function MenuItems({ name, calories, imgLink, imageAlt, price}) {
   return (
     <div className={styles.menuItemCard}>
       <img src={imgLink} alt={imageAlt} className={styles.itemImg} />
       <div className={styles.itemInfo}>
         <span className={styles.itemName}>{name}</span>
         {calories != null && (<span className={styles.itemCalories}>{calories} cals</span>)}
+        {price != null && (<span className={styles.itemPrice}>${Number(price).toFixed(2)}</span>
+        )}
       </div>
     </div>
   );
