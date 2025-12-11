@@ -93,6 +93,55 @@ router.get('/items/:id/parts', async (req, res) => {
 });
 
 /**
+ * Route to add a part to a menu item.
+ * @name post/items/:id/parts
+ * @function
+ * @param {string} id - The ID of the menu item.
+ * @param {string} partId - The ID of the menu part to add.
+ */
+router.post('/items/:id/parts', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { partId } = req.body;
+        const menuItem = await db.menuManager.getMenuItemById(id);
+        const menuPart = await db.menuManager.getMenuPartById(partId);
+
+        if (!menuItem || !menuPart) {
+            return res.status(404).json({ error: 'Menu item or part not found' });
+        }
+
+        await db.menuManager.addMenuPartToMenuItem(menuItem, menuPart);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * Route to remove a part from a menu item.
+ * @name delete/items/:id/parts/:partId
+ * @function
+ * @param {string} id - The ID of the menu item.
+ * @param {string} partId - The ID of the menu part to remove.
+ */
+router.delete('/items/:id/parts/:partId', async (req, res) => {
+    try {
+        const { id, partId } = req.params;
+        const menuItem = await db.menuManager.getMenuItemById(id);
+        const menuPart = await db.menuManager.getMenuPartById(partId);
+
+        if (!menuItem || !menuPart) {
+            return res.status(404).json({ error: 'Menu item or part not found' });
+        }
+
+        await db.menuManager.removeMenuPartFromMenuItem(menuItem, menuPart);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
  * Route to create a new menu item.
  * @name post/items
  * @function

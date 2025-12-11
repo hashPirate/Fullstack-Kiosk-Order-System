@@ -11,9 +11,10 @@ import axios from "axios";
  * @param {Function} setCurrentEditType Setter for tracking which field is being edited.
  * @param {Function} setEditErrorString Setter for presenting validation errors inside the popup.
  * @param {Object} editMutation React Query mutation used to persist edits.
+ * @param {Object} queryClient The React Query client instance for invalidating queries.
  * @returns {{handleEditStart: Function, handleEditCommit: Function, handleEditCancel: Function}} Collection of edit handlers.
  */
-export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation) {
+export default function useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation, queryClient) {
     // Begin editing an item by showing the popup
     /**
      * Opens the edit popup by recording the selected menu item and type.
@@ -59,7 +60,7 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
      * @param {string|number|boolean} newData User-provided value for the field.
      * @returns {void}
      */
-    function handleEditCommit(id, type, newData) {
+    async function handleEditCommit(id, type, newData) {
         if (type === editType.NAME) {
             // Check valid name and data type.
             if (newData === "") {
@@ -104,6 +105,29 @@ export default function useEditHandlers(setCurrentEditID, setCurrentEditType, se
             setEditErrorString(null);
         } else if (type === editType.IMAGE) {
             handleImageUpload(id, newData); // newData is the imageFile
+        } else if (type === editType.PARTS) {
+            try {
+                const { added, removed } = newData;
+                const promises = [];
+                
+                added.forEach(partId => {
+                    promises.push(axios.post(`/api/menu/items/${id}/parts`, { partId }));
+                });
+                
+                removed.forEach(partId => {
+                    promises.push(axios.delete(`/api/menu/items/${id}/parts/${partId}`));
+                });
+
+                await Promise.all(promises);
+                
+                queryClient.invalidateQueries({ queryKey: ['managerMenuItems'] });
+                setCurrentEditID(null);
+                setCurrentEditType(null);
+                setEditErrorString(null);
+            } catch (err) {
+                console.error("Failed to update parts:", err);
+                setEditErrorString("ERROR: Failed to update parts.");
+            }
         } else {
             throw new Error("Invalid edit type.");
         }
