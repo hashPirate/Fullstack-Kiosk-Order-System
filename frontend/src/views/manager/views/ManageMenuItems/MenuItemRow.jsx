@@ -45,6 +45,11 @@ export default function MenuItemRow({ menuItemId, itemName, price, imageName, fo
                     onChange={(event) => handleEditCommit(menuItemId, editType.FOR_SALE, event.target.checked)}
                 />
             </td>
+            <td>
+                <button onClick={() => onEditStart(menuItemId, editType.PARTS)}>
+                    Edit Parts
+                </button>
+            </td>
         </tr>
     );
 }

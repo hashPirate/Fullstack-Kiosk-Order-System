@@ -9,6 +9,7 @@ import MenuItemRow from "./MenuItemRow.jsx";
 import EditCellPopup from "./EditCellPopup";
 import AddRowPopup from "./AddRowPopup.jsx";
 import ImageUploadPopup from '../ImageUploadPopup.jsx';
+import EditPartsPopup from "./EditPartsPopup.jsx";
 import RemoveRowPopup from './RemoveRowPopup.jsx';
 import styles from './ManageMenuItems.module.css';
 import axios from 'axios';
@@ -192,7 +193,7 @@ export default function ManageMenuItems() {
 
 
     // Custom hook that abstracts Edit handling logic into another file.
-    const { handleEditStart, handleEditCommit, handleEditCancel } = useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation);
+    const { handleEditStart, handleEditCommit, handleEditCancel } = useEditHandlers(setCurrentEditID, setCurrentEditType, setEditErrorString, editMutation, queryClient);
 
     // Custom hook that abstracts Add handling logic into another file.
     const { handleAddStart, handleAddCommit, handleAddCancel } = useAddHandlers(setIsAdding, setAddErrorString, addMutation);
@@ -220,6 +221,16 @@ export default function ManageMenuItems() {
                 ? <ImageUploadPopup prompt={`Upload new image for menu item`} onCommit={(imageFile) => handleEditCommit(currentEditID, editType.IMAGE, imageFile)} onCancel={handleEditCancel} errorString={editErrorString} />
                 : <></> }
             
+            { (currentEditType === editType.PARTS && currentEditID !== null)
+                ? <EditPartsPopup 
+                    menuItemId={currentEditID} 
+                    prompt={`Manage parts for menu item`} 
+                    onCommit={(diff) => handleEditCommit(currentEditID, editType.PARTS, diff)} 
+                    onCancel={handleEditCancel} 
+                    errorString={editErrorString} 
+                  />
+                : <></> }
+            
             { isAdding
                 ? <AddRowPopup prompt={"Add enter info for new menu item"} onCommit={handleAddCommit} onCancel={handleAddCancel} errorString={addErrorString}/>
                 : <></> }
@@ -238,6 +249,7 @@ export default function ManageMenuItems() {
                                 <th>Price</th>
                                 <th>Image</th>
                                 <th>For Sale</th>
+                                <th>Parts</th>
                             </tr>
                         </thead>
                         <tbody>

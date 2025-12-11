@@ -154,6 +154,24 @@ ORDER BY mp.menu_part_id;`,
     }
 
     /**
+     * Adds a menu part to a menu item.
+     * @param {MenuItem} menuItem - The menu item.
+     * @param {MenuPart} menuPart - The menu part to add.
+     */
+    async addMenuPartToMenuItem(menuItem, menuPart) {
+        await this.db.runUpdate('INSERT INTO menu_parts_to_menu_items (menu_item_id, menu_part_id) VALUES ($1, $2) ON CONFLICT DO NOTHING', [menuItem.getMenuItemId(), menuPart.getMenuPartId()]);
+    }
+
+    /**
+     * Removes a menu part from a menu item.
+     * @param {MenuItem} menuItem - The menu item.
+     * @param {MenuPart} menuPart - The menu part to remove.
+     */
+    async removeMenuPartFromMenuItem(menuItem, menuPart) {
+        await this.db.runUpdate('DELETE FROM menu_parts_to_menu_items WHERE menu_item_id = $1 AND menu_part_id = $2', [menuItem.getMenuItemId(), menuPart.getMenuPartId()]);
+    }
+
+    /**
      * Retrieves the ingredients for a menu part.
      * @param {MenuPart} menuPart - The menu part.
      * @returns {Promise<MenuPartIngredient[]>} A list of ingredients with their quantities.
